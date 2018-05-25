@@ -1,0 +1,75 @@
+ннн
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2005 - 2018 Media Design School
+//
+// File Name    	:    Level.cpp
+// Description    	:    main implementation for Level
+// Author       	:    Alex Coultas
+// Mail         	:    alex.cou7417@mediadesign.school.nz
+//
+
+// This Includes //
+
+// Library Includes //
+
+// OpenGL Library Includes //
+
+// Engine Includes //
+
+// Local Includes //
+
+// Static Variables //
+
+// Prototypes //
+
+ннн
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2005 - 2018 Media Design School
+//
+// File Name    	:    UIManager.h
+// Description    	:    Header file outlining the Class
+// Author       	:    Alex Coultas
+// Mail         	:    alex.cou7417@mediadesign.school.nz
+//
+
+
+
+/************************************************************
+#--Description--#:  Constructor function
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	Takes contructor values
+#--Return--#: 		NA
+************************************************************/
+
+
+/************************************************************
+#--Description--#:  Destructor function
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	NA
+#--Return--#: 		NA
+************************************************************/
+
+
+/************************************************************
+#--Description--#:	Render Scene to the screen
+#--Author--#: 		Alex Coultas
+#--Parameters--#: 	NA
+#--Return--#: 		NA
+************************************************************/
+
+/************************************************************
+#--Description--#: 	Updated every frame
+#--Author--#: 		Alex Coultas
+#--Parameters--#: 	NA
+#--Return--#: 		NA
+************************************************************/

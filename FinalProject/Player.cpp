@@ -1,0 +1,309 @@
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2005 - 2018 Media Design School
+//
+// File Name    	:    Player.cpp
+// Description    	:    main implementation for Player
+// Author       	:    Alex Coultas
+// Mail         	:    alex.cou7417@mediadesign.school.nz
+//
+
+// Library Includes //
+#include <iostream>
+
+// OpenGL Library Includes //
+#include <glm\gtx\string_cast.hpp>
+
+// Engine Includes //
+#include "Engine/Utils.h"
+#include "Engine/SceneManager.h"
+#include "Engine/Scene.h"
+#include "Engine\Entity.h"
+#include "Engine\Input.h"
+#include "Engine\Time.h"
+#include "Engine\Sphere.h"
+
+// Local Includes //
+#include "Level.h"
+
+// This Includes //
+#include "Player.h"
+
+// Static Variables //
+
+// Types //
+#define GetSign(a) (a < 0 ? -1 : (a > 0 ? 1 : 0)) // If num is smaller than 0, ie negative, return -1, else return 1
+
+/************************************************************
+#--Description--#:  Constructor function
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	Takes contructor values
+#--Return--#: 		NA
+************************************************************/
+Player::Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float _fDepth, Utils::EANCHOR _Anchor, glm::vec4 _Colour)
+	: Entity(_Transform, _Anchor)
+{
+	std::shared_ptr<Sphere> NewMesh = std::make_shared<Sphere>(_fWidth, _fHeight, _fDepth, _Colour);
+	AddMesh(NewMesh);
+}
+
+/************************************************************
+#--Description--#:  Constructor function
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	Takes contructor values
+#--Return--#: 		NA
+************************************************************/
+Player::Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float _fDepth, Utils::EANCHOR _Anchor, glm::vec4 _Colour, const char * TextureSource, glm::vec4 UVCoords)
+	: Entity(_Transform, _Anchor)
+{
+	std::shared_ptr<Sphere> NewMesh = std::make_shared<Sphere>(_fWidth, _fHeight, _fDepth, _Colour, TextureSource, UVCoords);
+	AddMesh(NewMesh);
+}
+
+/************************************************************
+#--Description--#:  Destructor function
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	NA
+#--Return--#: 		NA
+************************************************************/
+Player::~Player()
+{
+}
+
+/************************************************************
+#--Description--#: 	Updated every frame
+#--Author--#: 		Alex Coultas
+#--Parameters--#: 	NA
+#--Return--#: 		NA
+************************************************************/
+void Player::Update()
+{
+	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
+	if (!GotLevel) return;
+	//if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
+	//{
+	//	transform.Scale.x = 1;
+	//	if (AnimationInfo.v2CurrentFrame.y < 2)
+	//	{
+	//		if (CollisionBox.v2Offset.y == -0.17f && ((AnimationInfo.v2CurrentFrame.x >= 4 && AnimationInfo.v2CurrentFrame.y == 0) || (AnimationInfo.v2CurrentFrame.x == 0 && AnimationInfo.v2CurrentFrame.y == 1)))
+	//		{
+	//			transform.Position.y += 0.02f;
+	//		}
+	//		CollisionBox.v2Offset.y = -0.10f;
+	//		AnimationInfo.v2StartFrame = { 1, 1 };
+	//		AnimationInfo.v2CurrentFrame = { 1, 1 };
+	//		AnimationInfo.v2EndFrame = { 6, 1 };
+	//		CollisionBox.fWidth = 0.8f;
+	//		CollisionBox.fHeight = 0.86f;
+	//	}
+	//}
+	//else if (Input::GetInstance()->KeyState[(unsigned char)'a'] == Input::INPUT_FIRST_PRESS)
+	//{
+	//	transform.Scale.x = -1;
+	//	if (AnimationInfo.v2CurrentFrame.y < 2)
+	//	{
+	//		if (CollisionBox.v2Offset.y == -0.17f && ((AnimationInfo.v2CurrentFrame.x >= 4 && AnimationInfo.v2CurrentFrame.y == 0) || (AnimationInfo.v2CurrentFrame.x == 0 && AnimationInfo.v2CurrentFrame.y == 1)))
+	//		{
+	//			transform.Position.y += 0.02f;
+	//		}
+	//		CollisionBox.v2Offset.y = -0.10f;
+	//		AnimationInfo.v2StartFrame = { 1, 1 };
+	//		AnimationInfo.v2CurrentFrame = { 1, 1 };
+	//		AnimationInfo.v2EndFrame = { 6, 1 };
+	//		CollisionBox.fWidth = 0.8f;
+	//		CollisionBox.fHeight = 0.86f;
+	//	}
+	//}
+	//else if (Input::GetInstance()->KeyState[(unsigned char)'s'] == Input::INPUT_FIRST_PRESS)
+	//{
+	//	AnimationInfo.v2StartFrame = { 4, 0 };
+	//	AnimationInfo.v2CurrentFrame = { 4, 0 };
+	//	AnimationInfo.v2EndFrame = { 0, 1 };
+	//	CollisionBox.fWidth = 0.6f;
+	//	CollisionBox.fHeight = 0.7f;
+	//	CollisionBox.v2Offset.y = -0.17f;
+	//}
+	//else if ((((AnimationInfo.v2CurrentFrame.y == 1 && AnimationInfo.v2CurrentFrame.x != 0)|| AnimationInfo.v2CurrentFrame.y == 3) && Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_RELEASED && Input::GetInstance()->KeyState[(unsigned char)'a'] == Input::INPUT_RELEASED) || AnimationInfo.v2CurrentFrame == glm::vec2(2, 3))
+	//{
+	//	AnimationInfo.v2CurrentFrame = { 0, 0 };
+	//	AnimationInfo.v2StartFrame = { 0, 0 };
+	//	AnimationInfo.v2EndFrame = { 3, 0 };
+	//	CollisionBox.fWidth = 0.6f;
+	//	CollisionBox.fHeight = 0.86f;
+	//	CollisionBox.v2Offset.y = -0.10f;
+	//}
+
+	//if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
+	//{
+	//	MoveHorizontally(false);
+	//	if (AnimationInfo.v2CurrentFrame.x >= 1 && AnimationInfo.v2CurrentFrame.y == 3)
+	//	{
+	//		AnimationInfo.v2StartFrame = { 1, 1 };
+	//		AnimationInfo.v2CurrentFrame = { 1, 1 };
+	//		AnimationInfo.v2EndFrame = { 6, 1 };
+	//		CollisionBox.fWidth = 0.8f;
+	//		CollisionBox.fHeight = 0.86f;
+	//		CollisionBox.v2Offset.y = -0.10f;
+	//	}
+	//}
+	//else if (Input::GetInstance()->KeyState[(unsigned char)'a'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'a'] == Input::INPUT_FIRST_PRESS)
+	//{
+	//	MoveHorizontally(true);
+	//	if (AnimationInfo.v2CurrentFrame.x >= 1 && AnimationInfo.v2CurrentFrame.y == 3)
+	//	{
+	//		AnimationInfo.v2StartFrame = { 1, 1 };
+	//		AnimationInfo.v2CurrentFrame = { 1, 1 };
+	//		AnimationInfo.v2EndFrame = { 6, 1 };
+	//		CollisionBox.fWidth = 0.8f;
+	//		CollisionBox.fHeight = 0.86f;
+	//		CollisionBox.v2Offset.y = -0.10f;
+	//	}
+	//}
+	//else
+	//{
+	//	if (Input::GetInstance()->KeyState[(unsigned char)'s'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'s'] == Input::INPUT_FIRST_PRESS)
+	//	{
+	//		if (AnimationInfo.v2CurrentFrame.x >= 1 && AnimationInfo.v2CurrentFrame.y == 3) // If running animation
+	//		{
+	//			// Set to running
+	//			AnimationInfo.v2StartFrame = { 1, 1 };
+	//			AnimationInfo.v2CurrentFrame = { 1, 1 };
+	//			AnimationInfo.v2EndFrame = { 6, 1 };
+	//			CollisionBox.fWidth = 0.8f;
+	//			CollisionBox.fHeight = 0.86f;
+	//			CollisionBox.v2Offset.y = -0.17f;
+	//		}
+	//		else if (AnimationInfo.v2CurrentFrame.x >= 0 && AnimationInfo.v2CurrentFrame.x <= 3 && AnimationInfo.v2CurrentFrame.y == 0) // If Standing/ Idle animation
+	//		{
+	//			// Set to Crouched
+	//			AnimationInfo.v2StartFrame = { 4, 0 };
+	//			//AnimationInfo.v2CurrentFrame = { 4, 0 };
+	//			AnimationInfo.v2EndFrame = { 0, 1 };
+	//			CollisionBox.fWidth = 0.6f;
+	//			CollisionBox.fHeight = 0.7f;
+	//			CollisionBox.v2Offset.y = -0.17f;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		if (!bJump)
+	//		{
+	//			AnimationInfo.v2StartFrame = { 0, 0 };
+	//			AnimationInfo.v2EndFrame = { 3, 0 };
+	//			CollisionBox.fWidth = 0.6f;
+	//			CollisionBox.fHeight = 0.86f;
+	//			if (CollisionBox.v2Offset.y == -0.17f && ((AnimationInfo.v2CurrentFrame.x >= 4 && AnimationInfo.v2CurrentFrame.y == 0) || (AnimationInfo.v2CurrentFrame.x == 0 && AnimationInfo.v2CurrentFrame.y == 1)))
+	//			{
+	//				transform.Position.y += 0.02f;
+	//			}
+	//			CollisionBox.v2Offset.y = -0.10f;
+	//		}
+	//	}
+	//	fHSpeed = 0;
+	//}
+	//if (Input::GetInstance()->KeyState[(unsigned char)'w'] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[(unsigned char)'w'] == Input::INPUT_HOLD)
+	//{
+	//	if (!bJump)
+	//	{
+	//		bJump = true;
+	//		fVSpeed = GameSettings::fJumpSize / 10;
+	//		AnimationInfo.v2CurrentFrame = { 0, 2 };
+	//		AnimationInfo.v2StartFrame = { 4, 2 };
+	//		AnimationInfo.v2EndFrame = { 4, 2 };
+	//	}
+	//}
+
+	//if (GotLevel && Input::GetInstance()->KeyState[(unsigned char)'w'] != Input::INPUT_FIRST_PRESS)
+	//{
+	//	bool bAddGrav = true;
+	//	for (auto it : GotLevel->Collidables)
+	//	{
+	//		// now its dis one?
+	//		if (Utils::CheckCollision2D(std::make_shared<Entity>(*this), it, glm::vec2(fHSpeed, fVSpeed - GameSettings::fGravity * (float)Time::dTimeDelta))) // Checks if will collide at - gravity
+	//		{
+	//			if (it->transform.Position.y >= transform.Position.y)
+	//				fVSpeed = Utils::GetDistance2D(std::make_shared<Entity>(*this), it).y; // Moves up to object (moves up the distance from object)				
+	//			else
+	//			{
+	//				fVSpeed = -Utils::GetDistance2D(std::make_shared<Entity>(*this), it).y; // Moves up to object (moves down the distance from object)
+	//				if (AnimationInfo.v2CurrentFrame.x < 5 && AnimationInfo.v2CurrentFrame.y == 2)
+	//				{
+	//					AnimationInfo.v2CurrentFrame = { 5, 2 };
+	//					AnimationInfo.v2EndFrame = { 2, 3 };
+	//				}
+	//				bJump = false;
+	//			}
+	//			bAddGrav = false;
+	//			
+	//			break;
+	//		}
+	//	}
+	//	if (GotLevel->Collidables.size() == 0 || bAddGrav)
+	//		if (fVSpeed > -GameSettings::fTerminalVelocity * (float)Time::dTimeDelta) fVSpeed -= GameSettings::fGravity * (float)Time::dTimeDelta; // moves down with -gravity
+	//		else fVSpeed = -GameSettings::fTerminalVelocity * (float)Time::dTimeDelta;
+	//}
+
+	//Translate(glm::vec3(fHSpeed, fVSpeed, 0));
+	//GotLevel->DebugText->sText = std::to_string(fVSpeed);
+
+}
+
+/************************************************************
+#--Description--#:  Respawn player
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	NA
+#--Return--#: 		NA
+************************************************************/
+void Player::Reset()
+{
+	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->Scenes[SceneManager::GetInstance()->CurrentScene]);
+	fHSpeed = 0;
+	fVSpeed = 0;
+	transform.Position = glm::vec3(GotLevel->SpawnPos, 0);
+}
+
+/************************************************************
+#--Description--#:  Move player in specified direction
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	Takes bool for direction true if left
+#--Return--#: 		NA
+************************************************************/
+void Player::MoveHorizontally(bool bLeft)
+{
+	int Direction;
+	if (bLeft) Direction = -1;
+	else Direction = 1;
+	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->Scenes[SceneManager::GetInstance()->CurrentScene]);
+	if (GotLevel)
+	{
+		if (GotLevel->Collidables.size() == 0)
+		{
+			if (bLeft)
+				fHSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+			else
+				fHSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+
+			return;
+		}
+		for (auto it : GotLevel->Collidables)
+		{
+			// dis one
+			if (Utils::CheckCollision2D(this->shared_from_this(), it, glm::vec2(GameSettings::fMoveSpeed * Time::dTimeDelta * Direction, 0)))
+			{
+					fHSpeed = Direction * abs(Utils::GetDistance2D(std::make_shared<Entity>(*this), it).x);
+					break;
+			}
+			else
+			{
+				if (bLeft)
+					fHSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+				else
+					fHSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+			}
+		}
+	}
+}
