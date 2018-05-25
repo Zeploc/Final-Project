@@ -73,6 +73,7 @@ void OnExit();
 int main(int argc, char **argv)
 {
 	// Whats Up noob
+	// Fuck you
 
 	srand(unsigned int(time(NULL)));
 	// init GLUT and create Window
