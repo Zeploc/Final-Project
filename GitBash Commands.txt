@@ -1,0 +1,28 @@
+Locate to branch location (H:/Year 2/Final Project)
+	cd "/h/Year 2/Final Project"
+	
+Display all branches
+	git branch -a
+	
+Checkout changes to master?
+	git checkout master
+	
+Get current version of master (so nothing is lost)
+	git pull origin master
+	(pull combines fetch and merge, so gets newest version, then updates/merges to that)
+	
+Get the current status of the branch
+	git status
+	
+
+Checkout local branch from master
+	git checkout -b LocalBranchName
+
+Add files/commit
+	git add .
+	
+Add commit with comment
+	git commit -m "Comment here"
+	
+Push Local master version to master on github
+	git push origin master
