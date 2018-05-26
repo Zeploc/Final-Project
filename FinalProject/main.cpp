@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 
 	// It works?
 
-	 // New line
+	// New test at home
 
 	srand(unsigned int(time(NULL)));
 	// init GLUT and create Window
