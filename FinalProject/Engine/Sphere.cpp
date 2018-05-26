@@ -206,25 +206,37 @@ void Sphere::Rebind()
 void Sphere::Render(Utils::Transform Newtransform)
 {
 	if (bHasTexture)
-	{
-		//glUseProgram(Shader::Textureprogram);
-		glUseProgram(Shader::LitTextureprogram);
-		glm::mat4 translate = glm::translate(glm::mat4(), Newtransform.Position);
-		glm::mat4 scale = glm::scale(glm::mat4(), Newtransform.Scale);
-		glm::mat4 rotation = glm::rotate(glm::mat4(), glm::radians(Newtransform.Rotation.x), glm::vec3(1, 0, 0));
-		rotation = glm::rotate(rotation, glm::radians(Newtransform.Rotation.y), glm::vec3(0, 1, 0));
-		rotation = glm::rotate(rotation, glm::radians(Newtransform.Rotation.z), glm::vec3(0, 0, 1));
-		glm::mat4 model = translate * rotation * scale;
-		GLint UVCoordsLoc = glGetUniformLocation(Shader::LitTextureprogram, "model");
-		glUniformMatrix4fv(UVCoordsLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Lighting::m_v3SunDirection = { 10, 1, 10 };
-		GLint LightPosLoc = glGetUniformLocation(Shader::LitTextureprogram, "lightPos");
-		glUniform3fv(LightPosLoc, 3, glm::value_ptr(Lighting::m_v3SunDirection));
+	{		
+		if (bIsLit)
+		{
+			glUseProgram(Shader::LitTextureprogram);
+			glm::mat4 translate = glm::translate(glm::mat4(), Newtransform.Position);
+			glm::mat4 scale = glm::scale(glm::mat4(), Newtransform.Scale);
+			glm::mat4 rotation = glm::rotate(glm::mat4(), glm::radians(Newtransform.Rotation.x), glm::vec3(1, 0, 0));
+			rotation = glm::rotate(rotation, glm::radians(Newtransform.Rotation.y), glm::vec3(0, 1, 0));
+			rotation = glm::rotate(rotation, glm::radians(Newtransform.Rotation.z), glm::vec3(0, 0, 1));
+			glm::mat4 model = translate * rotation * scale;
+			GLint UVCoordsLoc = glGetUniformLocation(Shader::LitTextureprogram, "model");
+			glUniformMatrix4fv(UVCoordsLoc, 1, GL_FALSE, glm::value_ptr(model));
+			Lighting::m_v3SunDirection = { 10, 1, 10 };
+			GLint LightPosLoc = glGetUniformLocation(Shader::LitTextureprogram, "lightPos");
+			glUniform3fv(LightPosLoc, 3, glm::value_ptr(Lighting::m_v3SunDirection));
+			glUniform1i(glGetUniformLocation(Shader::LitTextureprogram, "bIsTex"), bHasTexture);
+		}
+		else
+			glUseProgram(Shader::Textureprogram);
+
 		glEnable(GL_BLEND);
 	}
 	else
 	{
-		glUseProgram(Shader::program);
+		if (bIsLit)
+		{
+			glUseProgram(Shader::LitTextureprogram);
+			glUniform1i(glGetUniformLocation(Shader::LitTextureprogram, "bIsTex"), bHasTexture);
+		}
+		else
+			glUseProgram(Shader::program);
 		glDisable(GL_BLEND);
 	}
 	Mesh::Render(Newtransform);

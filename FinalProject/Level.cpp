@@ -29,11 +29,13 @@
 #include "Engine\Plane.h"
 #include "Engine\Pyramid.h"
 #include "Engine\Sphere.h"
+#include "Engine\Cube.h"
 
 // Local Includes //
 #include "Player.h"
 #include "GameManager.h"
 #include "UIManager.h"
+#include "Enemy1.h"
 
 // This Includes //
 #include "Level.h"
@@ -86,8 +88,19 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Entity> TexturedLitSphere = std::make_shared<Entity>(Entity({ glm::vec3(3, -3, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Sphere> TexturedLitSphereMesh = std::make_shared<Sphere>(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "Resources/Rayman.jpg");
 	TexturedLitSphere->AddMesh(TexturedLitSphereMesh);
+	TexturedLitSphereMesh->bIsLit = true;
 	AddEntity(TexturedLitSphere);
 
+	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(1.0f, 2.0f, 1.0f, glm::vec4(1.0f, 0.1f, 0.1f, 1.0f));
+	TargetMesh->bIsLit = true;
+	Target->AddMesh(TargetMesh);
+	AddEntity(Target);
+
+	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	NewEnemy->AddMesh(EnemeyMesh);
+	AddEntity(NewEnemy);
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//NewCursor->SetVisibleRange({ 500, 150 });
 	//AddUIElement(NewCursor);

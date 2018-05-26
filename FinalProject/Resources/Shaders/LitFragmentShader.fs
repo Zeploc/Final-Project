@@ -7,6 +7,7 @@ in vec2 fragTexCoord;
 in vec3 fragPos;
 in vec3 fragNormal;
 
+uniform int bIsTex = 1;
 uniform sampler2D tex;
 uniform float ambientStr = 0.1f;
 uniform vec3 ambientColor = vec3(1.0f, 1.0f, 1.0f);
@@ -39,6 +40,7 @@ void main(void)
 	float diffuseStr = max(dot(norm, -lightDir), 0.0f);
 	vec3 diffuse = diffuseStr * lightColor;
 	
-	color = vec4(ambient + diffuse + specular, 1.0f) * texture(tex, fragTexCoord) * fragcolor;
+	if (bIsTex == 1) color = vec4(ambient + diffuse + specular, 1.0f) * texture(tex, fragTexCoord) * fragcolor;
+	else color = vec4(ambient + diffuse + specular, 1.0f) * fragcolor;
 } 
 

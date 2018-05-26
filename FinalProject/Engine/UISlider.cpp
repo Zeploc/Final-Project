@@ -36,7 +36,7 @@
 ************************************************************/
 UISlider::UISlider(glm::vec2 _Position, float _fRotation, glm::vec4 _HandleColour, glm::vec4 _SliderColour, int _iSliderLength, int _iSliderThickness, int _iHandleHeight, int _iHandleWidth, Utils::EANCHOR _Anchor, std::string _sTitle)
 	: UIElement(_Position, _fRotation, _HandleColour), SliderBar(_Position, _Anchor, 0, _SliderColour, glm::vec4(glm::vec3(_SliderColour), 0.5), _iSliderLength, _iSliderThickness, nullptr),
-	SliderHandle(Utils::GetAncoredPosition(glm::vec2(_Position.x - _iSliderLength / 2, _Position.y), glm::vec2(_iSliderLength, _iSliderThickness), _Anchor), Utils::CENTER, 0, _HandleColour, glm::vec4(glm::vec3(_HandleColour), 0.5), _iHandleWidth, _iHandleHeight, nullptr),
+	SliderHandle(Utils::GetAncoredPosition2D(glm::vec2(_Position.x - _iSliderLength / 2, _Position.y), glm::vec2(_iSliderLength, _iSliderThickness), _Anchor), Utils::CENTER, 0, _HandleColour, glm::vec4(glm::vec3(_HandleColour), 0.5), _iHandleWidth, _iHandleHeight, nullptr),
 	sTitle(_sTitle)
 {
 	SliderBar.AddText(sTitle + ": 0.00", "Resources/Fonts/Roboto-Thin.ttf", 25, glm::vec4(1, 1, 1, 1), Utils::BOTTOM_CENTER);
@@ -79,8 +79,8 @@ void UISlider::Update()
 
 	if (SliderHandle.bPressed || SliderBar.bPressed)
 	{
-		float fSliderBarCenterPositionX = Utils::GetAncoredPosition(SliderBar.GetPosition(), glm::vec2(SliderBar.ImageComponent.GetWidth(), SliderBar.ImageComponent.GetHeight()), SliderBar.ImageComponent.GetAnchor()).x;
-		float fSliderHandleCenterPositionY = Utils::GetAncoredPosition(SliderBar.GetPosition(), glm::vec2(SliderBar.ImageComponent.GetWidth(), SliderBar.ImageComponent.GetHeight()), SliderBar.ImageComponent.GetAnchor()).y;
+		float fSliderBarCenterPositionX = Utils::GetAncoredPosition2D(SliderBar.GetPosition(), glm::vec2(SliderBar.ImageComponent.GetWidth(), SliderBar.ImageComponent.GetHeight()), SliderBar.ImageComponent.GetAnchor()).x;
+		float fSliderHandleCenterPositionY = Utils::GetAncoredPosition2D(SliderBar.GetPosition(), glm::vec2(SliderBar.ImageComponent.GetWidth(), SliderBar.ImageComponent.GetHeight()), SliderBar.ImageComponent.GetAnchor()).y;
 		if (MousePos.x <= fSliderBarCenterPositionX + SliderBar.ImageComponent.GetWidth() / 2 &&
 			MousePos.x >= fSliderBarCenterPositionX - SliderBar.ImageComponent.GetWidth() / 2)// //&&
 			/*MousePos.y <= fSliderHandleCenterPositionY + SliderHandle.ImageComponent.GetHeight() / 2 &&
@@ -125,7 +125,7 @@ void UISlider::SetActive(bool _bIsActive)
 ************************************************************/
 float UISlider::GetValue()
 {
-	float fSliderBarLeftPositionX = Utils::GetAncoredPosition(SliderBar.GetPosition(), glm::vec2(SliderBar.ImageComponent.GetWidth(), SliderBar.ImageComponent.GetHeight()), SliderBar.ImageComponent.GetAnchor()).x - SliderBar.ImageComponent.GetWidth() / 2;
+	float fSliderBarLeftPositionX = Utils::GetAncoredPosition2D(SliderBar.GetPosition(), glm::vec2(SliderBar.ImageComponent.GetWidth(), SliderBar.ImageComponent.GetHeight()), SliderBar.ImageComponent.GetAnchor()).x - SliderBar.ImageComponent.GetWidth() / 2;
 	float fSliderHandleDistance = SliderHandle.GetPosition().x - fSliderBarLeftPositionX;
 	float fPercentage = fSliderHandleDistance / (float)SliderBar.ImageComponent.GetWidth() - fMinimumPosition;
 	float fPercentageWithOffset = (fPercentage + fMinimumPosition) * (fMaximumPosition - fMinimumPosition);
@@ -187,7 +187,7 @@ void UISlider::SetStartPosition(float _fStartPosition)
 	if (_fStartPosition > fMaximumPosition) _fStartPosition = fMaximumPosition;
 	else if (_fStartPosition < fMinimumPosition) _fStartPosition = fMinimumPosition;
 	SliderBar.TextComponent.sText = sTitle + ": " + std::to_string(_fStartPosition).substr(0, 4);
-	float fSliderBarLeftPositionX = Utils::GetAncoredPosition(SliderBar.GetPosition(), glm::vec2(SliderBar.ImageComponent.GetWidth(), SliderBar.ImageComponent.GetHeight()), SliderBar.ImageComponent.GetAnchor()).x - SliderBar.ImageComponent.GetWidth() / 2;
+	float fSliderBarLeftPositionX = Utils::GetAncoredPosition2D(SliderBar.GetPosition(), glm::vec2(SliderBar.ImageComponent.GetWidth(), SliderBar.ImageComponent.GetHeight()), SliderBar.ImageComponent.GetAnchor()).x - SliderBar.ImageComponent.GetWidth() / 2;
 	float fSliderHandleDistance = fSliderBarLeftPositionX + (float)SliderBar.ImageComponent.GetWidth() * _fStartPosition / fMaximumPosition;
 	SliderHandle.SetPosition(glm::vec2(fSliderHandleDistance, SliderHandle.GetPosition().y));
 
