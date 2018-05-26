@@ -23,6 +23,7 @@
 // Engine Includes //
 #include "Input.h"
 #include "Shader.h"
+#include "Time.h"
 
 // This Includes //
 #include "Camera.h"
@@ -91,7 +92,7 @@ void Camera::SetWindowScale(float _fNewScale)
 	fWindowScale = _fNewScale;
 	float HalfWidth = (float)SCR_WIDTH / fWindowScale;
 	float HalfHeight = (float)SCR_HEIGHT / fWindowScale;
-	projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, 100.0f);
+	projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
 }
 
 /************************************************************
@@ -114,19 +115,21 @@ void Camera::FPSControls()
 	cameraFront = glm::normalize(frontVector);
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'w'] == Input::INPUT_HOLD)
-		cameraPos += cameraFront * cameraSpeed;
+		cameraPos += cameraFront * cameraSpeed * (float)Time::dTimeDelta;
 	else if (Input::GetInstance()->KeyState[(unsigned char)'s'] == Input::INPUT_HOLD)
-		cameraPos -= cameraFront * cameraSpeed;
+		cameraPos -= cameraFront * cameraSpeed * (float)Time::dTimeDelta;
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'a'] == Input::INPUT_HOLD)
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * (float)Time::dTimeDelta;
 	else if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD)
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * (float)Time::dTimeDelta;
 
 	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_HOLD)
-		cameraPos += cameraUp * cameraSpeed;
+		cameraPos += cameraUp * cameraSpeed * (float)Time::dTimeDelta;
 	else if (Input::GetInstance()->KeyState[(unsigned char)'q'] == Input::INPUT_HOLD)
-			cameraPos -= cameraUp * cameraSpeed;
+			cameraPos -= cameraUp * cameraSpeed * (float)Time::dTimeDelta;
+
+	
 
 	glutWarpPointer((float)SCR_WIDTH * 0.5f, (float)SCR_HEIGHT * 0.5f);
 }
@@ -155,6 +158,8 @@ void Camera::SetMVP(Utils::Transform _transform)
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));
 	MVPLoc = glGetUniformLocation(Shader::LitTextureprogram, "MVP");
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));
+	MVPLoc = glGetUniformLocation(Shader::CubeMapProgram, "MVP");
+	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));	
 }
 
 
@@ -173,14 +178,14 @@ void Camera::SwitchProjection(PROJECTIONMODE _Mode)
 	{
 		float HalfWidth = (float)SCR_WIDTH / 200;
 		float HalfHeight = (float)SCR_HEIGHT / 200;
-		projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, 100.0f);
+		projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
 		break;
 	}
 	case 2:
 	{
 		float HalfWidth = (float)SCR_WIDTH / 200;
 		float HalfHeight = (float)SCR_HEIGHT / 200;
-		projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, fMaxViewClipping);
 		break;
 	}
 	default:

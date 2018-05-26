@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="Chat.cpp" />
+    <ClCompile Include="Engine\CubeMap.cpp" />
     <ClCompile Include="Enemy1.cpp" />
     <ClCompile Include="Engine\Cube.cpp" />
     <ClCompile Include="Engine\Cursor.cpp" />
@@ -175,6 +176,7 @@
   <ItemGroup>
     <ClInclude Include="AI.h" />
     <ClInclude Include="Chat.h" />
+    <ClInclude Include="Engine\CubeMap.h" />
     <ClInclude Include="Enemy1.h" />
     <ClInclude Include="Engine\Cube.h" />
     <ClInclude Include="Engine\Cursor.h" />

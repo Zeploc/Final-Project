@@ -177,6 +177,9 @@
     <ClCompile Include="Engine\Cube.cpp">
       <Filter>Engine\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\CubeMap.cpp">
+      <Filter>Engine\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -285,6 +288,9 @@
       <Filter>Game\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Cube.h">
+      <Filter>Engine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\CubeMap.h">
       <Filter>Engine\Render</Filter>
     </ClInclude>
   </ItemGroup>

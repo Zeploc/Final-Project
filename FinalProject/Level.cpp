@@ -30,6 +30,7 @@
 #include "Engine\Pyramid.h"
 #include "Engine\Sphere.h"
 #include "Engine\Cube.h"
+#include "Engine\CubeMap.h"
 
 // Local Includes //
 #include "Player.h"
@@ -101,6 +102,13 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 	NewEnemy->AddMesh(EnemeyMesh);
 	AddEntity(NewEnemy);
+
+	std::shared_ptr<Entity> WorldCubeMap = std::make_shared<Entity>(Entity({ { 0, 0, 0 }, { 0, 0, 0 }, { 1, 1, 1 } }, Utils::CENTER));
+	char *  TextureSources[6] = { "right.jpg", "left.jpg" , "top.jpg" , "bottom.jpg" , "back.jpg" , "front.jpg" };
+	std::shared_ptr<CubeMap> WorldCubeMapMesh = std::make_shared<CubeMap>(CubeMap(1000.0f, 1000.0f, 1000.0f, TextureSources));
+	WorldCubeMap->AddMesh(WorldCubeMapMesh);
+	AddEntity(WorldCubeMap);
+
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//NewCursor->SetVisibleRange({ 500, 150 });
 	//AddUIElement(NewCursor);
