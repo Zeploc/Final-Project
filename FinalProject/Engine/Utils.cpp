@@ -37,7 +37,7 @@
 #--Parameters--#:	Element position, dimensions and current anchor
 #--Return--#: 		Returns vector 3 of new position
 ************************************************************/
-glm::vec3 Utils::GetAncoredPosition(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType)
+glm::vec3 Utils::GetAncoredPosition2D(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType)
 {
 	glm::vec3 NewPos;
 	switch (_AnchorType)
@@ -68,6 +68,50 @@ glm::vec3 Utils::GetAncoredPosition(glm::vec2 position, glm::vec2 Dimensions, EA
 		break;
 	case Utils::BOTTOM_RIGHT:
 		NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y + Dimensions.y / 2, 0);
+		break;
+	default:
+		break;
+	}
+	return NewPos;
+}
+
+/************************************************************
+#--Description--#:  Gets position from anchor and current position
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	Element position, dimensions and current anchor
+#--Return--#: 		Returns vector 3 of new position
+************************************************************/
+glm::vec3 Utils::GetAncoredPosition(glm::vec3 position, glm::vec2 Dimensions, EANCHOR _AnchorType)
+{
+	glm::vec3 NewPos;
+	switch (_AnchorType)
+	{
+	case Utils::TOP_LEFT:
+		NewPos = glm::vec3(position.x + Dimensions.x / 2, position.y - Dimensions.y / 2, position.z);
+		break;
+	case Utils::TOP_RIGHT:
+		NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y - Dimensions.y / 2, position.z);
+		break;
+	case Utils::TOP_CENTER:
+		NewPos = glm::vec3(position.x, position.y - Dimensions.y / 2, position.z);
+		break;
+	case Utils::CENTER_LEFT:
+		NewPos = glm::vec3(position.x + Dimensions.x / 2, position.y, position.z);
+		break;
+	case Utils::CENTER:
+		NewPos = glm::vec3(position.x, position.y, position.z);
+		break;
+	case Utils::CENTER_RIGHT:
+		NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y, position.z);
+		break;
+	case Utils::BOTTOM_LEFT:
+		NewPos = glm::vec3(position.x + Dimensions.x / 2, position.y + Dimensions.y / 2, position.z);
+		break;
+	case Utils::BOTTOM_CENTER:
+		NewPos = glm::vec3(position.x, position.y + Dimensions.y / 2, position.z);
+		break;
+	case Utils::BOTTOM_RIGHT:
+		NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y + Dimensions.y / 2, position.z);
 		break;
 	default:
 		break;

@@ -50,6 +50,7 @@ public:
 	const char * TextureSource;
 	glm::vec4 UVCoords;
 	bool bHasTexture = false;
+	bool bIsLit = false;
 	int m_iIndicies;
 
 	//std::shared_ptr<Entity> EntityRef;

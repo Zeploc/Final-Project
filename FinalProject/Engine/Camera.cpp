@@ -125,6 +125,8 @@ void Camera::FPSControls()
 
 	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_HOLD)
 		cameraPos += cameraUp * cameraSpeed;
+	else if (Input::GetInstance()->KeyState[(unsigned char)'q'] == Input::INPUT_HOLD)
+			cameraPos -= cameraUp * cameraSpeed;
 
 	glutWarpPointer((float)SCR_WIDTH * 0.5f, (float)SCR_HEIGHT * 0.5f);
 }

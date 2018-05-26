@@ -168,6 +168,15 @@
     <ClCompile Include="Engine\Time.cpp">
       <Filter>Engine\System</Filter>
     </ClCompile>
+    <ClCompile Include="AI.cpp">
+      <Filter>Game\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy1.cpp">
+      <Filter>Game\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Cube.cpp">
+      <Filter>Engine\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -267,6 +276,15 @@
       <Filter>Engine\Render</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Lighting.h">
+      <Filter>Engine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="AI.h">
+      <Filter>Game\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy1.h">
+      <Filter>Game\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Cube.h">
       <Filter>Engine\Render</Filter>
     </ClInclude>
   </ItemGroup>

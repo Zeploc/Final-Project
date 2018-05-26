@@ -72,13 +72,6 @@ void OnExit();
 ************************************************************/
 int main(int argc, char **argv)
 {
-	// Whats Up noob
-	// Fuck you
-
-	// It works?
-
-	 // New line
-
 	srand(unsigned int(time(NULL)));
 	// init GLUT and create Window
 	CAM->Init(1280, 720, glm::vec3(0, 0, 3), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));

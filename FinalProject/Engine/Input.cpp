@@ -107,7 +107,7 @@ void Input::Init()
 ************************************************************/
 void Input::processNormalKeysDown(unsigned char key, int x, int y)
 {
-	if (KeyState[key] == INPUT_RELEASED || KeyState[key] == INPUT_FIRST_RELEASE)
+	if (KeyState[key] == (INPUT_RELEASED | INPUT_FIRST_RELEASE))
 	{
 		KeyState[key] = INPUT_FIRST_PRESS;
 	}
@@ -121,7 +121,7 @@ void Input::processNormalKeysDown(unsigned char key, int x, int y)
 ************************************************************/
 void Input::processNormalKeysUp(unsigned char key, int x, int y)
 {
-	if (KeyState[key] == INPUT_HOLD || KeyState[key] == INPUT_FIRST_PRESS)
+	if (KeyState[key] == (INPUT_HOLD | INPUT_FIRST_PRESS))
 	{
 		KeyState[key] = INPUT_FIRST_RELEASE;
 	}
@@ -174,6 +174,7 @@ void Input::MouseButton(int button, int state, int x, int y)
 		}
 		
 	}
+
 }
 
 /************************************************************
@@ -206,6 +207,7 @@ void Input::Update()
 			MouseState[i] = INPUT_HOLD;
 		}
 	}
+	
 }
 
 /************************************************************
