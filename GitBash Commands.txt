@@ -46,34 +46,15 @@ git branch -a
 git branch <new branch name>
 	- Creates new branch
 	
+git branch -m <branch>
+	- Renames branch
+	
 git checkout <branch name>
 	- Checks out to new branch (Switch to branch)
 	
-
+git push -u origin <local branch>
+git push (needs to have done -u on that branch to link tracking)
+	- Pushes to remote repo
+	- u tells git to associate local branch with the remote branch of same type
 	
-
 	
-	
-	
-Checkout changes to master?
-	git checkout master
-	
-Get current version of master (so nothing is lost)
-	git pull origin master
-	(pull combines fetch and merge, so gets newest version, then updates/merges to that)
-	
-Get the current status of the branch
-	git status
-	
-
-Checkout local branch from master
-	git checkout -b LocalBranchName
-
-Add files/commit
-	git add .
-	
-Add commit with comment
-	git commit -m "Comment here"
-	
-Push Local master version to master on github
-	git push origin master
