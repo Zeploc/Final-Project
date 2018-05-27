@@ -57,4 +57,21 @@ git push (needs to have done -u on that branch to link tracking)
 	- Pushes to remote repo
 	- u tells git to associate local branch with the remote branch of same type
 	
+git branch --merged
+	- Shows branches that have been merged in so far
+
+git merge <branch>
+	- Merge with current --merged branches
 	
+ORDER IN UPDATING CHANGES
+git checkout <localbranch>
+git status 						// see the items to commit
+git add -A 						// git add .
+git commit -m "Message"
+git pull 						// pull latest personal branch
+git push 						// push new changes
+git checkout master 			// switch to master
+git pull origin master 			// Get remote master latest version onto local master
+git branch --merged 			// Show current to merge
+git merge <localbranch>			// merge personal branch with local master
+git push origin master			// push local master to remote master
