@@ -28,6 +28,11 @@ AI::~AI()
 
 glm::vec3 AI::SeekForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target)
 {
+	glm::vec3 DesiredVelocity = Source->transform.Position - Target->transform.Position;
+	float Distance = DesiredVelocity magnitude;
+	DesiredVelocity = Normalize(DesiredVelocity) * Maxvelocity;
+	glm::vec3 Steering = DesiredVelocity - 
+
 	return glm::vec3();
 }
 

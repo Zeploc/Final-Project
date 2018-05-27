@@ -14,6 +14,7 @@
 
 // OpenGL Library //
 #include <glm\common.hpp>
+#include <glm\matrix.hpp>
 
 // Engine Includes //
 #include "Engine\Entity.h"
