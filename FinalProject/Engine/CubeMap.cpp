@@ -23,6 +23,8 @@
 
 // OpenGL Includes //
 #include <SOIL.h>
+#include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtc\type_ptr.hpp>
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -73,36 +75,57 @@ void CubeMap::BindCubeMap()
 
 	GLfloat vertices[] = {
 		// Positions								// Colors			
-		-fHalfWidth, fHalfHeight, fHalfDepth,	// Top left front 0
-		fHalfWidth, fHalfHeight, fHalfDepth,	// Top right front 1
-		fHalfWidth, -fHalfHeight, fHalfDepth,	// Bottom left front 2
-		-fHalfWidth, -fHalfHeight, fHalfDepth,	// bottom right front 3
+		// Front Face
+		-fHalfWidth, fHalfHeight, fHalfDepth,	
+		fHalfWidth, fHalfHeight, fHalfDepth,	
+		fHalfWidth, -fHalfHeight, fHalfDepth,	
+		-fHalfWidth, -fHalfHeight, fHalfDepth,	
+		// Right Face
+		fHalfWidth, fHalfHeight, fHalfDepth,	
+		fHalfWidth, fHalfHeight, -fHalfDepth,	
+		fHalfWidth, -fHalfHeight, -fHalfDepth,	
+		fHalfWidth, -fHalfHeight, fHalfDepth,	
 		// Back Face
-		-fHalfWidth, fHalfHeight, -fHalfDepth,	//top left back 4
-		fHalfWidth, fHalfHeight, -fHalfDepth,	// top right back 5
-		-fHalfWidth, -fHalfHeight, -fHalfDepth,	// bottom left back 6
-		fHalfWidth, -fHalfHeight, -fHalfDepth	// bottom right back 7
+		fHalfWidth, fHalfHeight, -fHalfDepth,	
+		-fHalfWidth, fHalfHeight, -fHalfDepth,	
+		-fHalfWidth, -fHalfHeight, -fHalfDepth,	
+		fHalfWidth, -fHalfHeight, -fHalfDepth,	
+		// Left Face
+		-fHalfWidth, fHalfHeight, -fHalfDepth,	
+		-fHalfWidth, fHalfHeight, fHalfDepth,	
+		-fHalfWidth, -fHalfHeight, fHalfDepth,	
+		-fHalfWidth, -fHalfHeight, -fHalfDepth,	
+		// Top Face
+		-fHalfWidth, fHalfHeight, -fHalfDepth,	
+		fHalfWidth, fHalfHeight, -fHalfDepth,	
+		fHalfWidth, fHalfHeight, fHalfDepth,	
+		-fHalfWidth, fHalfHeight, fHalfDepth,	
+		// Bottom Face
+		-fHalfWidth, -fHalfHeight, fHalfDepth,	
+		fHalfWidth, -fHalfHeight, fHalfDepth,	
+		fHalfWidth, -fHalfHeight, -fHalfDepth,	
+		-fHalfWidth, -fHalfHeight, -fHalfDepth	
 	};
 
 	GLuint indices[] = {
-		// Right Face
-		1, 5, 7,
-		1, 7, 3,
-		// Left Face
-		0, 4, 6,
-		0, 6, 2,
-		// Top Face
-		0, 4, 5,
-		0, 5, 1,
-		// Bottom Face
-		2, 6, 7,
-		2, 7, 3,
-		// Back Face
-		5, 4, 6,
-		5, 6, 7,
 		// Front Face
 		0, 1, 2,
-		0, 2, 3
+		0, 2, 3,
+		// Right Face
+		4, 5, 6,
+		4, 6, 7,
+		// Back Face
+		8, 9, 10,
+		8, 10, 11,
+		// Left Face
+		12, 13, 14,
+		12, 14, 15,
+		// Top Face
+		16, 17, 18,
+		16, 18, 19,
+		// Bottom Face
+		20, 21, 22,
+		20, 22, 23
 	};
 	GLuint vbo;
 	GLuint ebo;
@@ -116,22 +139,20 @@ void CubeMap::BindCubeMap()
 	{
 		std::string fullPathName = "Resources/Textures/CubeMap/";
 		fullPathName.append(TextureSources[i]);
-		image = SOIL_load_image(fullPathName.c_str(), &width, &height, 0,
-			SOIL_LOAD_RGB);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
-			width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-		SOIL_free_image_data(image);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		image = SOIL_load_image(fullPathName.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,	width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	
 	}
 
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -170,7 +191,7 @@ void CubeMap::Render(Utils::Transform Newtransform)
 	glUseProgram(Shader::CubeMapProgram);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	glDisable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
+	//glDisable(GL_BLEND);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
@@ -179,7 +200,7 @@ void CubeMap::Render(Utils::Transform Newtransform)
 	Camera::GetInstance()->SetMVP(Newtransform);
 
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, sizeof (m_iIndicies) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 	glDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }

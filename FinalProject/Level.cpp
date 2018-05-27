@@ -54,6 +54,12 @@
 Level::Level(std::string sSceneName)
 	: Scene(sSceneName)
 {
+	std::shared_ptr<Entity> WorldCubeMap = std::make_shared<Entity>(Entity({ { 0, 0, 0 },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
+	char *  TextureSources[6] = { "right.jpg", "left.jpg" , "top.jpg" , "bottom.jpg" , "back.jpg" , "front.jpg" };
+	std::shared_ptr<CubeMap> WorldCubeMapMesh = std::make_shared<CubeMap>(CubeMap(1000.0f, 1000.0f, 1000.0f, TextureSources));
+	WorldCubeMap->AddMesh(WorldCubeMapMesh);
+	AddEntity(WorldCubeMap);
+	// Add cube map first so transpancy works
 	//std::shared_ptr<Player> Player(new Player(Utils::Transform{ glm::vec3(SpawnPos, 0.1f), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 1.50f, 1.11f, Utils::CENTER, glm::vec4(1.0, 1.0, 1.0, 1.0), "Resources/Player/adventurer-Sheet.png", glm::vec2(7, 11), 10));
 	
 	FPSCounterText = std::make_shared<UIText>(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 30.0f, Camera::GetInstance()->SCR_HEIGHT - 20.0f), 0.0f, glm::vec4(0.6, 0.6, 0.6, 1.0), "FPS:", "Resources/Fonts/Roboto-Condensed.ttf", 20, Utils::TOP_RIGHT);
@@ -82,7 +88,7 @@ Level::Level(std::string sSceneName)
 	PlainPyamid->AddMesh(PlainPyramidMesh);
 	AddEntity(PlainPyamid);
 	std::shared_ptr<Entity> TexturedPyramid = std::make_shared<Entity>(Entity({ glm::vec3(-1, -3, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-	std::shared_ptr<Pyramid> TexturedPyramidMesh = std::make_shared<Pyramid>(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "Resources/Enemy1.png");
+	std::shared_ptr<Pyramid> TexturedPyramidMesh = std::make_shared<Pyramid>(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "Resources/AwesomeFace.png");
 	TexturedPyramid->AddMesh(TexturedPyramidMesh);
 	AddEntity(TexturedPyramid);
 
@@ -103,11 +109,6 @@ Level::Level(std::string sSceneName)
 	NewEnemy->AddMesh(EnemeyMesh);
 	AddEntity(NewEnemy);
 
-	std::shared_ptr<Entity> WorldCubeMap = std::make_shared<Entity>(Entity({ { 0, 0, 0 }, { 0, 0, 0 }, { 1, 1, 1 } }, Utils::CENTER));
-	char *  TextureSources[6] = { "right.jpg", "left.jpg" , "top.jpg" , "bottom.jpg" , "back.jpg" , "front.jpg" };
-	std::shared_ptr<CubeMap> WorldCubeMapMesh = std::make_shared<CubeMap>(CubeMap(10.0f, 10.0f, 10.0f, TextureSources));
-	WorldCubeMap->AddMesh(WorldCubeMapMesh);
-	AddEntity(WorldCubeMap);
 
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//NewCursor->SetVisibleRange({ 500, 150 });
