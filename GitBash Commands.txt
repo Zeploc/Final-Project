@@ -1,8 +1,59 @@
-Locate to branch location (H:/Year 2/Final Project)
+Locate to branch location (H:/Year 2/Final Project) (Press tab to auto complete)
 	cd "/h/Year 2/Final Project"
+	cd H:/Year 2/Final Project
 	
-Display all branches
-	git branch -a
+origin - remote repository (online/serer)
+
+master - main branch on the repo
+
+COMMITING + PULLING/PUSHING
+git diff
+	- Gets difference in code on the branch from local to remote
+	
+git status
+	- Displays current branch's commit/staging status
+	- So whats added and whats untracked
+	
+git add <file>
+	- Adds file to stage ready to commit
+	
+git add -A
+git add .
+	- Adds all changed/untracked files to the stage ready to commit
+	
+git commit -m "Message"
+	- commits current staged files
+	- Adds file to repo
+	
+git log
+	- Shows all previous commits
+	
+git clone <url> <where to clone>
+	- Clone from url to location
+	
+git pull origin master
+	- Get the latest version of the master
+	
+git push origin master
+	- Pushes the local version to the remote (origin) version
+	
+	
+BRANCH:
+
+git branch -a
+	-Display all branches
+		
+git branch <new branch name>
+	- Creates new branch
+	
+git checkout <branch name>
+	- Checks out to new branch (Switch to branch)
+	
+
+	
+
+	
+	
 	
 Checkout changes to master?
 	git checkout master
