@@ -73,3 +73,46 @@
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
+
+
+	// Singleton
+public:
+	static std::shared_ptr<SceneManager> GetInstance();
+	static void DestoryInstance();
+	~SceneManager(); // Shared pointer has to be able to call destructor so can't be private
+
+private:
+	static std::shared_ptr<SceneManager> m_pSceneManager;
+	SceneManager();
+	SceneManager(SceneManager const&);              // Don't Implement
+	void operator=(SceneManager const&); // Don't implement
+
+	
+// Static Variables //
+std::shared_ptr<SceneManager> SceneManager::m_pSceneManager;
+
+	/************************************************************
+#--Description--#:  Retrieves static instance pointer to this class
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	NA
+#--Return--#: 		Returns static pointer to self
+************************************************************/
+std::shared_ptr<SceneManager> SceneManager::GetInstance()
+{
+	if (!m_pSceneManager) // null or doesn't exist
+	{
+		m_pSceneManager = std::shared_ptr<SceneManager>(new SceneManager());
+	}
+	return m_pSceneManager;
+}
+
+/************************************************************
+#--Description--#:  Destroys static instance pointer to this class
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	NA
+#--Return--#: 		NA
+************************************************************/
+void SceneManager::DestoryInstance()
+{
+	m_pSceneManager = nullptr;
+}

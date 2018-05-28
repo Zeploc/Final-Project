@@ -30,6 +30,7 @@
 #include "GameSettings.h"
 #include "LevelManager.h"
 #include "UIManager.h"
+#include "NetworkSystem.h"
 
 // This Includes //
 #include "Menu.h"
@@ -340,6 +341,7 @@ void HostGameScreen()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 	MenuRef->ToggleMenuSection(Menu::HOST);
+	NetworkSystem::GetInstance()->Init(SERVER);
 }
 
 /************************************************************

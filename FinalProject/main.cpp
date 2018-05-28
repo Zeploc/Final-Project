@@ -47,6 +47,7 @@
 #include "GameManager.h"
 #include "LevelManager.h"
 #include "UIManager.h"
+#include "NetworkSystem.h"
 
 // Static Function Prototypes //
 
@@ -152,6 +153,7 @@ void Update()
 	SceneManager::GetInstance()->UpdateCurrentScene();
 	UIManager::GetInstance()->Update();
 	Time::Update();
+	NetworkSystem::GetInstance()->Update();
 	SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 	glutPostRedisplay();
 }
@@ -186,7 +188,6 @@ void Init()
 	glutIgnoreKeyRepeat(1);
 
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
-
 
 	SoundManager::GetInstance()->InitFMod();
 	LevelManager::GetInstance()->Init();

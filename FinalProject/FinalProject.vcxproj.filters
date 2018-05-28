@@ -177,8 +177,17 @@
     <ClCompile Include="Engine\Cube.cpp">
       <Filter>Engine\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\CubeMap.cpp">
-      <Filter>Engine\Render</Filter>
+    <ClCompile Include="NetworkSystem.cpp">
+      <Filter>Game\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkEntity.cpp">
+      <Filter>Game\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Game\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Game\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -290,8 +299,17 @@
     <ClInclude Include="Engine\Cube.h">
       <Filter>Engine\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\CubeMap.h">
-      <Filter>Engine\Render</Filter>
+    <ClInclude Include="NetworkSystem.h">
+      <Filter>Game\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkEntity.h">
+      <Filter>Game\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Game\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Game\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
