@@ -189,6 +189,9 @@
     <ClCompile Include="Client.cpp">
       <Filter>Game\Network</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\CubeMap.cpp">
+      <Filter>Engine\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -310,6 +313,9 @@
     </ClInclude>
     <ClInclude Include="Server.h">
       <Filter>Game\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\CubeMap.h">
+      <Filter>Engine\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
