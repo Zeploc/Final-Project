@@ -45,7 +45,7 @@ public:
 
 	bool m_bFPS = false;
 
-	float cameraSpeed = 0.025f;
+	float cameraSpeed = 5.0f;
 
 	void Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm::vec3 ForwardVec, glm::vec3 UpVec);
 	void Update();
@@ -75,6 +75,7 @@ private:
 	PROJECTIONMODE m_ProjectionMode = ORTHAGRAPHIC;
 
 	float fWindowScale = 200;
+	float fMaxViewClipping = 2000.0f;
 
 	// Singleton
 public:

@@ -1,28 +1,77 @@
-Locate to branch location (H:/Year 2/Final Project)
+Locate to branch location (H:/Year 2/Final Project) (Press tab to auto complete)
 	cd "/h/Year 2/Final Project"
+	cd H:/Year 2/Final Project
 	
-Display all branches
-	git branch -a
-	
-Checkout changes to master?
-	git checkout master
-	
-Get current version of master (so nothing is lost)
-	git pull origin master
-	(pull combines fetch and merge, so gets newest version, then updates/merges to that)
-	
-Get the current status of the branch
-	git status
-	
+origin - remote repository (online/serer)
 
-Checkout local branch from master
-	git checkout -b LocalBranchName
+master - main branch on the repo
 
-Add files/commit
-	git add .
+COMMITING + PULLING/PUSHING
+git diff
+	- Gets difference in code on the branch from local to remote
 	
-Add commit with comment
-	git commit -m "Comment here"
+git status
+	- Displays current branch's commit/staging status
+	- So whats added and whats untracked
 	
-Push Local master version to master on github
-	git push origin master
+git add <file>
+	- Adds file to stage ready to commit
+	
+git add -A
+git add .
+	- Adds all changed/untracked files to the stage ready to commit
+	
+git commit -m "Message"
+	- commits current staged files
+	- Adds file to repo
+	
+git log
+	- Shows all previous commits
+	
+git clone <url> <where to clone>
+	- Clone from url to location
+	
+git pull origin master
+	- Get the latest version of the master
+	
+git push origin master
+	- Pushes the local version to the remote (origin) version
+	
+	
+BRANCH:
+
+git branch -a
+	-Display all branches
+		
+git branch <new branch name>
+	- Creates new branch
+	
+git branch -m <branch>
+	- Renames branch
+	
+git checkout <branch name>
+	- Checks out to new branch (Switch to branch)
+	
+git push -u origin <local branch>
+git push (needs to have done -u on that branch to link tracking)
+	- Pushes to remote repo
+	- u tells git to associate local branch with the remote branch of same type
+	
+git branch --merged
+	- Shows branches that have been merged in so far
+
+git merge <branch>
+	- Merge with current --merged branches
+	
+ORDER IN UPDATING CHANGES
+git checkout <localbranch>
+git status 						// see the items to commit
+git add -A 						// git add .
+git commit -m "Message"
+git pull 						// pull latest personal branch
+git push 						// push new changes
+git checkout master 			// switch to master
+git pull origin master 			// Get remote master latest version onto local master
+git branch --merged 			// Show current to merge
+git merge <localbranch>			// merge personal branch with local master
+git push origin master			// push local master to remote master

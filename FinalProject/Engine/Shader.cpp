@@ -35,6 +35,7 @@ GLuint Shader::Textureprogram;
 GLuint Shader::TextUIprogram;
 GLuint Shader::UIprogram;
 GLuint Shader::LitTextureprogram;
+GLuint Shader::CubeMapProgram;
 
 
 /************************************************************
