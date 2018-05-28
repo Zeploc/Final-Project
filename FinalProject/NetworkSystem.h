@@ -1,0 +1,64 @@
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2005 - 2018 Media Design School
+//
+// File Name    	:    NetworkSystem.h
+// Description    	:    Header file outlining the Class
+// Author       	:    Alex Coultas
+// Mail         	:    alex.cou7417@mediadesign.school.nz
+//
+
+// Library Includes //
+#include <memory>
+
+// Local Includes //
+#include "NetworkEntity.h"
+
+//Types
+enum EEntityType
+{
+	CLIENT = 1,
+	SERVER
+};
+
+//constants
+namespace
+{
+	unsigned const DEFAULT_SERVER_PORT = 50030;
+	unsigned const DEFAULT_CLIENT_PORT = 60013;
+	unsigned const MAX_MESSAGE_LENGTH = 256;
+	unsigned const MAX_ADDRESS_LENGTH = 32;
+	unsigned const MAX_PORT_LENGTH = 16;
+	unsigned const MAX_USERNAME_LENGTH = 50;
+}
+
+#pragma once
+class NetworkSystem
+{
+public:
+	void Init(EEntityType EntityType);
+	void Update();
+	void ShutDown();
+
+private:
+	bool m_bOnline;
+	char* m_pcPacketData = 0; //A local buffer to receive packet data info
+	
+	std::shared_ptr<NetworkEntity> m_pNetworkEntity;
+	// Singleton
+public:
+	static std::shared_ptr<NetworkSystem> GetInstance();
+	static void DestoryInstance();
+	~NetworkSystem(); // Shared pointer has to be able to call destructor so can't be private
+
+private:
+	static std::shared_ptr<NetworkSystem> m_pNetworkSystem;
+	NetworkSystem();
+	NetworkSystem(NetworkSystem const&);              // Don't Implement
+	void operator=(NetworkSystem const&); // Don't implement
+};
+

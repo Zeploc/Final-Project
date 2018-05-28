@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="Chat.cpp" />
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="Enemy1.cpp" />
     <ClCompile Include="Engine\Cube.cpp" />
     <ClCompile Include="Engine\Cursor.cpp" />
@@ -158,6 +159,8 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Engine\ParticleSystem.cpp" />
     <ClCompile Include="Engine\Mesh.cpp" />
+    <ClCompile Include="NetworkEntity.cpp" />
+    <ClCompile Include="NetworkSystem.cpp" />
     <ClCompile Include="OptionsScreen.cpp" />
     <ClCompile Include="Engine\Plane.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -170,11 +173,13 @@
     <ClCompile Include="Engine\Pyramid.cpp" />
     <ClCompile Include="ScoreTab.cpp" />
     <ClCompile Include="Engine\Sphere.cpp" />
+    <ClCompile Include="Server.cpp" />
     <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
     <ClInclude Include="Chat.h" />
+    <ClInclude Include="Client.h" />
     <ClInclude Include="Enemy1.h" />
     <ClInclude Include="Engine\Cube.h" />
     <ClInclude Include="Engine\Cursor.h" />
@@ -196,6 +201,8 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Engine\ParticleSystem.h" />
     <ClInclude Include="Engine\Mesh.h" />
+    <ClInclude Include="NetworkEntity.h" />
+    <ClInclude Include="NetworkSystem.h" />
     <ClInclude Include="OptionsScreen.h" />
     <ClInclude Include="Engine\Plane.h" />
     <ClInclude Include="Player.h" />
@@ -208,6 +215,7 @@
     <ClInclude Include="Engine\Pyramid.h" />
     <ClInclude Include="ScoreTab.h" />
     <ClInclude Include="Engine\Sphere.h" />
+    <ClInclude Include="Server.h" />
     <ClInclude Include="UIManager.h" />
   </ItemGroup>
   <ItemGroup>
