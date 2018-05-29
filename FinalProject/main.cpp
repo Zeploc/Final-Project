@@ -49,6 +49,9 @@
 #include "UIManager.h"
 #include "NetworkSystem.h"
 
+// make sure the winsock lib is included...
+#pragma comment(lib,"ws2_32.lib")
+
 // Static Function Prototypes //
 
 // Types //

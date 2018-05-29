@@ -192,6 +192,9 @@
     <ClCompile Include="Engine\CubeMap.cpp">
       <Filter>Engine\Render</Filter>
     </ClCompile>
+    <ClCompile Include="socket.cpp">
+      <Filter>Game\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -316,6 +319,12 @@
     </ClInclude>
     <ClInclude Include="Engine\CubeMap.h">
       <Filter>Engine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="socket.h">
+      <Filter>Game\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkQueue.h">
+      <Filter>Game\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

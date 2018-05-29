@@ -71,7 +71,6 @@ void NetworkSystem::Init(EEntityType EntityType)
 		m_pNetworkEntity->Initialise();
 
 		std::shared_ptr<Server> NewServerVer = std::dynamic_pointer_cast<Server>(m_pNetworkEntity);
-		std::thread(&Server::ReceiveData, NewServerVer, std::ref(m_pcPacketData));
 		break;
 	}
 	default:

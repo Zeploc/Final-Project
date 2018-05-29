@@ -14,11 +14,13 @@
 #pragma once
 // Local Includes //
 #include "NetworkEntity.h"
-//#include "socket.h"
-//#include "WorkQueue.h"
+#include "socket.h"
+#include "WorkQueue.h"
 
-// Library Includes //
+// Library Includes
+#define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
 #include <Windows.h>
+#include <WS2tcpip.h>
 
 class Server : public NetworkEntity
 {
@@ -39,12 +41,9 @@ private:
 	//Since it is a UDP socket capable of receiving from multiple clients; these details will change depending on who has sent the packet we are currently processing.
 	sockaddr_in m_ClientAddress;
 
-
-	//sockaddr_in m_ClientAddress;
-
-	//CSocket* m_pServerSocket;
+	CSocket* m_pServerSocket;
 
 	//A workQueue to distribute messages between the main thread and Receive thread.
-	//CWorkQueue<std::string>* m_pWorkQueue;
+	CWorkQueue<std::string>* m_pWorkQueue;
 };
 
