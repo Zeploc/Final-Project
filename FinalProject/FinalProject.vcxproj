@@ -175,6 +175,7 @@
     <ClCompile Include="ScoreTab.cpp" />
     <ClCompile Include="Engine\Sphere.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="ServerItem.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
@@ -219,8 +220,10 @@
     <ClInclude Include="ScoreTab.h" />
     <ClInclude Include="Engine\Sphere.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="ServerItem.h" />
     <ClInclude Include="socket.h" />
     <ClInclude Include="UIManager.h" />
+    <ClInclude Include="utils.h" />
     <ClInclude Include="WorkQueue.h" />
   </ItemGroup>
   <ItemGroup>

@@ -45,6 +45,23 @@ Server::Server()
 ************************************************************/
 Server::~Server()
 {
+	if (m_bOnline)
+	{
+		m_bOnline = false;
+		m_ReceiveThread.join();
+
+		delete m_pConnectedClients;
+		m_pConnectedClients = 0;
+
+		delete m_pServerSocket;
+		m_pServerSocket = 0;
+
+		delete m_pWorkQueue;
+		m_pWorkQueue = 0;
+
+		delete[] m_pcPacketData;
+		m_pcPacketData = 0;
+	}
 }
 
 /************************************************************
@@ -55,6 +72,7 @@ Server::~Server()
 ************************************************************/
 void Server::Initialise()
 {
+	m_bOnline = true;
 	m_pcPacketData = new char[MAX_MESSAGE_LENGTH];
 
 	//Create a work queue to distribute messages between the main  thread and the receive thread.
@@ -72,12 +90,12 @@ void Server::Initialise()
 	}
 
 	//Qs 2: Create the map to hold details of all connected clients
-	//m_pConnectedClients = new std::map < std::string, TClientDetails >();
-	m_ReceiveThread = std::thread(&Server::ReceiveData, this, std::ref(m_pcPacketData));
+	m_pConnectedClients = new std::map < std::string, TClientDetails >();
+	m_ReceiveThread = std::thread(&Server::ReceiveData, this);
 
 }
 
-void Server::ReceiveData(char * _pcBufferToReceiveData)
+void Server::ReceiveData()
 {
 	int iSizeOfAdd = sizeof(m_ClientAddress);
 	int _iNumOfBytesReceived;
@@ -86,7 +104,7 @@ void Server::ReceiveData(char * _pcBufferToReceiveData)
 	//Receive data into a local buffer
 	char _buffer[MAX_MESSAGE_LENGTH];
 
-	while (true)
+	while (m_bOnline)
 	{
 		 //pull off the packet(s) using recvfrom()
 		_iNumOfBytesReceived = recvfrom(			// pulls a packet from a single source...
@@ -100,17 +118,16 @@ void Server::ReceiveData(char * _pcBufferToReceiveData)
 		if (_iNumOfBytesReceived < 0)
 		{
 			int _iError = WSAGetLastError();
-			//ErrorRoutines::PrintWSAErrorInfo(_iError);
+			ErrorRoutines::PrintWSAErrorInfo(_iError);
 			//return false;
 		}
 		else
 		{
-			_iPacketSize = static_cast<int>(strlen(_buffer)) + 1;
-			strcpy_s(_pcBufferToReceiveData, _iPacketSize, _buffer);
+			std::string NewData(_buffer);
 			char _IPAddress[100];
-			//inet_ntop(AF_INET, &m_ClientAddress.sin_addr, _IPAddress, sizeof(_IPAddress));
+			inet_ntop(AF_INET, &m_ClientAddress.sin_addr, _IPAddress, sizeof(_IPAddress));
 
-			std::cout << "Server Received \"" << _pcBufferToReceiveData << "\" from " <<
+			std::cout << "Server Received \"" << NewData << "\" from " <<
 				_IPAddress << ":" << ntohs(m_ClientAddress.sin_port) << std::endl;
 			/*if (int(_pcBufferToReceiveData[0] - '0') == KEEPALIVE)
 			{
@@ -122,8 +139,45 @@ void Server::ReceiveData(char * _pcBufferToReceiveData)
 			else
 			{*/
 				//Push this packet data into the WorkQ
-				//m_pWorkQueue->push(_pcBufferToReceiveData);
+				m_pWorkQueue->push(NewData);
 			//}
+		}
+	}
+}
+
+bool Server::SendData(char * _pcDataToSend)
+{
+	int _iBytesToSend = (int)strlen(_pcDataToSend) + 1;
+
+	int iNumBytes = sendto(
+		m_pServerSocket->GetSocketHandle(),				// socket to send through.
+		_pcDataToSend,									// data to send
+		_iBytesToSend,									// number of bytes to send
+		0,												// flags
+		reinterpret_cast<sockaddr*>(&m_ClientAddress),	// address to be filled with packet target
+		sizeof(m_ClientAddress)							// size of the above address struct.
+	);
+	if (_iBytesToSend != iNumBytes)
+	{
+		std::cout << "There was an error in sending data from server to client" << std::endl; //Changed
+		return false;
+	}
+	return true;
+}
+
+void Server::ProcessData(std::string _DataReceived)
+{
+	TPacket _packetRecvd, _packetToSend;
+	_packetRecvd = _packetRecvd.Deserialize(_DataReceived);
+	switch (_packetRecvd.MessageType)
+	{
+		case BROADCAST:
+		{
+			std::cout << "Received a broadcast packet" << std::endl;
+			//Just send out a packet to the back to the client again which will have the server's IP and port in it's sender fields
+			_packetToSend.Serialize(BROADCAST, "0 Server Name!");
+			SendData(_packetToSend.PacketData);
+			break;
 		}
 	}
 }
@@ -136,5 +190,11 @@ void Server::ReceiveData(char * _pcBufferToReceiveData)
 ************************************************************/
 void Server::Update()
 {
-
+	if (!m_pWorkQueue->empty())
+	{
+		std::string temp;
+		//Retrieve off a message from the queue and process it
+		m_pWorkQueue->pop(temp);
+		ProcessData(temp);
+	}
 }

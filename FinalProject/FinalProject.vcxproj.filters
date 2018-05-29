@@ -195,6 +195,9 @@
     <ClCompile Include="socket.cpp">
       <Filter>Game\Network</Filter>
     </ClCompile>
+    <ClCompile Include="ServerItem.cpp">
+      <Filter>Game\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -324,6 +327,12 @@
       <Filter>Game\Network</Filter>
     </ClInclude>
     <ClInclude Include="WorkQueue.h">
+      <Filter>Game\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Game\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerItem.h">
       <Filter>Game\Network</Filter>
     </ClInclude>
   </ItemGroup>

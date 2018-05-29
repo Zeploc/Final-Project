@@ -31,6 +31,7 @@
 #include "LevelManager.h"
 #include "UIManager.h"
 #include "NetworkSystem.h"
+#include "Client.h"
 
 // This Includes //
 #include "Menu.h"
@@ -44,6 +45,7 @@ void MenuScreen();
 void OptionsScreen();
 void HostGameScreen();
 void JoinGameScreen();
+void SearchForServers();
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -124,13 +126,20 @@ Menu::Menu(std::string sSceneName)
 	std::shared_ptr<UIButton> JoinGameBackBtn(new UIButton(glm::vec2(0, Camera::GetInstance()->SCR_HEIGHT), Utils::BOTTOM_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 80, MenuScreen));
 	JoinGameBackBtn->AddText("Back", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	JoinGameBackBtn->SetActive(false);
+	std::shared_ptr<UIButton> SendBroadcastBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 100), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 80, SearchForServers));
+	SendBroadcastBtn->AddText("Refresh", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+	SendBroadcastBtn->SetActive(false);
+
 	// Add elements to scene UI elements
 	AddUITextElement(JoinText);
 	AddUIElement(JoinGameBackBtn);
+	AddUIElement(SendBroadcastBtn);
 	// Add elements to vector list
 	v_JoinGameElements.push_back(JoinText);
 	v_JoinGameElements.push_back(JoinGameBackBtn);
+	v_JoinGameElements.push_back(SendBroadcastBtn);
 
+	ServerListPos = { Camera::GetInstance()->SCR_WIDTH / 2, 400 };
 		
 	// Add cursor
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
@@ -221,24 +230,35 @@ void Menu::ToggleMenuSection(MENUSECTION _NewSection)
 	// Show all elements in the corresponding section
 	switch (m_CurrentSection)
 	{
-	case Menu::MAIN:
+	case MAIN:
 		for (auto it : v_MenuElements)
 			it->SetActive(true);
 		break;
-	case Menu::OPTIONS:
+	case OPTIONS:
 		for (auto it : v_OptionsElements)
 			it->SetActive(true);
 		break;
-	case Menu::HOST:
+	case HOST:
 		for (auto it : v_HostGameElements)
 			it->SetActive(true);
 		break;
-	case Menu::JOIN:
+	case JOIN:
 		for (auto it : v_JoinGameElements)
 			it->SetActive(true);
 		break;
 	default:
 		break;
+	}
+}
+
+void Menu::AddServers(std::vector<ServerInfo> Servers)
+{
+	for (int i = 0; i < Servers.size(); i++)
+	{
+		glm::vec2 NewPos = ServerListPos;
+		NewPos.y += i * 100;
+		ServerItem NewServerItem(Servers[i], NewPos);
+		v_ServerList.push_back(NewServerItem);
 	}
 }
 
@@ -316,7 +336,7 @@ void ExitGame()
 void MenuScreen()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
-	MenuRef->ToggleMenuSection(Menu::MAIN);
+	MenuRef->ToggleMenuSection(MAIN);
 }
 
 /************************************************************
@@ -328,7 +348,7 @@ void MenuScreen()
 void OptionsScreen()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
-	MenuRef->ToggleMenuSection(Menu::OPTIONS);
+	MenuRef->ToggleMenuSection(OPTIONS);
 }
 
 /************************************************************
@@ -340,7 +360,7 @@ void OptionsScreen()
 void HostGameScreen()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
-	MenuRef->ToggleMenuSection(Menu::HOST);
+	MenuRef->ToggleMenuSection(HOST);
 	NetworkSystem::GetInstance()->Init(SERVER);
 }
 
@@ -353,5 +373,13 @@ void HostGameScreen()
 void JoinGameScreen()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
-	MenuRef->ToggleMenuSection(Menu::JOIN);
+	MenuRef->ToggleMenuSection(JOIN);
+	NetworkSystem::GetInstance()->Init(CLIENT);
+}
+
+void SearchForServers()
+{
+	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
+	MenuRef->ClearServerList();
+	std::dynamic_pointer_cast<Client>(NetworkSystem::GetInstance()->m_pNetworkEntity)->BroadcastForServers();
 }

@@ -14,6 +14,12 @@
 #pragma once
 // Local Includes //
 #include "NetworkEntity.h"
+#include "socket.h"
+#include "WorkQueue.h"
+#include "ServerItem.h"
+
+// Library Includes //
+#include <vector>
 
 class Client :	public NetworkEntity
 {
@@ -22,7 +28,29 @@ public:
 	~Client();
 
 	void Initialise();
-	void ReceiveData(char* _pcBufferToReceiveData);
+	bool SendData(char* _pcDataToSend);
+	void ReceiveData();
+	void ProcessData(std::string _DataReceived);
 	void Update();
+
+	bool BroadcastForServers();
+private:
+	void ReceiveBroadcastMessages(char* _pcBufferToReceiveData);
+
+private:
+	//A buffer to contain all packet data for the client
+	//char* m_pcPacketData;
+	//A client has a socket object to create the UDP socket at its end.
+	CSocket * m_pClientSocket;
+	// A Sockaddress structure which will have the details of the server 
+	sockaddr_in m_ServerSocketAddress;
+	//A username to associate with a client
+	char m_cUserName[50];
+	//A workQueue to distribute messages between the main thread and Receive thread.
+	CWorkQueue<std::string>* m_pWorkQueue;
+
+	//A vector to hold all the servers found after broadcasting
+	std::vector<ServerInfo> m_vecServerAddr;
+	bool m_bDoBroadcast;
 };
 

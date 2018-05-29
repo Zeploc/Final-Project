@@ -14,7 +14,7 @@
 //
 
 // Library Includes //
-
+#include <WinSock2.h>
 // OpenGL Library Includes //
 
 // Engine Includes //
@@ -23,6 +23,7 @@
 #include "Engine\UIButton.h"
 
 // Local Includes //
+#include "ServerItem.h"
 
 // This Includes //
 
@@ -30,16 +31,19 @@
 
 #pragma once
 
+
+enum MENUSECTION
+{
+	MAIN,
+	OPTIONS,
+	HOST,
+	JOIN
+};
+
+
 class Menu : public Scene
 {
 public:
-	enum MENUSECTION
-	{
-		MAIN,
-		OPTIONS,
-		HOST,
-		JOIN
-	};
 
 	Menu(std::string sSceneName);
 	~Menu();
@@ -49,6 +53,10 @@ public:
 	void OnLoadScene();
 	void PlayRandomTrack();
 	void ToggleMenuSection(MENUSECTION);
+	void ClearServerList() { v_ServerList.clear(); };
+
+	void AddServers(std::vector<ServerInfo> Servers);
+
 	//void ToggleInstructions();
 private:
 	glm::vec2 ButtonPositions[3];
@@ -59,5 +67,8 @@ private:
 	std::vector<std::shared_ptr<UIElement>> v_JoinGameElements;
 	MENUSECTION m_CurrentSection = MAIN;
 	std::shared_ptr<UIImage> m_Arrow;
+
+	std::vector<ServerItem> v_ServerList;
+	glm::vec2 ServerListPos;
 };
 

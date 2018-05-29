@@ -25,6 +25,11 @@ enum EEntityType
 	SERVER
 };
 
+namespace ErrorRoutines
+{
+	void PrintWSAErrorInfo(int iError);
+}
+
 //constants
 namespace
 {
@@ -44,11 +49,12 @@ public:
 	void Update();
 	void ShutDown();
 
+	std::shared_ptr<NetworkEntity> m_pNetworkEntity;
+
 private:
 	bool m_bOnline;
 	char* m_pcPacketData = 0; //A local buffer to receive packet data info
 	
-	std::shared_ptr<NetworkEntity> m_pNetworkEntity;
 	// Singleton
 public:
 	static std::shared_ptr<NetworkSystem> GetInstance();

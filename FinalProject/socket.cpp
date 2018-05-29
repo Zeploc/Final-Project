@@ -45,7 +45,7 @@ bool CSocket::Initialise(unsigned short _usPortNumber)
 	if (INVALID_SOCKET == m_hSocket)
 	{
 		_iError = WSAGetLastError();
-		//ErrorRoutines::PrintWSAErrorInfo(_iError);
+		ErrorRoutines::PrintWSAErrorInfo(_iError);
 		std::cout << "Unable to create socket\n";
 		return false;
 	}
@@ -113,7 +113,7 @@ int CSocket::EnableBroadcast()
 	if (_iResult == SOCKET_ERROR)
 	{
 		int _iError = WSAGetLastError();
-		//ErrorRoutines::PrintWSAErrorInfo(_iError);
+		ErrorRoutines::PrintWSAErrorInfo(_iError);
 		std::cout << "Unable to enable broadcast option on the socket" << std::endl;
 		closesocket(m_hSocket);
 		return _iError;
@@ -130,7 +130,7 @@ int CSocket::DisableBroadcast()
 	if (_iResult == SOCKET_ERROR)
 	{
 		int _iError = WSAGetLastError();
-		//ErrorRoutines::PrintWSAErrorInfo(_iError);
+		ErrorRoutines::PrintWSAErrorInfo(_iError);
 		std::cout << "Unable to disable broadcast option on the socket" << std::endl;
 		closesocket(m_hSocket);
 		return _iError;
