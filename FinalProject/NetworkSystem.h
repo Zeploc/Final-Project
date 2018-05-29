@@ -17,6 +17,7 @@
 
 // Local Includes //
 #include "NetworkEntity.h"
+#include "ServerItem.h"
 
 //Types
 enum EEntityType
@@ -45,7 +46,8 @@ namespace
 class NetworkSystem
 {
 public:
-	void Init(EEntityType EntityType);
+	void InitClient();
+	void InitServer(ServerInfo NewServerProperties);
 	void Update();
 	void ShutDown();
 

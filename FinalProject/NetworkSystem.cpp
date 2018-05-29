@@ -44,12 +44,12 @@ NetworkSystem::~NetworkSystem()
 }
 
 /************************************************************
-#--Description--#:  Initialises the class based on entity type
+#--Description--#:  Initialises the class based for Client
 #--Author--#: 		Alex Coultas
 #--Parameters--#:	Entity Type for network
 #--Return--#: 		NA
 ************************************************************/
-void NetworkSystem::Init(EEntityType EntityType)
+void NetworkSystem::InitClient()
 {
 	m_pcPacketData = new char[MAX_MESSAGE_LENGTH];
 	strcpy_s(m_pcPacketData, strlen("") + 1, "");
@@ -62,32 +62,34 @@ void NetworkSystem::Init(EEntityType EntityType)
 		//Diagnostic error messages to be added!!
 	}
 	m_bOnline = true;
-	switch (EntityType)
-	{
-	case CLIENT:
-	{
-		m_pNetworkEntity = std::make_shared<Client>();
-		m_pNetworkEntity->Initialise();
 
-		//std::shared_ptr<Client> NewClientVer = std::dynamic_pointer_cast<Client>(m_pNetworkEntity);
-		//m_pNetworkEntity->m_ReceiveThread = std::thread(&Client::ReceiveData, NewClientVer, std::ref(m_pcPacketData));
-		break;
-	}
-	case SERVER:
-	{
-		//Server NewServer;
-		m_pNetworkEntity = std::make_shared<Server>();
-		m_pNetworkEntity->Initialise();
+	m_pNetworkEntity = std::make_shared<Client>();
+	m_pNetworkEntity->Initialise();
+}
 
-		//m_pNetworkEntity = std::move(NewServerVer);
-		break;
-	}
-	default:
+/************************************************************
+#--Description--#:  Initialises the class based for Server
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	Entity Type for network
+#--Return--#: 		NA
+************************************************************/
+void NetworkSystem::InitServer(ServerInfo NewServerProperties)
+{
+	m_pcPacketData = new char[MAX_MESSAGE_LENGTH];
+	strcpy_s(m_pcPacketData, strlen("") + 1, "");
+	// startup windows sockets:
+	WSADATA wsaData;
+	int _iError;
+	if (WSAStartup(0x0202, &wsaData) != 0)
 	{
-		//Add some error handling in here
-		break;
+		_iError = WSAGetLastError();
+		//Diagnostic error messages to be added!!
 	}
-	}
+	m_bOnline = true;
+
+
+	m_pNetworkEntity = std::make_shared<Server>();
+	std::dynamic_pointer_cast<Server>(m_pNetworkEntity)->Initialise(NewServerProperties);
 }
 
 /************************************************************

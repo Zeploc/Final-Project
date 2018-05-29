@@ -64,13 +64,21 @@ Server::~Server()
 	}
 }
 
+void Server::Initialise()
+{
+	ServerInfo DefaultServer;
+	DefaultServer._ServerName = "Default Server";
+	DefaultServer._iPlayers = 2;
+	Initialise(DefaultServer);
+}
+
 /************************************************************
 #--Description--#:  Initialises the class
 #--Author--#: 		Alex Coultas
 #--Parameters--#:	NA
 #--Return--#: 		NA
 ************************************************************/
-void Server::Initialise()
+void Server::Initialise(ServerInfo NewServerProperties)
 {
 	m_bOnline = true;
 	m_pcPacketData = new char[MAX_MESSAGE_LENGTH];
@@ -92,7 +100,7 @@ void Server::Initialise()
 	//Qs 2: Create the map to hold details of all connected clients
 	m_pConnectedClients = new std::map < std::string, TClientDetails >();
 	m_ReceiveThread = std::thread(&Server::ReceiveData, this);
-
+	CurrentServerProperties = NewServerProperties;
 }
 
 void Server::ReceiveData()
@@ -174,8 +182,9 @@ void Server::ProcessData(std::string _DataReceived)
 		case BROADCAST:
 		{
 			std::cout << "Received a broadcast packet" << std::endl;
+			std::string ServerProperties = std::to_string(CurrentServerProperties._iPlayers) + " " + CurrentServerProperties._ServerName;
 			//Just send out a packet to the back to the client again which will have the server's IP and port in it's sender fields
-			_packetToSend.Serialize(BROADCAST, "0 Server Name!");
+			_packetToSend.Serialize(BROADCAST, const_cast<char*>(ServerProperties.c_str()));
 			SendData(_packetToSend.PacketData);
 			break;
 		}

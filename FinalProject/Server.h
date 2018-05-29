@@ -16,6 +16,7 @@
 #include "NetworkEntity.h"
 #include "socket.h"
 #include "WorkQueue.h"
+#include "ServerItem.h"
 
 // Library Includes
 #define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
@@ -39,6 +40,7 @@ public:
 	~Server();
 
 	void Initialise();
+	void Initialise(ServerInfo NewServerProperties);
 	void ReceiveData();
 	bool SendData(char* _pcDataToSend);
 	void ProcessData(std::string _DataReceived);
@@ -53,6 +55,7 @@ private:
 	//Since it is a UDP socket capable of receiving from multiple clients; these details will change depending on who has sent the packet we are currently processing.
 	sockaddr_in m_ClientAddress;
 
+	ServerInfo CurrentServerProperties;
 
 	//The structure maps client addresses to client details
 	std::map<std::string, TClientDetails>* m_pConnectedClients;

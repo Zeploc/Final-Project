@@ -21,6 +21,7 @@
 #include "Engine\Scene.h"
 #include "Engine\UIImage.h"
 #include "Engine\UIButton.h"
+#include "Engine\UISlider.h"
 
 // Local Includes //
 #include "ServerItem.h"
@@ -37,7 +38,8 @@ enum MENUSECTION
 	MAIN,
 	OPTIONS,
 	HOST,
-	JOIN
+	JOIN,
+	LOBBY
 };
 
 
@@ -53,9 +55,12 @@ public:
 	void OnLoadScene();
 	void PlayRandomTrack();
 	void ToggleMenuSection(MENUSECTION);
+	void GoToLobby();
 	void ClearServerList() { v_ServerList.clear(); };
 
 	void AddServers(std::vector<ServerInfo> Servers);
+	std::shared_ptr<UISlider> PlayersCountSlider;
+	std::shared_ptr<UIText> ServerName;
 
 	//void ToggleInstructions();
 private:
@@ -65,6 +70,7 @@ private:
 	std::vector<std::shared_ptr<UIElement>> v_OptionsElements;
 	std::vector<std::shared_ptr<UIElement>> v_HostGameElements;
 	std::vector<std::shared_ptr<UIElement>> v_JoinGameElements;
+	std::vector<std::shared_ptr<UIElement>> v_LobbyElements;
 	MENUSECTION m_CurrentSection = MAIN;
 	std::shared_ptr<UIImage> m_Arrow;
 

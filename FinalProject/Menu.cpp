@@ -46,6 +46,7 @@ void OptionsScreen();
 void HostGameScreen();
 void JoinGameScreen();
 void SearchForServers();
+void StartHost();
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -113,12 +114,29 @@ Menu::Menu(std::string sSceneName)
 	std::shared_ptr<UIButton> HostGameBackBtn(new UIButton(glm::vec2(0, Camera::GetInstance()->SCR_HEIGHT), Utils::BOTTOM_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 80, MenuScreen));
 	HostGameBackBtn->AddText("Back", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	HostGameBackBtn->SetActive(false);
+	PlayersCountSlider = std::make_shared<UISlider>(UISlider({ Camera::GetInstance()->SCR_WIDTH / 2, 300.0f }, 0, { 0.2f, 0.2f, 0.2f, 1.0f }, { 0.6f, 0.6f, 0.6f, 1.0f }, 300, 20, 40, 10, Utils::CENTER, "Players Count:"));
+	PlayersCountSlider->SetMinimumPosition(2.0f);
+	PlayersCountSlider->SetMaximumPosition(4.0f);
+	PlayersCountSlider->SetLockSize(1.0f);
+	PlayersCountSlider->SetStartPosition(2.0f);
+	PlayersCountSlider->SetActive(false);
+	std::shared_ptr<UIButton> StartHostBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 120), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 420, 60, StartHost));
+	StartHostBtn->AddText("Start Host", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+	StartHostBtn->SetActive(false);
+	ServerName = std::make_shared<UIText>(UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 500.0f), 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Server Name", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
+	ServerName->SetActive(false);
 	// Add elements to scene UI elements
 	AddUITextElement(HostText);
 	AddUIElement(HostGameBackBtn);
+	AddUIElement(PlayersCountSlider);
+	AddUIElement(StartHostBtn);
+	AddUITextElement(ServerName);
 	// Add elements to vector list
 	v_HostGameElements.push_back(HostText);
 	v_HostGameElements.push_back(HostGameBackBtn);
+	v_HostGameElements.push_back(PlayersCountSlider);
+	v_HostGameElements.push_back(StartHostBtn);
+	v_HostGameElements.push_back(ServerName);
 
 	// Add Join Elements
 	std::shared_ptr<UIText> JoinText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Join Game:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
@@ -126,7 +144,7 @@ Menu::Menu(std::string sSceneName)
 	std::shared_ptr<UIButton> JoinGameBackBtn(new UIButton(glm::vec2(0, Camera::GetInstance()->SCR_HEIGHT), Utils::BOTTOM_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 80, MenuScreen));
 	JoinGameBackBtn->AddText("Back", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	JoinGameBackBtn->SetActive(false);
-	std::shared_ptr<UIButton> SendBroadcastBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 100), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 80, SearchForServers));
+	std::shared_ptr<UIButton> SendBroadcastBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 120), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 420, 60, SearchForServers));
 	SendBroadcastBtn->AddText("Refresh", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	SendBroadcastBtn->SetActive(false);
 
@@ -139,7 +157,7 @@ Menu::Menu(std::string sSceneName)
 	v_JoinGameElements.push_back(JoinGameBackBtn);
 	v_JoinGameElements.push_back(SendBroadcastBtn);
 
-	ServerListPos = { Camera::GetInstance()->SCR_WIDTH / 2, 400 };
+	ServerListPos = { Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 400 };
 		
 	// Add cursor
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
@@ -224,6 +242,9 @@ void Menu::ToggleMenuSection(MENUSECTION _NewSection)
 		it->SetActive(false);
 	for (auto it : v_JoinGameElements)
 		it->SetActive(false);
+	for (auto it : v_LobbyElements)
+		it->SetActive(false);
+	
 	// Set current Section to new section
 	m_CurrentSection = _NewSection;
 
@@ -246,9 +267,18 @@ void Menu::ToggleMenuSection(MENUSECTION _NewSection)
 		for (auto it : v_JoinGameElements)
 			it->SetActive(true);
 		break;
+	case LOBBY:
+		for (auto it : v_LobbyElements)
+			it->SetActive(true);
+		break;
 	default:
 		break;
 	}
+}
+
+void Menu::GoToLobby()
+{
+
 }
 
 void Menu::AddServers(std::vector<ServerInfo> Servers)
@@ -261,46 +291,6 @@ void Menu::AddServers(std::vector<ServerInfo> Servers)
 		v_ServerList.push_back(NewServerItem);
 	}
 }
-
-///************************************************************
-//#--Description--#:  Toggle instructions
-//#--Author--#: 		Alex Coultas
-//#--Parameters--#:	NA
-//#--Return--#: 		NA
-//************************************************************/
-//void Menu::ToggleInstructions()
-//{
-//	if (m_bOptionsVisible)
-//	{
-//		m_bOptionsVisible = false;
-//		for (unsigned int i = 0; i < v_MenuElements.size(); i++)
-//		{
-//			if (i != 1) v_MenuElements[i]->SetActive(true);
-//		}
-//		for (auto it : v_OptionsElements)
-//		{
-//			it->SetActive(false);
-//		}
-//		v_MenuElements[1]->SetPosition(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 + 100));
-//		v_MenuElements[1]->TextComponent.sText = "INSTRUCTIONS";
-//		m_Arrow->SetActive(true);
-//	}
-//	else
-//	{
-//		m_bOptionsVisible = true;
-//		for (unsigned int i = 0; i < v_MenuElements.size(); i++)
-//		{
-//			if (i != 1) v_MenuElements[i]->SetActive(false);
-//		}
-//		for (auto it : v_OptionsElements)
-//		{
-//			it->SetActive(true);
-//		}
-//		v_MenuElements[1]->SetPosition({ 280, Camera::GetInstance()->SCR_HEIGHT - 40 });
-//		v_MenuElements[1]->TextComponent.sText = "BACK";
-//		m_Arrow->SetActive(false);
-//	}
-//}
 
 /************************************************************
 #--Description--#:  Local start game button
@@ -361,7 +351,6 @@ void HostGameScreen()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 	MenuRef->ToggleMenuSection(HOST);
-	NetworkSystem::GetInstance()->Init(SERVER);
 }
 
 /************************************************************
@@ -374,7 +363,7 @@ void JoinGameScreen()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 	MenuRef->ToggleMenuSection(JOIN);
-	NetworkSystem::GetInstance()->Init(CLIENT);
+	NetworkSystem::GetInstance()->InitClient();
 }
 
 void SearchForServers()
@@ -382,4 +371,13 @@ void SearchForServers()
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 	MenuRef->ClearServerList();
 	std::dynamic_pointer_cast<Client>(NetworkSystem::GetInstance()->m_pNetworkEntity)->BroadcastForServers();
+}
+
+void StartHost()
+{
+	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
+	ServerInfo NewProperties;
+	NewProperties._iPlayers = (int)MenuRef->PlayersCountSlider->GetValue();
+	NewProperties._ServerName = MenuRef->ServerName->sText;
+	NetworkSystem::GetInstance()->InitServer(NewProperties);
 }
