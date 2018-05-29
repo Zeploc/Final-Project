@@ -34,7 +34,7 @@ glm::vec3 AI::SeekForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> 
 	float Distance = DesiredVelocity.length();// magnitude
 	DesiredVelocity = glm::normalize(DesiredVelocity);// * Maxvelocity;
 	glm::vec3 Steering = DesiredVelocity;// - ;
-
+	//Bungus
 	return glm::vec3();
 }
 
