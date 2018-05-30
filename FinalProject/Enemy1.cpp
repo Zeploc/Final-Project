@@ -34,5 +34,5 @@ Enemy1::~Enemy1()
 
 void Enemy1::Update()
 {
-	if (Target) transform.Position += AI::SeekDirection(this->shared_from_this(), Target) *  m_fSpeed * (float)Time::dTimeDelta;
+	if (Target) transform.Position += AI::SeekDirection(this->shared_from_this(), Target->transform.Position) *  m_fSpeed * (float)Time::dTimeDelta;
 }

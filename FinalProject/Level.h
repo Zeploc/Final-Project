@@ -52,6 +52,8 @@ public:
 
 	std::shared_ptr<Player> EPlayer;
 
+	std::shared_ptr<Entity> TempTarget;
+
 	std::vector<std::shared_ptr<Entity>> Collidables;
 	std::vector<std::shared_ptr<Entity>> Enemies;
 
