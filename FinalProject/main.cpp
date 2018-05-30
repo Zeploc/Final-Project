@@ -48,6 +48,7 @@
 #include "LevelManager.h"
 #include "UIManager.h"
 #include "NetworkSystem.h"
+#include "NetworkManager.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
@@ -156,7 +157,7 @@ void Update()
 	SceneManager::GetInstance()->UpdateCurrentScene();
 	UIManager::GetInstance()->Update();
 	Time::Update();
-	NetworkSystem::GetInstance()->Update();
+	NetworkManager::GetInstance()->m_Network.Update();
 	SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 	glutPostRedisplay();
 }

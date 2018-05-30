@@ -15,8 +15,6 @@
 // This Includes //
 #include "NetworkSystem.h"
 
-// Static Variables //
-std::shared_ptr<NetworkSystem> NetworkSystem::m_pNetworkSystem;
 
 // Local Includes //
 #include "Client.h"
@@ -118,31 +116,6 @@ void NetworkSystem::ShutDown()
 	m_bOnline = false;
 }
 
-/************************************************************
-#--Description--#:  Retrieves static instance pointer to this class
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		Returns static pointer to self
-************************************************************/
-std::shared_ptr<NetworkSystem> NetworkSystem::GetInstance()
-{
-	if (!m_pNetworkSystem) // null or doesn't exist
-	{
-		m_pNetworkSystem = std::shared_ptr<NetworkSystem>(new NetworkSystem());
-	}
-	return m_pNetworkSystem;
-}
-
-/************************************************************
-#--Description--#:  Destroys static instance pointer to this class
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		NA
-************************************************************/
-void NetworkSystem::DestoryInstance()
-{
-	m_pNetworkSystem = nullptr;
-}
 
 void ErrorRoutines::PrintWSAErrorInfo(int iError)
 {

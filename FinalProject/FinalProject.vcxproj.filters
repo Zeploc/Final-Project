@@ -198,6 +198,9 @@
     <ClCompile Include="ServerItem.cpp">
       <Filter>Game\Network</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -334,6 +337,9 @@
     </ClInclude>
     <ClInclude Include="ServerItem.h">
       <Filter>Game\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -161,6 +161,7 @@
     <ClCompile Include="Engine\ParticleSystem.cpp" />
     <ClCompile Include="Engine\Mesh.cpp" />
     <ClCompile Include="NetworkEntity.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="NetworkSystem.cpp" />
     <ClCompile Include="OptionsScreen.cpp" />
     <ClCompile Include="Engine\Plane.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="Engine\ParticleSystem.h" />
     <ClInclude Include="Engine\Mesh.h" />
     <ClInclude Include="NetworkEntity.h" />
+    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="NetworkSystem.h" />
     <ClInclude Include="OptionsScreen.h" />
     <ClInclude Include="Engine\Plane.h" />

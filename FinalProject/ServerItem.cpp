@@ -17,6 +17,7 @@
 
 // Local Includes //
 #include "utils.h"
+#include "NetworkManager.h"
 
 // Engine Includes //
 #include "Engine\SceneManager.h"
@@ -39,4 +40,5 @@ ServerItem::~ServerItem()
 
 void JoinSerer()
 {
+	NetworkManager::GetInstance()->JoinServer(CurrentServerInfo);
 }

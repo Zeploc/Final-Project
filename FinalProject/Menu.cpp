@@ -32,6 +32,7 @@
 #include "UIManager.h"
 #include "NetworkSystem.h"
 #include "Client.h"
+#include "NetworkManager.h"
 
 // This Includes //
 #include "Menu.h"
@@ -289,6 +290,7 @@ void Menu::AddServers(std::vector<ServerInfo> Servers)
 		NewPos.y += i * 100;
 		ServerItem NewServerItem(Servers[i], NewPos);
 		v_ServerList.push_back(NewServerItem);
+		v_JoinGameElements.push_back(NewServerItem.ServerButton);
 	}
 }
 
@@ -363,14 +365,14 @@ void JoinGameScreen()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 	MenuRef->ToggleMenuSection(JOIN);
-	NetworkSystem::GetInstance()->InitClient();
+	NetworkManager::GetInstance()->m_Network.InitClient();
 }
 
 void SearchForServers()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 	MenuRef->ClearServerList();
-	std::dynamic_pointer_cast<Client>(NetworkSystem::GetInstance()->m_pNetworkEntity)->BroadcastForServers();
+	std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)->BroadcastForServers();
 }
 
 void StartHost()
@@ -379,5 +381,5 @@ void StartHost()
 	ServerInfo NewProperties;
 	NewProperties._iPlayers = (int)MenuRef->PlayersCountSlider->GetValue();
 	NewProperties._ServerName = MenuRef->ServerName->sText;
-	NetworkSystem::GetInstance()->InitServer(NewProperties);
+	NetworkManager::GetInstance()->m_Network.InitServer(NewProperties);
 }
