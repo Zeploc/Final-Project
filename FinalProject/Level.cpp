@@ -107,6 +107,7 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 	NewEnemy->AddMesh(EnemeyMesh);
+	NewEnemy->Target = Target;
 	AddEntity(NewEnemy);
 
 

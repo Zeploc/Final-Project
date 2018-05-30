@@ -28,23 +28,36 @@ AI::~AI()
 {
 }
 
-glm::vec3 AI::SeekForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target)
+glm::vec3 AI::SeekDirection(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target)
 {
-	glm::vec3 DesiredVelocity = Source->transform.Position - Target->transform.Position;
-	float Distance = DesiredVelocity.length();// magnitude
-	DesiredVelocity = glm::normalize(DesiredVelocity);// * Maxvelocity;
-	glm::vec3 Steering = DesiredVelocity;// - ;
-	//Bungus
-	return glm::vec3();
+	glm::vec3 DesiredVelocity =  Target->transform.Position - Source->transform.Position;
+	DesiredVelocity = glm::normalize(DesiredVelocity);
+	
+	
+	return glm::vec3(DesiredVelocity);
 }
 
 glm::vec3 AI::FleeForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target)
 {
-	return glm::vec3();
+	glm::vec3 DesiredVelocity =  Source->transform.Position - Target->transform.Position;
+	DesiredVelocity = glm::normalize(DesiredVelocity);
+
+
+	return glm::vec3(DesiredVelocity);
 }
 
-glm::vec3 AI::PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target)
+glm::vec3 AI::PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, float PredictionModifier)
 {
+	glm::vec3 DesiredVelocity = Source->transform.Position - Target->transform.Position;
+	
+	glm::vec3 Tracking = Target->transform.Position;
+
+	DesiredVelocity += glm::normalize(Tracking);
+
+	DesiredVelocity = glm::normalize(DesiredVelocity);
+
+
+
 	return glm::vec3();
 }
 

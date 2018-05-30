@@ -20,12 +20,16 @@ class Enemy1 :	public Entity
 public:
 	Enemy1(Utils::Transform _Transform, Utils::EANCHOR _Anchor);
 	~Enemy1();
+	std::shared_ptr<Entity> Target;
 
 	void Update();
 
 private:
+
+	float m_fSpeed = 5.0;
+
 	glm::vec3 m_v3CurrentVelocity = { 0, 0, 0 };
 
-	std::shared_ptr<Entity> Target;
+	
 };
 
