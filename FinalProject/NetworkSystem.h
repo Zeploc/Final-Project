@@ -17,7 +17,7 @@
 
 // Local Includes //
 #include "NetworkEntity.h"
-#include "ServerItem.h"
+#include "JoinGameMenu.h"
 
 //Types
 enum EEntityType

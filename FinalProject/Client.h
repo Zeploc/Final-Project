@@ -16,7 +16,7 @@
 #include "NetworkEntity.h"
 #include "socket.h"
 #include "WorkQueue.h"
-#include "ServerItem.h"
+#include "JoinGameMenu.h"
 
 // Library Includes //
 #include <vector>

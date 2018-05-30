@@ -246,6 +246,8 @@ void Client::ProcessData(std::string _DataReceived)
 				TPacket _packet;
 				std::string userName(m_cUserName);
 				userName += "1";
+				std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
+				MenuRef->LobbyScreen.SetPlayerNameText(userName);
 				_packet.Serialize(HANDSHAKE, const_cast<char *>(userName.c_str()));
 				SendData(_packet.PacketData);
 				// User name taken Display
@@ -274,7 +276,7 @@ void Client::ProcessData(std::string _DataReceived)
 				Address = Result.substr(i + 1);
 				break;
 			}			
-			MenuRef->ClientConnected(Username, Address);
+			MenuRef->LobbyScreen.ClientConnected(Username, Address);
 			break;
 		}
 	}
@@ -320,7 +322,7 @@ bool Client::BroadcastForServers()
 	ReceiveBroadcastMessages(_pcTempBuffer);
 
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
-	MenuRef->AddServers(m_vecServerAddr);
+	MenuRef->JoinGameScreen.AddServers(m_vecServerAddr);
 	return true;
 }
 

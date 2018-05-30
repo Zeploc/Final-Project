@@ -146,9 +146,12 @@
     <ClCompile Include="Engine\Input.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameSettings.cpp" />
+    <ClCompile Include="HostGameMenu.cpp" />
+    <ClCompile Include="JoinGameMenu.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Engine\Lighting.cpp" />
+    <ClCompile Include="LobbyMenu.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Scene.cpp" />
     <ClCompile Include="Engine\SceneManager.cpp" />
@@ -176,7 +179,6 @@
     <ClCompile Include="ScoreTab.cpp" />
     <ClCompile Include="Engine\Sphere.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="ServerItem.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
@@ -200,9 +202,12 @@
     <ClInclude Include="Engine\Utils.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameSettings.h" />
+    <ClInclude Include="HostGameMenu.h" />
+    <ClInclude Include="JoinGameMenu.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Engine\Lighting.h" />
+    <ClInclude Include="LobbyMenu.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Engine\ParticleSystem.h" />
     <ClInclude Include="Engine\Mesh.h" />
@@ -222,7 +227,6 @@
     <ClInclude Include="ScoreTab.h" />
     <ClInclude Include="Engine\Sphere.h" />
     <ClInclude Include="Server.h" />
-    <ClInclude Include="ServerItem.h" />
     <ClInclude Include="socket.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="utils.h" />

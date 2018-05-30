@@ -199,6 +199,7 @@ void Server::ProcessData(std::string _DataReceived)
 			{
 				// Get string of all connected Users
 				std::string ServerConnectedNames;
+				std::string SenderAddress = ToString(m_ClientAddress);
 				for (auto it = m_pConnectedClients->begin(); it != m_pConnectedClients->end(); ++it)
 				{
 					ServerConnectedNames += it->second.m_strName + " ";
@@ -218,14 +219,13 @@ void Server::ProcessData(std::string _DataReceived)
 					_packetToSend.Serialize(CLIENTCONNECTED, const_cast<char*>(_strToSend.c_str()));
 					SendData(_packetToSend.PacketData);
 				}
-				
-				
+								
 				// Send the new client to all current clients
-				_strToSend = m_pConnectedClients->find(ToString(m_ClientAddress))->second.m_strName + " " + ToString(m_ClientAddress);
-				SendToAllClients(_strToSend, CLIENTCONNECTED, ToString(m_ClientAddress));
+				_strToSend = m_pConnectedClients->find(SenderAddress)->second.m_strName + " " + SenderAddress;
+				SendToAllClients(_strToSend, CLIENTCONNECTED, SenderAddress);
 
 				std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
-				MenuRef->ClientConnected(m_pConnectedClients->find(ToString(m_ClientAddress))->second.m_strName, ToString(m_ClientAddress));
+				MenuRef->LobbyScreen.ClientConnected(m_pConnectedClients->find(SenderAddress)->second.m_strName, SenderAddress);
 	
 			}
 			else

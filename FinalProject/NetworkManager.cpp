@@ -16,7 +16,7 @@
 #include "NetworkManager.h"
 
 // Local Includes //
-#include "ServerItem.h"
+#include "JoinGameMenu.h"
 #include "Client.h"
 
 // Static Variables //

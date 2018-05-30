@@ -24,7 +24,9 @@
 #include "Engine\UISlider.h"
 
 // Local Includes //
-#include "ServerItem.h"
+#include "JoinGameMenu.h"
+#include "HostGameMenu.h"
+#include "LobbyMenu.h"
 
 // This Includes //
 
@@ -56,28 +58,23 @@ public:
 	void PlayRandomTrack();
 	void ToggleMenuSection(MENUSECTION);
 	void GoToLobby();
-	void ClearServerList() { v_ServerList.clear(); };
-	void ClientConnected(std::string _UseName, std::string Address);
-	void AddServers(std::vector<ServerInfo> Servers);
-	std::shared_ptr<UISlider> PlayersCountSlider;
-	std::shared_ptr<UIText> ServerName;
 	std::shared_ptr<UIText> PlayerName;
-	std::shared_ptr<UIText> ServerPlayerName;
+	LobbyMenu LobbyScreen;
+	JoinGameMenu JoinGameScreen;
+	HostGameMenu HostGameScreen;
 
 	//void ToggleInstructions();
 private:
+
 	glm::vec2 ButtonPositions[3];
 	int m_iCurrentSelected = 0;
 	std::vector<std::shared_ptr<UIElement>> v_MenuElements;
 	std::vector<std::shared_ptr<UIElement>> v_OptionsElements;
-	std::vector<std::shared_ptr<UIElement>> v_HostGameElements;
-	std::vector<std::shared_ptr<UIElement>> v_JoinGameElements;
-	std::vector<std::shared_ptr<UIElement>> v_LobbyElements;
-	std::vector<std::shared_ptr<UIElement>> v_PlayersConnected;
+	//std::vector<std::shared_ptr<UIElement>> v_HostGameElements;
+	//std::vector<std::shared_ptr<UIElement>> v_JoinGameElements;
+	//std::vector<std::shared_ptr<UIElement>> v_LobbyElements;
 	MENUSECTION m_CurrentSection = MAIN;
 	std::shared_ptr<UIImage> m_Arrow;
 
-	std::vector<ServerItem> v_ServerList;
-	glm::vec2 ServerListPos;
 };
 
