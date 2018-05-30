@@ -32,6 +32,7 @@
 #include "UIManager.h"
 #include "NetworkSystem.h"
 #include "Client.h"
+#include "Server.h"
 #include "NetworkManager.h"
 
 // This Includes //
@@ -126,18 +127,24 @@ Menu::Menu(std::string sSceneName)
 	StartHostBtn->SetActive(false);
 	ServerName = std::make_shared<UIText>(UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 500.0f), 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Server Name", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
 	ServerName->SetActive(false);
+	ServerPlayerName = std::make_shared<UIText>(UIText({ 100.0f, 500.0f }, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Player", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER_LEFT));
+	ServerPlayerName->SetActive(false);
+
 	// Add elements to scene UI elements
 	AddUITextElement(HostText);
 	AddUIElement(HostGameBackBtn);
 	AddUIElement(PlayersCountSlider);
 	AddUIElement(StartHostBtn);
 	AddUITextElement(ServerName);
+	AddUITextElement(ServerPlayerName);
+
 	// Add elements to vector list
 	v_HostGameElements.push_back(HostText);
 	v_HostGameElements.push_back(HostGameBackBtn);
 	v_HostGameElements.push_back(PlayersCountSlider);
 	v_HostGameElements.push_back(StartHostBtn);
 	v_HostGameElements.push_back(ServerName);
+	v_HostGameElements.push_back(ServerPlayerName);
 
 	// Add Join Elements
 	std::shared_ptr<UIText> JoinText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Join Game:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
@@ -148,18 +155,37 @@ Menu::Menu(std::string sSceneName)
 	std::shared_ptr<UIButton> SendBroadcastBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 120), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 420, 60, SearchForServers));
 	SendBroadcastBtn->AddText("Refresh", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	SendBroadcastBtn->SetActive(false);
+	PlayerName = std::make_shared<UIText>(UIText({ 100.0f, 500.0f }, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Player", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER_LEFT));
+	PlayerName->SetActive(false);
 
 	// Add elements to scene UI elements
 	AddUITextElement(JoinText);
 	AddUIElement(JoinGameBackBtn);
 	AddUIElement(SendBroadcastBtn);
+	AddUITextElement(PlayerName);
+
 	// Add elements to vector list
 	v_JoinGameElements.push_back(JoinText);
 	v_JoinGameElements.push_back(JoinGameBackBtn);
 	v_JoinGameElements.push_back(SendBroadcastBtn);
+	v_JoinGameElements.push_back(PlayerName);
 
 	ServerListPos = { Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 400 };
-		
+	
+	// Add Lobby Elements
+	std::shared_ptr<UIText> LobbyText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Game Lobby:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
+	LobbyText->SetActive(false);
+	PlayerName = std::make_shared<UIText>(UIText({ 100.0f, 500.0f }, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Player", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER_LEFT));
+	PlayerName->SetActive(false);
+
+	// Add elements to scene UI elements
+	AddUITextElement(LobbyText);
+	AddUITextElement(PlayerName);
+
+	// Add elements to vector list
+	v_LobbyElements.push_back(LobbyText);
+	v_LobbyElements.push_back(PlayerName);
+
 	// Add cursor
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//AddUIElement(NewCursor);
@@ -282,6 +308,17 @@ void Menu::GoToLobby()
 
 }
 
+void Menu::ClientConnected(std::string _UserName, std::string Address)
+{
+	float fYPos = v_PlayersConnected.size() * 50 + 300;
+	std::shared_ptr<UIText> NewClient(new UIText(glm::vec2(100, fYPos), 0, glm::vec4(0.8f, 0.8f, 0.8f, 1.0f), _UserName + "      " + Address, "Resources/Fonts/Roboto-Bold.ttf", 30, Utils::CENTER_LEFT));
+	AddUITextElement(NewClient);
+	v_LobbyElements.push_back(NewClient);
+	v_PlayersConnected.push_back(NewClient);
+	//v_LobbyElements;
+	//v_PlayersConnected;
+}
+
 void Menu::AddServers(std::vector<ServerInfo> Servers)
 {
 	for (int i = 0; i < Servers.size(); i++)
@@ -382,4 +419,10 @@ void StartHost()
 	NewProperties._iPlayers = (int)MenuRef->PlayersCountSlider->GetValue();
 	NewProperties._ServerName = MenuRef->ServerName->sText;
 	NetworkManager::GetInstance()->m_Network.InitServer(NewProperties);
+	std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+	ServerRef->SetServerUserName(MenuRef->ServerPlayerName->sText);
+	MenuRef->PlayerName->sText = MenuRef->ServerPlayerName->sText;
+	MenuRef->ClientConnected(MenuRef->ServerPlayerName->sText, ServerRef->CurrentServerAddress());
+
+	MenuRef->ToggleMenuSection(LOBBY);
 }

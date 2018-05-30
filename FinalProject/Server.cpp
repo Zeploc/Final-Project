@@ -22,6 +22,11 @@
 
 // Local Includes //
 #include "NetworkSystem.h"
+#include "utils.h"
+#include "Menu.h"
+
+// Engine Includes //
+#include "Engine\SceneManager.h"
 
 
 /************************************************************
@@ -188,6 +193,48 @@ void Server::ProcessData(std::string _DataReceived)
 			SendData(_packetToSend.PacketData);
 			break;
 		}
+		case HANDSHAKE:
+		{
+			if (AddClient(_packetRecvd.MessageContent))
+			{
+				// Get string of all connected Users
+				std::string ServerConnectedNames;
+				for (auto it = m_pConnectedClients->begin(); it != m_pConnectedClients->end(); ++it)
+				{
+					ServerConnectedNames += it->second.m_strName + " ";
+				}
+				// Welcomes connected client by sending handshake message
+				_packetToSend.Serialize(HANDSHAKE, const_cast<char*>(ServerConnectedNames.c_str()));
+				SendData(_packetToSend.PacketData);
+
+				std::string _strToSend = std::string(m_cUserName) + " " + m_pServerSocket->GetSocketAddress();
+				_packetToSend.Serialize(CLIENTCONNECTED, const_cast<char*>(_strToSend.c_str()));
+				SendData(_packetToSend.PacketData);
+
+				// Send client connected for each existing client to current client
+				for (auto it = m_pConnectedClients->begin(); it != m_pConnectedClients->end(); ++it)
+				{
+					std::string _strToSend = it->second.m_strName + " " + it->first;
+					_packetToSend.Serialize(CLIENTCONNECTED, const_cast<char*>(_strToSend.c_str()));
+					SendData(_packetToSend.PacketData);
+				}
+				
+				
+				// Send the new client to all current clients
+				_strToSend = m_pConnectedClients->find(ToString(m_ClientAddress))->second.m_strName + " " + ToString(m_ClientAddress);
+				SendToAllClients(_strToSend, CLIENTCONNECTED, ToString(m_ClientAddress));
+
+				std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
+				MenuRef->ClientConnected(m_pConnectedClients->find(ToString(m_ClientAddress))->second.m_strName, ToString(m_ClientAddress));
+	
+			}
+			else
+			{
+				_packetToSend.Serialize(HANDSHAKE, "Invalid");
+				SendData(_packetToSend.PacketData);
+			}
+			break;
+		}
 	}
 }
 
@@ -206,4 +253,48 @@ void Server::Update()
 		m_pWorkQueue->pop(temp);
 		ProcessData(temp);
 	}
+}
+
+void Server::SendToAllClients(std::string _pcMessage, EMessageType _MessageType, std::string ExcludeAddress)
+{
+	const char * NewMessage = _pcMessage.c_str();
+	TPacket _packetToSend;
+	for (auto it = m_pConnectedClients->begin(); it != m_pConnectedClients->end(); ++it)
+	{
+		if ((*it).first == ExcludeAddress)
+			continue;
+
+		// Sets client address to current client in vector iterator
+		m_ClientAddress = it->second.m_ClientAddress;
+		// Sends new user message to current client
+		_packetToSend.Serialize(_MessageType, const_cast<char*>(NewMessage));
+		SendData(_packetToSend.PacketData);
+	}
+}
+
+bool Server::AddClient(std::string _strClientName)
+{
+	for (auto it = m_pConnectedClients->begin(); it != m_pConnectedClients->end(); ++it)
+	{
+		//Check to see that the client to be added does not already exist in the map, 
+		if (it->first == ToString(m_ClientAddress))
+		{
+			return false;
+		}
+		//also check for the existence of the username
+		else if (it->second.m_strName == _strClientName)
+		{
+			return false;
+		}
+	}
+	//Add the client to the map.
+	TClientDetails _clientToAdd;
+	_clientToAdd.m_strName = _strClientName;
+	_clientToAdd.m_ClientAddress = this->m_ClientAddress;
+	//_clientToAdd.m_bIsActive = true;
+	//_clientToAdd.m_timeOfLastMessage = 0;
+
+	std::string _strAddress = ToString(m_ClientAddress);
+	m_pConnectedClients->insert(std::pair < std::string, TClientDetails >(_strAddress, _clientToAdd));
+	return true;
 }

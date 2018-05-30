@@ -161,7 +161,7 @@ void Plane::BindPlane()
 		0, 2, 3 // Second Triangle
 	};
 	// If no texture, texture source is equal to ""
-	vao = Shader::CreateBuffer(TextureSource, texture);
+	vao = Shader::CreateBuffer(TextureSource, texture, true);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }

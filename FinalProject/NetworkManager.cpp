@@ -15,6 +15,9 @@
 // This Includes //
 #include "NetworkManager.h"
 
+// Local Includes //
+#include "ServerItem.h"
+#include "Client.h"
 
 // Static Variables //
 std::shared_ptr<NetworkManager> NetworkManager::m_pNetworkManager;
@@ -26,6 +29,13 @@ NetworkManager::NetworkManager()
 
 NetworkManager::~NetworkManager()
 {
+}
+
+void NetworkManager::JoinServer(ServerInfo _ServerProperties)
+{	
+	TPacket _packet;
+	_packet.Serialize(HANDSHAKE, const_cast<char *>(std::dynamic_pointer_cast<Client>(m_Network.m_pNetworkEntity)->GetClientUserName().c_str()));
+	std::dynamic_pointer_cast<Client>(m_Network.m_pNetworkEntity)->SendData(_packet.PacketData);
 }
 
 /************************************************************

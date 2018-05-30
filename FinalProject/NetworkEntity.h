@@ -22,7 +22,8 @@ enum EMessageType : unsigned char
 	HANDSHAKE,
 	DATA,
 	KEEPALIVE,
-	BROADCAST
+	BROADCAST,
+	CLIENTCONNECTED
 };
 
 struct TPacket

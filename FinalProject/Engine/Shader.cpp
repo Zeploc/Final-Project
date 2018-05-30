@@ -358,7 +358,7 @@ GLuint Shader::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
 	};
 	GLuint TempTexture;
 
-	GLuint vao = CreateBuffer("", TempTexture);
+	GLuint vao = CreateBuffer("", TempTexture, true);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	return vao;
@@ -500,8 +500,8 @@ GLuint Shader::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour,
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	int width, height;
 	unsigned char* image = SOIL_load_image(TextureSource, &width, &height, 0, SOIL_LOAD_RGBA);
@@ -656,7 +656,7 @@ Text::cFont Shader::AddFont(std::string fontPath, int iPSize)
 #--Parameters--#: 	Takes texture path and texture gluint ref
 #--Return--#: 		New vao gluint
 ************************************************************/
-GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture)
+GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool bAA)
 {
 	GLuint vao;
 	GLuint vbo;
@@ -670,8 +670,16 @@ GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture)
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		if (bAA)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
 
 		int width, height;
 		unsigned char* image = SOIL_load_image(TextureSource, &width, &height, 0, SOIL_LOAD_RGBA);

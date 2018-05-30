@@ -234,6 +234,50 @@ void Client::ReceiveData()
 
 void Client::ProcessData(std::string _DataReceived)
 {
+	TPacket _packetRecvd;
+	_packetRecvd = _packetRecvd.Deserialize(_DataReceived);
+	switch (_packetRecvd.MessageType)
+	{
+		case HANDSHAKE:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			if (Result == "Invalid")
+			{
+				TPacket _packet;
+				std::string userName(m_cUserName);
+				userName += "1";
+				_packet.Serialize(HANDSHAKE, const_cast<char *>(userName.c_str()));
+				SendData(_packet.PacketData);
+				// User name taken Display
+				break;
+			}
+
+			std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
+			MenuRef->ToggleMenuSection(LOBBY);
+			break;
+		}
+		case CLIENTCONNECTED:
+		{
+			std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
+
+			std::string Result = _packetRecvd.MessageContent;
+			std::string Username;
+			std::string Address;
+
+			for (int i = 0; i < Result.size(); i++)
+			{
+				if (Result[i] != ' ')
+				{
+					Username += Result[i];
+					continue;
+				}
+				Address = Result.substr(i + 1);
+				break;
+			}			
+			MenuRef->ClientConnected(Username, Address);
+			break;
+		}
+	}
 }
 
 /************************************************************
@@ -244,7 +288,14 @@ void Client::ProcessData(std::string _DataReceived)
 ************************************************************/
 void Client::Update()
 {
-
+	//If the message queue is empty 
+	if (!m_pWorkQueue->empty())
+	{
+		//Retrieve off a message from the queue and process it
+		std::string temp;
+		m_pWorkQueue->pop(temp);
+		ProcessData(temp);
+	}
 }
 
 bool Client::BroadcastForServers()

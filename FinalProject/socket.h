@@ -21,6 +21,7 @@
 #include <WS2tcpip.h>
 #include <string>
 
+// Local Includes //
 
 class CSocket
 {
@@ -42,6 +43,8 @@ public:
 	//Question 7 : Broadcast to detect a server
 	int EnableBroadcast();
 	int DisableBroadcast();
+
+	std::string GetSocketAddress();
 
 private:
 	//Get the local IP Address to which the socket is bound to

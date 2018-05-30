@@ -33,6 +33,9 @@ public:
 	void ProcessData(std::string _DataReceived);
 	void Update();
 
+	std::string GetClientUserName() { return std::string(m_cUserName); };
+	void SetClientUserName(std::string _NewName) { strncpy_s(m_cUserName, _NewName.c_str(), sizeof(_NewName) - 1); };
+
 	bool BroadcastForServers();
 private:
 	void ReceiveBroadcastMessages(char* _pcBufferToReceiveData);

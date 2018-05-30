@@ -57,10 +57,12 @@ public:
 	void ToggleMenuSection(MENUSECTION);
 	void GoToLobby();
 	void ClearServerList() { v_ServerList.clear(); };
-
+	void ClientConnected(std::string _UseName, std::string Address);
 	void AddServers(std::vector<ServerInfo> Servers);
 	std::shared_ptr<UISlider> PlayersCountSlider;
 	std::shared_ptr<UIText> ServerName;
+	std::shared_ptr<UIText> PlayerName;
+	std::shared_ptr<UIText> ServerPlayerName;
 
 	//void ToggleInstructions();
 private:
@@ -71,6 +73,7 @@ private:
 	std::vector<std::shared_ptr<UIElement>> v_HostGameElements;
 	std::vector<std::shared_ptr<UIElement>> v_JoinGameElements;
 	std::vector<std::shared_ptr<UIElement>> v_LobbyElements;
+	std::vector<std::shared_ptr<UIElement>> v_PlayersConnected;
 	MENUSECTION m_CurrentSection = MAIN;
 	std::shared_ptr<UIImage> m_Arrow;
 
