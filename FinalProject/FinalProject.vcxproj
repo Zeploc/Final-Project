@@ -181,6 +181,7 @@
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="Engine\UITextField.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
@@ -229,6 +230,7 @@
     <ClInclude Include="Server.h" />
     <ClInclude Include="socket.h" />
     <ClInclude Include="UIManager.h" />
+    <ClInclude Include="Engine\UITextField.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="WorkQueue.h" />
   </ItemGroup>

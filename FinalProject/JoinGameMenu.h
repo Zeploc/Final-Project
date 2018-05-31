@@ -22,6 +22,7 @@
 // Engine Includes //
 #include "Engine\Scene.h"
 #include "Engine\UIButton.h"
+#include "Engine\UITextField.h"
 
 struct ServerInfo
 {
@@ -57,11 +58,11 @@ public:
 	void ClearServerList() { v_ServerList.clear(); };
 	void AddServers(std::vector<ServerInfo> Servers);
 
-	std::string GetPlayerName() { return PlayerName->sText; };
+	std::string GetPlayerName() { return PlayerName->FieldText.sText; };
 
 	std::vector<std::shared_ptr<UIElement>> v_ScreenElements;
 private:
-	std::shared_ptr<UIText> PlayerName;
+	std::shared_ptr<UITextField> PlayerName;
 	glm::vec2 ServerListPos;
 
 	std::vector<ServerItem> v_ServerList;

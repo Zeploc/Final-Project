@@ -55,6 +55,7 @@ UIText::UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::st
 UIText::UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour)
 	: UIElement(_Position, _fRotation, _Colour)
 {
+	sText = "";
 }
 
 /************************************************************
@@ -76,7 +77,7 @@ UIText::~UIText()
 ************************************************************/
 void UIText::DrawUIElement()
 {
-	if (!bActive)
+	if (!bActive || sText == "")
 		return;
 	glUseProgram(Shader::TextUIprogram);
 	Text::Render(sText, sFont, iPSize, position, Colour, Anchor);

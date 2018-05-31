@@ -56,7 +56,7 @@ void HostGameMenu::Init(std::shared_ptr<Scene> _Scene)
 	StartHostBtn->SetActive(false);
 	ServerName = std::make_shared<UIText>(UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 500.0f), 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Server", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
 	ServerName->SetActive(false);
-	PlayerName = std::make_shared<UIText>(UIText({ 100.0f, 200.0f }, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "ServerP", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER_LEFT));
+	PlayerName = std::make_shared<UITextField>(UITextField({ 100.0f, 200.0f }, Utils::CENTER_LEFT, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), 400, 50, { 0.8f, 0.8f, 0.8f, 1.0f }, "PlayerName", "Resources/Fonts/Roboto-Bold.ttf", 40, Utils::CENTER));
 	PlayerName->SetActive(false);
 
 	// Add elements to scene UI elements
@@ -65,7 +65,7 @@ void HostGameMenu::Init(std::shared_ptr<Scene> _Scene)
 	_Scene->AddUIElement(PlayersCountSlider);
 	_Scene->AddUIElement(StartHostBtn);
 	_Scene->AddUITextElement(ServerName);
-	_Scene->AddUITextElement(PlayerName);
+	_Scene->AddUIElement(PlayerName);
 
 	// Add elements to vector list
 	v_ScreenElements.push_back(HostText);

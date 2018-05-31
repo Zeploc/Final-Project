@@ -50,6 +50,9 @@ public:
 
 	std::string InputStateString(unsigned int State);
 
+	bool bKBHit = false;
+	unsigned char cLastKey;
+
 private:
 
 

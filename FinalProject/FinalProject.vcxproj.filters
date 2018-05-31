@@ -210,6 +210,9 @@
     <ClCompile Include="LobbyMenu.cpp">
       <Filter>Game\Network\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\UITextField.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -355,6 +358,9 @@
     </ClInclude>
     <ClInclude Include="LobbyMenu.h">
       <Filter>Game\Network\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UITextField.h">
+      <Filter>Engine\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
