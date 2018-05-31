@@ -64,6 +64,9 @@
     <Filter Include="Game\AI">
       <UniqueIdentifier>{0147767a-017e-4d1e-b879-7f072f955f62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Network\Menu">
+      <UniqueIdentifier>{e73dc593-4eba-4ca1-921b-a3720bfcf550}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
