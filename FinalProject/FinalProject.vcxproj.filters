@@ -67,9 +67,6 @@
     <Filter Include="Game\Network\Menu">
       <UniqueIdentifier>{e73dc593-4eba-4ca1-921b-a3720bfcf550}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\HELLO">
-      <UniqueIdentifier>{7f763dbb-47a8-4076-a90d-c351efaad682}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
