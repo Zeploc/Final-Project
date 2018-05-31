@@ -61,14 +61,15 @@ Level::Level(std::string sSceneName)
 	WorldCubeMap->AddMesh(WorldCubeMapMesh);
 	AddEntity(WorldCubeMap);
 	// Add cube map first so transpancy works
-	//std::shared_ptr<Player> Player(new Player(Utils::Transform{ glm::vec3(SpawnPos, 0.1f), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 1.50f, 1.11f, Utils::CENTER, glm::vec4(1.0, 1.0, 1.0, 1.0), "Resources/Player/adventurer-Sheet.png", glm::vec2(7, 11), 10));
-	
+	std::shared_ptr<Player> Player(new Player(Utils::Transform{ glm::vec3(SpawnPos, 0.1f), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0), "Resources/Player/adventurer-Sheet.png", { 0, 1, 0, 1 }));
+	AddEntity(Player);
+	EPlayer = Player;                
+
+
 	FPSCounterText = std::make_shared<UIText>(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 30.0f, Camera::GetInstance()->SCR_HEIGHT - 20.0f), 0.0f, glm::vec4(0.6, 0.6, 0.6, 1.0), "FPS:", "Resources/Fonts/Roboto-Condensed.ttf", 20, Utils::TOP_RIGHT);
 	//std::shared_ptr<UIImage> ScoreBack(new UIImage(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 20.0f, 18.0f), Utils::TOP_RIGHT, 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0), 160, 50));
 	//ScoreText = std::make_shared<UIText>(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 30.0f, 20.0f), 0.0f, glm::vec4(0.36, 0.219, 0.188, 1.0), "Score: ", "Resources/Fonts/Pixeled.ttf", 30, Utils::TOP_RIGHT);
 
-	//AddEntity(Player);
-	//EPlayer = Player;
 	AddUIElement(FPSCounterText);
 	//AddUITextElement(ScoreText);
 	fCameraSpeed = 0;// GameSettings::fMoveSpeed;
