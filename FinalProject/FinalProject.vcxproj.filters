@@ -64,6 +64,9 @@
     <Filter Include="Game\AI">
       <UniqueIdentifier>{0147767a-017e-4d1e-b879-7f072f955f62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Network\Menu">
+      <UniqueIdentifier>{e73dc593-4eba-4ca1-921b-a3720bfcf550}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -195,11 +198,22 @@
     <ClCompile Include="socket.cpp">
       <Filter>Game\Network</Filter>
     </ClCompile>
-    <ClCompile Include="ServerItem.cpp">
+    <ClCompile Include="NetworkManager.cpp">
       <Filter>Game\Network</Filter>
     </ClCompile>
     <ClCompile Include="Enemy2.cpp">
       <Filter>Game\Enemies</Filter>
+    <ClCompile Include="HostGameMenu.cpp">
+      <Filter>Game\Network\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="JoinGameMenu.cpp">
+      <Filter>Game\Network\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbyMenu.cpp">
+      <Filter>Game\Network\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UITextField.cpp">
+      <Filter>Engine\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -335,11 +349,22 @@
     <ClInclude Include="utils.h">
       <Filter>Game\Network</Filter>
     </ClInclude>
-    <ClInclude Include="ServerItem.h">
+    <ClInclude Include="NetworkManager.h">
       <Filter>Game\Network</Filter>
     </ClInclude>
     <ClInclude Include="Enemy2.h">
       <Filter>Game\Enemies</Filter>
+    <ClInclude Include="HostGameMenu.h">
+      <Filter>Game\Network\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="JoinGameMenu.h">
+      <Filter>Game\Network\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyMenu.h">
+      <Filter>Game\Network\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UITextField.h">
+      <Filter>Engine\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

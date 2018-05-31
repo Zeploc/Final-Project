@@ -20,6 +20,7 @@
 
 //Local Includes 
 #include "NetworkSystem.h"
+#include "utils.h"
 
 //This Include
 #include "socket.h"
@@ -136,6 +137,11 @@ int CSocket::DisableBroadcast()
 		return _iError;
 	}
 	return _iResult;
+}
+
+std::string CSocket::GetSocketAddress()
+{
+	return GetLocalAddress() + ":" + std::to_string(m_SocketAddress.sin_port);
 }
 
 void CSocket::SetRemotePort(unsigned short _usRemotePort)

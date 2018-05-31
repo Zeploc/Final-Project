@@ -172,7 +172,7 @@ void Cube::BindCube()
 		20, 22, 23
 	};
 
-	vao = Shader::CreateBuffer(TextureSource, texture);
+	vao = Shader::CreateBuffer(TextureSource, texture, true);
 	if (TextureSource != "")
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Texturedvertices), Texturedvertices, GL_STATIC_DRAW);
 	else

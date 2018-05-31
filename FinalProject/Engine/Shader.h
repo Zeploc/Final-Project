@@ -52,7 +52,7 @@ public:
 		
 	static Text::cFont AddFont(std::string fontPath, int iPSize);
 
-	static GLuint CreateBuffer(const char * TextureSource, GLuint & Texture);
+	static GLuint CreateBuffer(const char * TextureSource, GLuint & Texture, bool bAA);
 private:
 };
 

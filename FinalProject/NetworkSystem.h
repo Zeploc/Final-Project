@@ -17,7 +17,7 @@
 
 // Local Includes //
 #include "NetworkEntity.h"
-#include "ServerItem.h"
+#include "JoinGameMenu.h"
 
 //Types
 enum EEntityType
@@ -46,6 +46,9 @@ namespace
 class NetworkSystem
 {
 public:
+	NetworkSystem();
+	~NetworkSystem();
+
 	void InitClient();
 	void InitServer(ServerInfo NewServerProperties);
 	void Update();
@@ -57,16 +60,5 @@ private:
 	bool m_bOnline;
 	char* m_pcPacketData = 0; //A local buffer to receive packet data info
 	
-	// Singleton
-public:
-	static std::shared_ptr<NetworkSystem> GetInstance();
-	static void DestoryInstance();
-	~NetworkSystem(); // Shared pointer has to be able to call destructor so can't be private
-
-private:
-	static std::shared_ptr<NetworkSystem> m_pNetworkSystem;
-	NetworkSystem();
-	NetworkSystem(NetworkSystem const&);              // Don't Implement
-	void operator=(NetworkSystem const&); // Don't implement
 };
 

@@ -61,6 +61,8 @@ SceneManager::~SceneManager()
 ************************************************************/
 void SceneManager::AddScene(std::shared_ptr<Scene> _Scene)
 {
+	if (Scenes.empty())
+		_Scene->OnLoadScene();
 	Scenes.push_back(_Scene);
 }
 

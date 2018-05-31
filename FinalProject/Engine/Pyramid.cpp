@@ -112,7 +112,7 @@ void Pyramid::BindPyramid()
 		3, 1, 0 // Bottom Triangle 1
 	};
 
-	vao = Shader::CreateBuffer(TextureSource, texture);
+	vao = Shader::CreateBuffer(TextureSource, texture, true);
 	if (TextureSource != "")
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Texturedvertices), Texturedvertices, GL_STATIC_DRAW);
 	else

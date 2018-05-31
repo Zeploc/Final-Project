@@ -24,7 +24,7 @@
 
 
 #pragma once
-class Scene
+class Scene : public std::enable_shared_from_this<Scene>
 {
 public:
 	Scene(std::string sSceneName);

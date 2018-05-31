@@ -242,10 +242,29 @@ void Scene::Update()
 		if (it)
 			it->Update();
 	}*/
-	for (auto it : UIElements)
+	if (UIElements.size() != 0)
+	{
+		unsigned int iEndPos = UIElements.size() - 1;
+		for (unsigned int i = 0; i <= iEndPos; i++)
+		{
+			if (UIElements[i])
+				UIElements[i]->Update();
+			if (iEndPos >= UIElements.size())
+			{
+				iEndPos = UIElements.size() - 1;
+				i--;
+			}
+			if (UIElements[iEndPos] != UIElements.back()) // if current last value is not equal to the back of the vector
+			{
+				iEndPos = UIElements.size() - 1;
+				i--;
+			}
+		}
+	}
+	/*for (auto it : UIElements)
 	{
 		if (it) it->Update();
-	}
+	}*/
 }
 
 /************************************************************

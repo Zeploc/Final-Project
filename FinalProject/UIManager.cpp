@@ -72,6 +72,8 @@ void UIManager::Update()
 	if (SceneManager::GetInstance()->GetCurrentScene()->SceneName == "MainMenu")
 	{
 		if (m_bDisplayPauseOptions) m_bDisplayPauseOptions = false;
+		if (m_bDisplayChat) m_bDisplayChat = false;
+		if (m_bUIMode == false)	SwitchUIMode(true);
 	}
 	// Show Tab Scores
 	if (Input::GetInstance()->KeyState[(const int)'\t'] == Input::INPUT_FIRST_PRESS)

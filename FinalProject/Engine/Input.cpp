@@ -107,6 +107,8 @@ void Input::Init()
 ************************************************************/
 void Input::processNormalKeysDown(unsigned char key, int x, int y)
 {
+	bKBHit = true;
+	cLastKey = key;
 	if (KeyState[key] == (INPUT_RELEASED | INPUT_FIRST_RELEASE))
 	{
 		KeyState[key] = INPUT_FIRST_PRESS;
@@ -207,7 +209,7 @@ void Input::Update()
 			MouseState[i] = INPUT_HOLD;
 		}
 	}
-	
+	bKBHit = false;
 }
 
 /************************************************************

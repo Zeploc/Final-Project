@@ -147,9 +147,12 @@
     <ClCompile Include="Engine\Input.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameSettings.cpp" />
+    <ClCompile Include="HostGameMenu.cpp" />
+    <ClCompile Include="JoinGameMenu.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Engine\Lighting.cpp" />
+    <ClCompile Include="LobbyMenu.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Scene.cpp" />
     <ClCompile Include="Engine\SceneManager.cpp" />
@@ -162,6 +165,7 @@
     <ClCompile Include="Engine\ParticleSystem.cpp" />
     <ClCompile Include="Engine\Mesh.cpp" />
     <ClCompile Include="NetworkEntity.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="NetworkSystem.cpp" />
     <ClCompile Include="OptionsScreen.cpp" />
     <ClCompile Include="Engine\Plane.cpp" />
@@ -176,9 +180,9 @@
     <ClCompile Include="ScoreTab.cpp" />
     <ClCompile Include="Engine\Sphere.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="ServerItem.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="Engine\UITextField.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
@@ -201,13 +205,17 @@
     <ClInclude Include="Engine\Utils.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameSettings.h" />
+    <ClInclude Include="HostGameMenu.h" />
+    <ClInclude Include="JoinGameMenu.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Engine\Lighting.h" />
+    <ClInclude Include="LobbyMenu.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Engine\ParticleSystem.h" />
     <ClInclude Include="Engine\Mesh.h" />
     <ClInclude Include="NetworkEntity.h" />
+    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="NetworkSystem.h" />
     <ClInclude Include="OptionsScreen.h" />
     <ClInclude Include="Engine\Plane.h" />
@@ -222,9 +230,9 @@
     <ClInclude Include="ScoreTab.h" />
     <ClInclude Include="Engine\Sphere.h" />
     <ClInclude Include="Server.h" />
-    <ClInclude Include="ServerItem.h" />
     <ClInclude Include="socket.h" />
     <ClInclude Include="UIManager.h" />
+    <ClInclude Include="Engine\UITextField.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="WorkQueue.h" />
   </ItemGroup>
