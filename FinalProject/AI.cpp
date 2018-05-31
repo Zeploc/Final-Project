@@ -28,24 +28,37 @@ AI::~AI()
 {
 }
 
-glm::vec3 AI::SeekForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target)
+glm::vec3 AI::SeekDirection(std::shared_ptr<Entity> Source, glm::vec3 Target)
 {
-	glm::vec3 DesiredVelocity = Source->transform.Position - Target->transform.Position;
-	float Distance = DesiredVelocity.length();// magnitude
-	DesiredVelocity = glm::normalize(DesiredVelocity);// * Maxvelocity;
-	glm::vec3 Steering = DesiredVelocity;// - ;
-
-	return glm::vec3();
+	glm::vec3 DesiredVelocity =  Target - Source->transform.Position;
+	DesiredVelocity = glm::normalize(DesiredVelocity);
+	
+	
+	return glm::vec3(DesiredVelocity);
 }
 
 glm::vec3 AI::FleeForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target)
 {
-	return glm::vec3();
+	glm::vec3 DesiredVelocity =  Source->transform.Position - Target->transform.Position;
+	DesiredVelocity = glm::normalize(DesiredVelocity);
+
+
+	return glm::vec3(DesiredVelocity);
 }
 
-glm::vec3 AI::PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target)
+glm::vec3 AI::PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target , glm::vec3 PreviousPosition, float ScaleFactor)
 {
-	return glm::vec3();
+	glm::vec3 TargetVelocity = Target->transform.Position - PreviousPosition;
+
+	if (0 != (TargetVelocity.x || TargetVelocity.y || TargetVelocity.z))
+	{
+		TargetVelocity = glm::vec3(glm::normalize(TargetVelocity));
+	}
+
+	TargetVelocity * ScaleFactor + Target->transform.Position; //Future position
+
+	return SeekDirection(Source, TargetVelocity * ScaleFactor + Target->transform.Position);
+
 }
 
 glm::vec3 AI::EvadeForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target)

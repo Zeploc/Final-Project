@@ -18,6 +18,10 @@
 // Local Includes //
 #include "AI.h"
 
+// Engine Includes //
+
+#include "Engine\Time.h"
+
 Enemy1::Enemy1(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 	: Entity(_Transform, _Anchor)
 {
@@ -30,5 +34,5 @@ Enemy1::~Enemy1()
 
 void Enemy1::Update()
 {
-	if (Target) m_v3CurrentVelocity += AI::SeekForce(this->shared_from_this(), Target);
+	if (Target) transform.Position += AI::SeekDirection(this->shared_from_this(), Target->transform.Position) *  m_fSpeed * (float)Time::dTimeDelta;
 }

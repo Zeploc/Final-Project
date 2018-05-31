@@ -37,6 +37,7 @@
 #include "GameManager.h"
 #include "UIManager.h"
 #include "Enemy1.h"
+#include "Enemy2.h"
 
 // This Includes //
 #include "Level.h"
@@ -107,8 +108,20 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 	NewEnemy->AddMesh(EnemeyMesh);
+	NewEnemy->Target = Target;
 	AddEntity(NewEnemy);
 
+	TempTarget = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	TargetMesh = std::make_shared<Sphere>(1.0f, 2.0f, 1.0f, glm::vec4(0.0f, 0.9f, 0.1f, 1.0f));
+	TargetMesh->bIsLit = true;
+	TempTarget->AddMesh(TargetMesh);
+	AddEntity(TempTarget);
+
+	std::shared_ptr<Enemy2> NewPersueEnemy = std::make_shared<Enemy2>(Enemy2({ glm::vec3(5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Cube> EnemeyPursueMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	NewPersueEnemy->AddMesh(EnemeyMesh);
+	NewPersueEnemy->SetTarget(TempTarget);
+	AddEntity(NewPersueEnemy);
 
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//NewCursor->SetVisibleRange({ 500, 150 });
@@ -144,6 +157,8 @@ void Level::Update()
 	{
 		RestartLevel();
 	}
+
+	TempTarget->transform.Position += glm::vec3(4 * Time::dTimeDelta, 0, 0);
 
 	/*if (EPlayer->transform.Position.y < -5)
 	{

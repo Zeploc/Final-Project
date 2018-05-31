@@ -198,24 +198,6 @@
     <ClCompile Include="socket.cpp">
       <Filter>Game\Network</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy2.cpp">
-      <Filter>Game\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UITextField.cpp">
-      <Filter>Engine\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkManager.cpp">
-      <Filter>Game\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="LobbyMenu.cpp">
-      <Filter>Game\Network\Menu</Filter>
-    </ClCompile>
-    <ClCompile Include="JoinGameMenu.cpp">
-      <Filter>Game\Network\Menu</Filter>
-    </ClCompile>
-    <ClCompile Include="HostGameMenu.cpp">
-      <Filter>Game\Network\Menu</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -367,6 +349,12 @@
     </ClInclude>
     <ClInclude Include="HostGameMenu.h">
       <Filter>Game\Network\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerItem.h">
+      <Filter>Game\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy2.h">
+      <Filter>Game\Enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
