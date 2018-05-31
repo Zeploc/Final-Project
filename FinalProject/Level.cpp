@@ -38,6 +38,7 @@
 #include "UIManager.h"
 #include "Enemy1.h"
 #include "Enemy2.h"
+#include "Enemy3.h"
 
 // This Includes //
 #include "Level.h"
@@ -123,6 +124,11 @@ Level::Level(std::string sSceneName)
 	NewPersueEnemy->AddMesh(EnemeyMesh);
 	NewPersueEnemy->SetTarget(TempTarget);
 	AddEntity(NewPersueEnemy);
+	
+	std::shared_ptr<Enemy3> NewWanderEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(-5, -2.5, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Cube> EnemeyBlueMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 0.1f, 1.0f, 1.0f), "Resources/Enemy1.png");
+	NewWanderEnemy->AddMesh(EnemeyBlueMesh);
+	AddEntity(NewWanderEnemy);
 
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//NewCursor->SetVisibleRange({ 500, 150 });

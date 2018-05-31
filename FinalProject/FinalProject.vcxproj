@@ -139,6 +139,7 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Enemy1.cpp" />
     <ClCompile Include="Enemy2.cpp" />
+    <ClCompile Include="Enemy3.cpp" />
     <ClCompile Include="Engine\Cube.cpp" />
     <ClCompile Include="Engine\CubeMap.cpp" />
     <ClCompile Include="Engine\Cursor.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Client.h" />
     <ClInclude Include="Enemy1.h" />
     <ClInclude Include="Enemy2.h" />
+    <ClInclude Include="Enemy3.h" />
     <ClInclude Include="Engine\Cube.h" />
     <ClInclude Include="Engine\CubeMap.h" />
     <ClInclude Include="Engine\Cursor.h" />

@@ -6,29 +6,27 @@
 //
 // (c) 2005 - 2018 Media Design School
 //
-// File Name    	:    Enemy2.h
+// File Name    	:    Enemy3.h
 // Description    	:    Header file outlining the Class
-// Author       	:    Jonty Hoekstra
-// Mail         	:    Jonty.hoe7674@mediadesign.school.nz
+// Author       	:    Alex Coultas
+// Mail         	:    alex.cou7417@mediadesign.school.nz
 //
 
 #pragma once
 // Local Includes
 #include "Engine\Entity.h"
 
-class Enemy2 : public Entity
+class Enemy3 : public Entity
 {
 public:
-	Enemy2(Utils::Transform _Transform, Utils::EANCHOR _Anchor);
-	~Enemy2();
+	Enemy3(Utils::Transform _Transform, Utils::EANCHOR _Anchor);
+	~Enemy3();
 	
 	
 	void Update();
-	void SetTarget(std::shared_ptr<Entity> _Target);
 private:
-
-	std::shared_ptr<Entity> Target;
-	glm::vec3 PreviousPosition;
+	float m_fDecisonTime = 0;
+	glm::vec3 Target;
 	float m_fSpeed = 4;
 
 	glm::vec3 m_v3CurrentVelocity = { 0, 0, 0 };
