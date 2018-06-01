@@ -62,7 +62,7 @@ Level::Level(std::string sSceneName)
 	WorldCubeMap->AddMesh(WorldCubeMapMesh);
 	AddEntity(WorldCubeMap);
 	// Add cube map first so transpancy works
-	std::shared_ptr<Player> Player(new Player(Utils::Transform{ glm::vec3(SpawnPos, 0.1f), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0), "Resources/Player/adventurer-Sheet.png", { 0, 1, 0, 1 }));
+	std::shared_ptr<Player> Player(new Player(Utils::Transform{ glm::vec3(SpawnPos, 0.1f), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
 	AddEntity(Player);
 	EPlayer = Player;                
 

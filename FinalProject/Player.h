@@ -43,10 +43,13 @@ public:
 private:
 
 	void MoveHorizontally(bool bLeft);
-	
+
+	void MoveVertical(bool bUp);
+	float DodgeTimer = 0.5f;
 	float fHSpeed = 0;
 	float fVSpeed = 0;
 
+	bool bHasDodged = false;
 	bool bJump = false;
 };
 
