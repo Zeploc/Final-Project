@@ -18,13 +18,18 @@
 // Local Includes //
 #include "AI.h"
 
+// OpenGL Includes //
+#include <glm/gtc/matrix_transform.hpp>
+
 // Engine Includes //
 
 #include "Engine\Time.h"
 
-Enemy1::Enemy1(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
+Enemy1::Enemy1(Utils::Transform _Transform, Utils::EANCHOR _Anchor, glm::vec3 InitialVelocity)
 	: Entity(_Transform, _Anchor)
 {
+	m_v3CurrentVelocity = InitialVelocity;
+	m_fSpeed = glm::length(m_v3CurrentVelocity);
 }
 
 
@@ -36,5 +41,8 @@ void Enemy1::Update()
 {
 	if (Target)
 		//transform.Position += AI::SeekDirection(this->shared_from_this(), Target->transform.Position) *  m_fSpeed * (float)Time::dTimeDelta;
-		transform.Position += AI::SeekWithArrival(this->shared_from_this(), Target->transform.Position, 5, m_fSpeed) * (float)Time::dTimeDelta;
+		m_v3CurrentVelocity += AI::FleeForce(transform.Position, Target->transform.Position, 300.0f,m_v3CurrentVelocity, m_fSpeed);
+
+
+	transform.Position += m_v3CurrentVelocity * (float)Time::dTimeDelta;
 }
