@@ -225,6 +225,9 @@
     <ClCompile Include="Engine\Model.cpp">
       <Filter>Engine\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Spectator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -394,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="ModelObject.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Spectator.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
