@@ -68,10 +68,9 @@ void Mesh::Render(Utils::Transform Newtransform)
 	
 	}
 	glFrontFace(GL_CW);
-	Camera::GetInstance()->SetMVP(Newtransform);
+	Camera::GetInstance()->SetMVP(Newtransform, program);
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
-

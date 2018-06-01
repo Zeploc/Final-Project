@@ -17,24 +17,29 @@
 
 // Engine Library //
 #include "Entity.h"
+#include "Utils.h"
 
 // OpenGL Library //
 #include <glm\common.hpp>
-
+struct Transform;
 #pragma once
 class CollisionBounds
 {
 public:
-	CollisionBounds();
+	CollisionBounds(float fHeight, float fWidth, float fDepth, std::shared_ptr<Entity> _EntityRef);
 	~CollisionBounds();
 
+	void SetOffset(glm::vec3 _NewOffset) { v3Offset = _NewOffset; };
+	bool isColliding(std::shared_ptr<Entity> Entity2);
+	bool CheckCollision(std::shared_ptr<Entity> Entity2, glm::vec3 Movement);
+
+private:
 	float fHeight;
 	float fWidth;
 	float fDepth;
-	glm::vec3 v2Offset = glm::vec3();
+	glm::vec3 v3Offset = glm::vec3();
 
-	bool isColliding(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
-	bool CheckCollision(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2, glm::vec3 Movement);
+	std::shared_ptr<Entity> EntityRef;
 
 };
 

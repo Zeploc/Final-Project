@@ -40,18 +40,17 @@ public:
 	{
 
 		this->program = Shader::ModelProgram;
-		this->camera = camera;
 		this->loadModel(path);
 	}
 
 	// Draws the model, and thus all its meshes
-	void Render()
+	void Render(Utils::Transform MeshTransform)
 	{
 		for (GLuint i = 0; i < this->meshes.size(); i++) {
 
 		//printf("mesh size: %d \n", meshes.size());
 
-			this->meshes[i].Render(camera, program);
+			this->meshes[i].Render(program, MeshTransform);
 		}
 	}
 

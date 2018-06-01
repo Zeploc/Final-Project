@@ -386,20 +386,20 @@
     <ClInclude Include="Enemy3.h">
       <Filter>Game\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="ModelMesh.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Model.h">
       <Filter>Engine\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelObject.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Spectator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\CollisionBounds.h">
       <Filter>Engine\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ModelMesh.h">
+      <Filter>Engine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ModelObject.h">
+      <Filter>Engine\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

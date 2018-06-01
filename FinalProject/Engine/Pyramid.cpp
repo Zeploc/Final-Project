@@ -36,6 +36,14 @@ Pyramid::Pyramid(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 	m_iIndicies = 18;
 	BindPyramid();
 	m_eShape = Utils::PYRAMID;
+	if (bHasTexture)
+	{
+		program = Shader::Textureprogram;
+	}
+	else
+	{
+		program = Shader::program;
+	}
 }
 
 /************************************************************
@@ -56,6 +64,14 @@ Pyramid::Pyramid(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, c
 	m_iIndicies = 18;
 	BindPyramid();
 	m_eShape = Utils::PYRAMID;
+	if (bHasTexture)
+	{
+		program = Shader::Textureprogram;
+	}
+	else
+	{
+		program = Shader::program;
+	}
 
 }
 
@@ -141,12 +157,12 @@ void Pyramid::Render(Utils::Transform Newtransform)
 {
 	if (bHasTexture)
 	{
-		glUseProgram(Shader::Textureprogram);
+		glUseProgram(program);
 		glEnable(GL_BLEND);
 	}
 	else
 	{
-		glUseProgram(Shader::program);
+		glUseProgram(program);
 		glDisable(GL_BLEND);
 	}
 	Mesh::Render(Newtransform);

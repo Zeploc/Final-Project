@@ -32,102 +32,16 @@
 #include "Sphere.h"
 
 
-//
-///************************************************************
-//#--Description--#:  Constructor function
+//************************************************************
+//#--Description--#:	Constructor function with base position
 //#--Author--#: 		Alex Coultas
-//#--Parameters--#:	Takes contructor values
+//#--Parameters--#:		Takes contructor values
 //#--Return--#: 		NA
 //************************************************************/
-//Entity::Entity(Utils::Transform _Transform, float _fWidth, float _fHeight, Utils::EANCHOR _Anchor, glm::vec4 _Colour, Utils::ESHAPE _eShape)
-//	: transform(_Transform), m_fWidth(_fWidth), m_fHeight(_fHeight), EntityAnchor(_Anchor), Colour(_Colour), m_eShape(_eShape)
-//{
-//	switch (_eShape)
-//	{
-//	case Utils::PYRAMID:
-//		vao = Shader::BindPyramidArray(m_fWidth, m_fHeight, m_fWidth, Colour);
-//		m_iIndicies = 18;
-//		CollisionBox.fHeight = m_fHeight;
-//		CollisionBox.fWidth = m_fWidth;
-//		break;
-//	case Utils::PLANE:
-//		vao = Shader::BindArray(m_fWidth, m_fHeight, Colour);
-//		m_iIndicies = 6;
-//		break;
-//	case Utils::SPHERE:
-//		vao = Shader::BindSphereArray(m_fWidth, m_fHeight, m_fWidth, Colour, m_iIndicies);
-//		break;
-//	default:
-//		break;
-//	}
-//	bHasTexture = false;
-//}
-//
-///************************************************************
-//#--Description--#:  Constructor function with texture
-//#--Author--#: 		Alex Coultas
-//#--Parameters--#:	Takes contructor values
-//#--Return--#: 		NA
-//************************************************************/
-//Entity::Entity(Utils::Transform _Transform, float _fWidth, float _fHeight, Utils::EANCHOR _Anchor, glm::vec4 _Colour, const char * TextureSource, Utils::ESHAPE _eShape, glm::vec4 UVCoords)
-//	: transform(_Transform), m_fWidth(_fWidth), m_fHeight(_fHeight), EntityAnchor(_Anchor), Colour(_Colour)
-//{
-//	switch (_eShape)
-//	{
-//	case Utils::PYRAMID:
-//		vao = Shader::BindPyramidArray(m_fWidth, m_fHeight, m_fWidth, Colour, TextureSource, texture, UVCoords);
-//		m_iIndicies = 18;
-//		break;
-//	case Utils::PLANE:
-//		vao = Shader::BindArray(m_fWidth, m_fHeight, Colour, TextureSource, texture, UVCoords);
-//		CollisionBox.fHeight = m_fHeight;
-//		CollisionBox.fWidth = m_fWidth;
-//		m_iIndicies = 6;
-//		break;
-//	case Utils::SPHERE:
-//		vao = Shader::BindSphereArray(m_fWidth, m_fHeight, m_fWidth, Colour, TextureSource, texture, m_iIndicies, UVCoords);
-//		break;
-//	default:
-//		break;
-//	}
-//	bHasTexture = true;
-//}
-///************************************************************
-//#--Description--#:  Constructor function with texture and animation
-//#--Author--#: 		Alex Coultas
-//#--Parameters--#:	Takes contructor values
-//#--Return--#: 		NA
-//************************************************************/
-//Entity::Entity(Utils::Transform _Transform, float _fWidth, float _fHeight, Utils::EANCHOR _Anchor, glm::vec4 _Colour, const char * TextureSource, glm::vec2 v2FrameCounts, int _iFPS)
-//	: transform(_Transform), m_fWidth(_fWidth), m_fHeight(_fHeight), EntityAnchor(_Anchor), Colour(_Colour)
-//{
-//	vao = Shader::BindArray(m_fWidth, m_fHeight, Colour, TextureSource, texture, v2FrameCounts, AnimationInfo);
-//	bHasTexture = true;
-//	AnimationInfo.iFPS = _iFPS;
-//	m_fFrameCheck = 1.0f / AnimationInfo.iFPS;
-//	CollisionBox.fHeight = m_fHeight;
-//	CollisionBox.fWidth = m_fWidth;
-//}
-//
-///************************************************************
-//#--Description--#:  Constructor function with texture and tiling method
-//#--Author--#: 		Alex Coultas
-//#--Parameters--#:	Takes contructor values
-//#--Return--#: 		NA
-//************************************************************/
-//Entity::Entity(Utils::Transform _Transform, float _fWidth, float _fHeight, Utils::EANCHOR _Anchor, glm::vec4 _Colour, const char * TextureSource, int iCount, bool bHorizontal)
-//	: transform(_Transform), m_fWidth(_fWidth), m_fHeight(_fHeight), EntityAnchor(_Anchor), Colour(_Colour)
-//{
-//	vao = Shader::BindArray(m_fWidth, m_fHeight, Colour, TextureSource, texture, iCount, bHorizontal);
-//	bHasTexture = true;
-//	CollisionBox.fHeight = m_fHeight;
-//	CollisionBox.fWidth = m_fWidth;
-//}
-
 Entity::Entity(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 	: transform(_Transform), EntityAnchor(_Anchor)
 {
-	//EntityMesh->EntityRef = this->shared_from_this();
+
 }
 
 /************************************************************

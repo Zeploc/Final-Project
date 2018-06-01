@@ -95,7 +95,7 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 	{
 		case 1:
 		{
-			_Scene->SetPlayerPosition({ 0, -0.5f });
+			_Scene->SetPlayerPosition({ 0, -2.5f, 0 });
 			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-8.25,-2.25f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5, 6, Utils::BOTTOM_CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block4.png", 1, true);
 			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-2, -1.75f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 1, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block4Ice.png", 2, true);
 			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-6, -1.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 1.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block2Ice.png", 4, true);
@@ -109,7 +109,7 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 		}
 		case 2:
 		{
-			_Scene->SetPlayerPosition({ -3, 2.0f });
+			_Scene->SetPlayerPosition({ -3, 2.0f, 0 });
 			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-8.25,-2.25f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5, 6, Utils::BOTTOM_CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block4Ice.png", 1, true);
 			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-7, -1.0f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 1.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block2Ice.png", 4, true);
 			_Scene->AddCollidable(Utils::Transform{ glm::vec3(5, -0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block2Ice.png", 1, false);

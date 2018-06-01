@@ -31,6 +31,8 @@
 #include "Engine\Sphere.h"
 #include "Engine\Cube.h"
 #include "Engine\CubeMap.h"
+#include "Engine\CollisionBounds.h"
+#include "Engine\Model.h"
 
 // Local Includes //
 #include "Player.h"
@@ -62,8 +64,9 @@ Level::Level(std::string sSceneName)
 	WorldCubeMap->AddMesh(WorldCubeMapMesh);
 	AddEntity(WorldCubeMap);
 	// Add cube map first so transpancy works
-	std::shared_ptr<Player> Player(new Player(Utils::Transform{ glm::vec3(SpawnPos, 0.1f), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
+	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
 	AddEntity(Player);
+	Player->EntityMesh->MeshCollisionBounds = new CollisionBounds(0.5f, 1.0f, 0.5f, Player);
 	EPlayer = Player;                
 
 
@@ -105,13 +108,18 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(1.0f, 2.0f, 1.0f, glm::vec4(1.0f, 0.1f, 0.1f, 1.0f));
 	TargetMesh->bIsLit = true;
 	Target->AddMesh(TargetMesh);
+	TargetMesh->MeshCollisionBounds = new CollisionBounds(1, 2, 1, Target);
 	AddEntity(Target);
 
 	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 	NewEnemy->AddMesh(EnemeyMesh);
 	NewEnemy->Target = Target;
+	EnemeyMesh->MeshCollisionBounds = new CollisionBounds(1, 1, 1, NewEnemy);
 	AddEntity(NewEnemy);
+
+	TargetRef = Target;
+	Enemy1Ref = NewEnemy;
 
 	TempTarget = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 	TargetMesh = std::make_shared<Sphere>(1.0f, 2.0f, 1.0f, glm::vec4(0.0f, 0.9f, 0.1f, 1.0f));
@@ -129,6 +137,11 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Cube> EnemeyBlueMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 0.1f, 1.0f, 1.0f), "Resources/Enemy1.png");
 	NewWanderEnemy->AddMesh(EnemeyBlueMesh);
 	AddEntity(NewWanderEnemy);
+
+	std::shared_ptr<Entity> ModelEnt = std::make_shared<Entity>(Entity({ glm::vec3(5, -2.5, 8), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(Model({ 1.0f, 1.0f, 1.0f, 1.0f }, "Resources/Models/Tank/Tank.obj"));
+	ModelEnt->AddMesh(NewModelMesh);
+	AddEntity(ModelEnt);
 
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//NewCursor->SetVisibleRange({ 500, 150 });
@@ -157,6 +170,10 @@ Level::~Level()
 ************************************************************/
 void Level::Update()
 {
+	if (EPlayer->EntityMesh->MeshCollisionBounds->isColliding(TargetRef))
+	{
+		std::cout << "Player Colliding with Target!\n";
+	}
 	//if (!TestParticleSystem)
 	//	std::cout << "particle system destroyed\n";
 	FPSCounterText->sText = "FPS: " + std::to_string(Time::dFPS);
@@ -334,7 +351,7 @@ void Level::RestartLevel()
 #--Parameters--#:	Vector 2 for new position
 #--Return--#: 		NA
 ************************************************************/
-void Level::SetPlayerPosition(glm::vec2 Pos)
+void Level::SetPlayerPosition(glm::vec3 Pos)
 {
 	//EPlayer->transform.Position = glm::vec3(Pos, 0);	
 	SpawnPos = Pos;

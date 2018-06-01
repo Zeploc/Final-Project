@@ -223,8 +223,8 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Engine\ParticleSystem.h" />
     <ClInclude Include="Engine\Mesh.h" />
-    <ClInclude Include="ModelObject.h" />
-    <ClInclude Include="ModelMesh.h" />
+    <ClInclude Include="Engine\ModelObject.h" />
+    <ClInclude Include="Engine\ModelMesh.h" />
     <ClInclude Include="NetworkEntity.h" />
     <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="NetworkSystem.h" />

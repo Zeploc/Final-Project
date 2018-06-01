@@ -50,7 +50,7 @@ public:
 	void Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm::vec3 ForwardVec, glm::vec3 UpVec);
 	void Update();
 
-	void SetMVP(Utils::Transform _transform);
+	void SetMVP(Utils::Transform _transform, GLuint program);
 	void SwitchProjection(PROJECTIONMODE _Mode);
 	PROJECTIONMODE ReturnDimensionMode() { return m_ProjectionMode; };
 

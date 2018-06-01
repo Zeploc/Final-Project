@@ -16,16 +16,24 @@
 // This Includes //
 #include "Mesh.h"
 
+// Library Includes //
+#include <memory>
+
+// Engine Includes //
+#include "ModelObject.h"
+
 class Model : public Mesh
 {
 public:
-	Model(float fWidth, float fHeight, float fDepth, glm::vec4 Colour, const char *  ModelSource);
+	Model(glm::vec4 Colour, const char *  ModelSource);
 	~Model();
 
 	void BindModel();
 	void Rebind();
 
 	void Render(Utils::Transform Newtransform);
-	void Update();	
+	void Update();
+
+	std::shared_ptr<ModelObject> pModelObject;
 };
 

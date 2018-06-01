@@ -282,7 +282,7 @@ void Player::Reset()
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->Scenes[SceneManager::GetInstance()->CurrentScene]);
 	fHSpeed = 0;
 	fVSpeed = 0;
-	transform.Position = glm::vec3(GotLevel->SpawnPos, 0);
+	transform.Position = GotLevel->SpawnPos;
 }
 
 /************************************************************

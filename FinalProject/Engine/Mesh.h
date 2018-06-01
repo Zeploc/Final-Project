@@ -49,6 +49,7 @@ public:
 	float m_fHeight;
 	float m_fDepth = 0;
 	glm::vec4 Colour;
+	GLuint program;
 	GLuint vao;
 	GLuint texture;
 	const char * TextureSource;

@@ -55,17 +55,19 @@ public:
 	std::shared_ptr<Player> EPlayer;
 
 	std::shared_ptr<Entity> TempTarget;
+	std::shared_ptr<Entity> TargetRef;
+	std::shared_ptr<Entity> Enemy1Ref;
 
 	std::vector<std::shared_ptr<Entity>> Collidables;
 	std::vector<std::shared_ptr<Entity>> Enemies;
 
-	glm::vec2 SpawnPos = glm::vec2(0, -0.5f);
+	glm::vec3 SpawnPos = glm::vec3(0, -2.5f, 0);
 
 	std::shared_ptr<UIText> ScoreText;
 	std::shared_ptr<UIText> FPSCounterText;
 	
 	void RestartLevel();
-	void SetPlayerPosition(glm::vec2 Pos);
+	void SetPlayerPosition(glm::vec3 Pos);
 
 	void AddPoints(int _Points) { iScore += _Points; };
 	int GetTotalPoints() { return iScore; };

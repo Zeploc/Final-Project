@@ -141,7 +141,7 @@ void Camera::FPSControls()
 #--Parameters--#: 	Takes in the transforms vectors
 #--Return--#: 		NA
 ************************************************************/
-void Camera::SetMVP(Utils::Transform _transform)
+void Camera::SetMVP(Utils::Transform _transform, GLuint program)
 {
 	glm::mat4 translate = glm::translate(glm::mat4(), _transform.Position);
 	glm::mat4 scale = glm::scale(glm::mat4(), _transform.Scale);
@@ -152,14 +152,8 @@ void Camera::SetMVP(Utils::Transform _transform)
 	glm::mat4 model = translate * rotation * scale;
 	
 	glm::mat4 MVP = projection * view * model;
-	GLint MVPLoc = glGetUniformLocation(Shader::program, "MVP");
+	GLint MVPLoc = glGetUniformLocation(program, "MVP");
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));
-	MVPLoc = glGetUniformLocation(Shader::Textureprogram, "MVP");
-	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));
-	MVPLoc = glGetUniformLocation(Shader::LitTextureprogram, "MVP");
-	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));
-	MVPLoc = glGetUniformLocation(Shader::CubeMapProgram, "MVP");
-	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));	
 }
 
 

@@ -47,7 +47,7 @@ CubeMap::CubeMap(float fWidth, float fHeight, float fDepth, char *  _TextureSour
 	bHasTexture = false;
 	m_eShape = Utils::CUBE;
 	BindCubeMap();
-
+	program = Shader::CubeMapProgram;
 }
 
 
@@ -187,7 +187,7 @@ void CubeMap::Rebind()
 ************************************************************/
 void CubeMap::Render(Utils::Transform Newtransform)
 {
-	glUseProgram(Shader::CubeMapProgram);
+	glUseProgram(program);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	glDisable(GL_CULL_FACE);
 	//glDisable(GL_BLEND);
@@ -196,7 +196,7 @@ void CubeMap::Render(Utils::Transform Newtransform)
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 	glUniform1i(glGetUniformLocation(Shader::CubeMapProgram, "cubeSampler"), 0);
 
-	Camera::GetInstance()->SetMVP(Newtransform);
+	Camera::GetInstance()->SetMVP(Newtransform, program);
 
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, 0);

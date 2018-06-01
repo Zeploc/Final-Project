@@ -40,6 +40,28 @@ Sphere::Sphere(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 	bHasTexture = false;
 	BindSphere();
 	m_eShape = Utils::SPHERE;
+	if (bHasTexture)
+	{
+		if (bIsLit)
+		{
+			program = Shader::LitTextureprogram;
+		}
+		else
+		{
+			program = Shader::Textureprogram;
+		}
+	}
+	else
+	{
+		if (bIsLit)
+		{
+			program = Shader::LitTextureprogram;
+		}
+		else
+		{
+			program = Shader::program;
+		}
+	}
 }
 
 /************************************************************
@@ -59,6 +81,28 @@ Sphere::Sphere(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, con
 	bHasTexture = true;
 	BindSphere();
 	m_eShape = Utils::SPHERE;
+	if (bHasTexture)
+	{
+		if (bIsLit)
+		{
+			program = Shader::LitTextureprogram;
+		}
+		else
+		{
+			program = Shader::Textureprogram;
+		}
+	}
+	else
+	{
+		if (bIsLit)
+		{
+			program = Shader::LitTextureprogram;
+		}
+		else
+		{
+			program = Shader::program;
+		}
+	}
 }
 
 /************************************************************
@@ -209,7 +253,7 @@ void Sphere::Render(Utils::Transform Newtransform)
 	{		
 		if (bIsLit)
 		{
-			glUseProgram(Shader::LitTextureprogram);
+			glUseProgram(program);
 			glm::mat4 translate = glm::translate(glm::mat4(), Newtransform.Position);
 			glm::mat4 scale = glm::scale(glm::mat4(), Newtransform.Scale);
 			glm::mat4 rotation = glm::rotate(glm::mat4(), glm::radians(Newtransform.Rotation.x), glm::vec3(1, 0, 0));
@@ -224,7 +268,9 @@ void Sphere::Render(Utils::Transform Newtransform)
 			glUniform1i(glGetUniformLocation(Shader::LitTextureprogram, "bIsTex"), bHasTexture);
 		}
 		else
-			glUseProgram(Shader::Textureprogram);
+		{
+			glUseProgram(program);
+		}
 
 		glEnable(GL_BLEND);
 	}
@@ -232,11 +278,13 @@ void Sphere::Render(Utils::Transform Newtransform)
 	{
 		if (bIsLit)
 		{
-			glUseProgram(Shader::LitTextureprogram);
+			glUseProgram(program);
 			glUniform1i(glGetUniformLocation(Shader::LitTextureprogram, "bIsTex"), bHasTexture);
 		}
 		else
-			glUseProgram(Shader::program);
+		{
+			glUseProgram(program);
+		}
 		glDisable(GL_BLEND);
 	}
 	Mesh::Render(Newtransform);
