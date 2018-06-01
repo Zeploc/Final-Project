@@ -222,6 +222,9 @@
     <ClCompile Include="CollisionBounds.cpp">
       <Filter>Engine\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Model.cpp">
+      <Filter>Engine\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -380,14 +383,17 @@
     <ClInclude Include="Enemy3.h">
       <Filter>Game\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="ModelMesh.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="CollisionBounds.h">
       <Filter>Engine\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Model.h">
+      <Filter>Engine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelObject.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

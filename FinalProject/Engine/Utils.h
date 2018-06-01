@@ -81,7 +81,8 @@ public:
 		PLANE,
 		PYRAMID,
 		CUBE,
-		SPHERE
+		SPHERE,
+		MODEL
 	};
 
 	static glm::vec3 GetAncoredPosition(glm::vec3 position, glm::vec2 Dimensions, EANCHOR _AnchorType);

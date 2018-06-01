@@ -63,6 +63,10 @@ git branch --merged
 git merge <branch>
 	- Merge with current --merged branches
 	
+CONFIG:
+git config --global user.name "NAME"
+git config --global user.email "email@example.com"
+	
 ORDER IN UPDATING CHANGES
 git checkout <localbranch>
 git status 						// see the items to commit

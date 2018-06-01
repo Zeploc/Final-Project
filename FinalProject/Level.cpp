@@ -145,8 +145,8 @@ Level::Level(std::string sSceneName)
 ************************************************************/
 Level::~Level()
 {
-	delete TestModel;
-	TestModel = nullptr;
+	//delete TestModel;
+	//TestModel = nullptr;
 }
 
 /************************************************************

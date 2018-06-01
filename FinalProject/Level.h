@@ -24,7 +24,7 @@
 #include "Engine\Entity.h"
 
 // Local Includes //
-#include "Model.h"
+//#include "Model.h"
 
 // This Includes //
 
@@ -70,7 +70,7 @@ public:
 	void AddPoints(int _Points) { iScore += _Points; };
 	int GetTotalPoints() { return iScore; };
 
-	Model* TestModel;
+	//Model* TestModel;
 
 private:
 	float fCameraSpeed = 5.0f;

@@ -28,7 +28,7 @@ using namespace std;
 #include "Engine\Camera.h"
 #include "Engine\Shader.h"
 
-class Model
+class ModelObject
 {
 public:
 	
@@ -37,7 +37,7 @@ public:
 	
 	/*  Functions   */
 	// Constructor, expects a filepath to a 3D model.
-	Model(std::string path, Camera* camera)
+	ModelObject(std::string path, Camera* camera)
 	{
 
 		this->program = Shader::ModelProgram;

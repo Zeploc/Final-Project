@@ -149,6 +149,7 @@
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\Entity.cpp" />
     <ClCompile Include="Engine\Input.cpp" />
+    <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameSettings.cpp" />
     <ClCompile Include="HostGameMenu.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\Entity.h" />
     <ClInclude Include="Engine\Input.h" />
+    <ClInclude Include="Engine\Model.h" />
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\SceneManager.h" />
     <ClInclude Include="Engine\Shader.h" />
@@ -220,7 +222,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Engine\ParticleSystem.h" />
     <ClInclude Include="Engine\Mesh.h" />
-    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelObject.h" />
     <ClInclude Include="ModelMesh.h" />
     <ClInclude Include="NetworkEntity.h" />
     <ClInclude Include="NetworkManager.h" />
