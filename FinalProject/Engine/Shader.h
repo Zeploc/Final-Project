@@ -36,6 +36,7 @@ public:
 	static GLuint TextUIprogram;
 	static GLuint UIprogram;
 	static GLuint CubeMapProgram;
+	static GLuint ModelProgram;
 	
 	/*static GLuint BindPyramidArray(float fWidth, float fHeight, float fDepth, glm::vec4 Colour);
 	static GLuint BindPyramidArray(float fWidth, float fHeight, float fDepth, glm::vec4 Colour, const char *  TextureSource, GLuint& Texture, glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1));

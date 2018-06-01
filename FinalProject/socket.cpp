@@ -141,7 +141,7 @@ int CSocket::DisableBroadcast()
 
 std::string CSocket::GetSocketAddress()
 {
-	return GetLocalAddress() + ":" + std::to_string(m_SocketAddress.sin_port);
+	return GetLocalAddress() + ":" + std::to_string(ntohs(m_SocketAddress.sin_port));
 }
 
 void CSocket::SetRemotePort(unsigned short _usRemotePort)

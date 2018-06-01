@@ -59,14 +59,14 @@ Mesh::~Mesh()
 ************************************************************/
 void Mesh::Render(Utils::Transform Newtransform)
 {
+	// ABOVE CALLED FROM DERIVED RENDER
 	if (bHasTexture)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
 	
 	}
-	// ABOVE CALLED FROM DERIVED RENDER
-
+	glFrontFace(GL_CW);
 	Camera::GetInstance()->SetMVP(Newtransform);
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, 0);

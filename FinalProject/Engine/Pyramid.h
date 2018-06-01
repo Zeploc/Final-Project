@@ -27,8 +27,6 @@ public:
 	void Rebind();
 
 	void Render(Utils::Transform Newtransform);
-	void Update();
-	
-	float m_fDepth;
+	void Update();	
 };
 

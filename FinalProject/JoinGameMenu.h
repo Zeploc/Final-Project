@@ -58,6 +58,8 @@ public:
 	void ClearServerList() { v_ServerList.clear(); };
 	void AddServers(std::vector<ServerInfo> Servers);
 
+	void JoinCurrentServer();
+
 	std::string GetPlayerName() { return PlayerName->FieldText.sText; };
 
 	std::vector<std::shared_ptr<UIElement>> v_ScreenElements;

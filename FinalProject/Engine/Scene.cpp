@@ -22,6 +22,7 @@
 #include "UIText.h"
 #include "Shader.h"
 #include "Plane.h"
+#include "UIButton.h"
 
 // Local Includes //
 
@@ -265,6 +266,7 @@ void Scene::Update()
 	{
 		if (it) it->Update();
 	}*/
+	UIButton::bButtonPressedThisFrame = false;
 }
 
 /************************************************************
