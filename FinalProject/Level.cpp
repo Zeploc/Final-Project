@@ -58,6 +58,9 @@
 Level::Level(std::string sSceneName)
 	: Scene(sSceneName)
 {
+
+	Camera::GetInstance()->SetCameraForwardVector({0, -1, -1});
+	Camera::GetInstance()->m_bFPS = false;
 	std::shared_ptr<Entity> WorldCubeMap = std::make_shared<Entity>(Entity({ { 0, 0, 0 },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
 	char *  TextureSources[6] = { "right.jpg", "left.jpg" , "top.jpg" , "bottom.jpg" , "back.jpg" , "front.jpg" };
 	std::shared_ptr<CubeMap> WorldCubeMapMesh = std::make_shared<CubeMap>(CubeMap(1000.0f, 1000.0f, 1000.0f, TextureSources));
@@ -111,7 +114,7 @@ Level::Level(std::string sSceneName)
 	TargetMesh->MeshCollisionBounds = new CollisionBounds(1, 2, 1, Target);
 	AddEntity(Target);
 
-	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 2,0,0 }));
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 	NewEnemy->AddMesh(EnemeyMesh);
 	NewEnemy->Target = Target;

@@ -31,50 +31,56 @@ AI::~AI()
 {
 }
 
-glm::vec3 AI::SeekDirection(glm::vec3 Source, glm::vec3 Target)
+glm::vec3 AI::SeekForce(glm::vec3 Source, glm::vec3 Target, float Force, glm::vec3 CurrentVelocity, float MaxSpeed)
 {
-	glm::vec3 DesiredVelocity =  Target - Source;
-	if (0 != (DesiredVelocity.x || DesiredVelocity.y || DesiredVelocity.z)) // In case vector is zero vector (Can't normalise zero vector)
+	glm::vec3 LookAtDirection =  Target - Source;
+	if (0 != (LookAtDirection.x || LookAtDirection.y || LookAtDirection.z)) // In case vector is zero vector (Can't normalise zero vector)
 	{
-		DesiredVelocity = glm::vec3(glm::normalize(DesiredVelocity));
+		LookAtDirection = glm::vec3(glm::normalize(LookAtDirection));
 	}	
 	
-	return glm::vec3(DesiredVelocity);
+	glm::vec3 DesiredVelocity = LookAtDirection * MaxSpeed;
+	glm::vec3 Steering = DesiredVelocity - CurrentVelocity;
+	Steering /= Force;
+	return (Steering);
 }
 
-glm::vec3 AI::FleeDirection(glm::vec3 Source, glm::vec3 Target)
+glm::vec3 AI::FleeForce(glm::vec3 Source, glm::vec3 Target, float Force, glm::vec3 CurrentVelocity, float MaxSpeed)
 {
-	glm::vec3 DesiredVelocity =  Source;
-	if (0 != (DesiredVelocity.x || DesiredVelocity.y || DesiredVelocity.z)) // In case vector is zero vector (Can't normalise zero vector)
+	glm::vec3 LookAtDirection = Target - Source;
+	if (0 != (LookAtDirection.x || LookAtDirection.y || LookAtDirection.z)) // In case vector is zero vector (Can't normalise zero vector)
 	{
-		DesiredVelocity = glm::vec3(glm::normalize(DesiredVelocity));
+		LookAtDirection = glm::vec3(glm::normalize(LookAtDirection));
 	}
-
-	return glm::vec3(DesiredVelocity);
+	// Fix tho
+	glm::vec3 DesiredVelocity = LookAtDirection * MaxSpeed;
+	glm::vec3 Steering = CurrentVelocity - DesiredVelocity;
+	Steering /= Force;
+	return (Steering);
 }
 
 glm::vec3 AI::PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, glm::vec3 PreviousPosition, float ScaleFactor)
 {	
-	glm::vec3 TargetVelocity = SeekDirection(PreviousPosition, Target->transform.Position);
+	glm::vec3 TargetVelocity = SeekForce(PreviousPosition, Target->transform.Position, 1, { 1, 0 ,0 }, 5);
 
 	TargetVelocity * ScaleFactor + Target->transform.Position; //Future position
 
-	return SeekDirection(Source->transform.Position, TargetVelocity * ScaleFactor + Target->transform.Position);
+	return SeekForce(Source->transform.Position, TargetVelocity * ScaleFactor + Target->transform.Position,1, { 1, 0 ,0 }, 5);
 
 }
 
 glm::vec3 AI::EvadeForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, glm::vec3 PreviousPosition, float ScaleFactor)
 {
-	glm::vec3 TargetVelocity = SeekDirection(PreviousPosition, Target->transform.Position);
+	glm::vec3 TargetVelocity = SeekForce(PreviousPosition, Target->transform.Position, 1, { 1, 0 ,0 }, 5);
 
 	-TargetVelocity * ScaleFactor + Target->transform.Position; //Future position inverted
 
-	return SeekDirection(Source->transform.Position, -TargetVelocity * ScaleFactor + Target->transform.Position);
+	return SeekForce(Source->transform.Position, -TargetVelocity * ScaleFactor + Target->transform.Position, 1, { 1, 0 ,0 }, 5);
 }
 
 glm::vec3 AI::SeekWithArrival(std::shared_ptr<Entity> Source, glm::vec3 Target, float _fSlowingRange, float _fMaxSpeed)
 {
-	glm::vec3 v3SeekDirection = SeekDirection(Source->transform.Position, Target);
+	glm::vec3 v3SeekDirection = SeekForce(Source->transform.Position, Target, 1, { 1, 0 ,0 }, 5);
 	float fDistanceToTarget = abs(glm::length((Target - Source->transform.Position)));
 	if (fDistanceToTarget < _fSlowingRange)
 	{
@@ -100,7 +106,7 @@ glm::vec3 AI::WanderDirection(std::shared_ptr<Entity> Source, glm::vec3& TargetR
 		TargetRef = NewTargetPos;
 	}
 
-	return SeekDirection(Source->transform.Position, TargetRef);
+	return SeekForce(Source->transform.Position, TargetRef, 1, { 1, 0 ,0 }, 5);
 }
 
 glm::vec3 AI::FindFutureLocation(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, float _fScaleFactor, float _fVelTarget)

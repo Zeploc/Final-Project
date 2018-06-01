@@ -60,10 +60,8 @@ void Camera::Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm:
 ************************************************************/
 void Camera::Update()
 {
-	if (m_ProjectionMode == PERSPECTIVE && m_bFPS)
-		FPSControls();
-
-
+	/*if (m_ProjectionMode == PERSPECTIVE && m_bFPS)
+		FPSControls();*/
 	view = glm::lookAt(cameraPos,
 		cameraPos + cameraFront,
 		cameraUp);	
