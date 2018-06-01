@@ -167,17 +167,29 @@ void Player::Update()
 		fVSpeed = 0;
 	}
 	
-	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS)
+	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS && bHasDodged == false)
 	{
-		fHSpeed *= 15;
-		fVSpeed *= 15;
+		fHSpeed *= 10;
+        fVSpeed *= 10;
 
 		bHasDodged = true;
+		DodgeTimer = 0.2f;
 	}
 
-	if (bHasDodged == true && bHasDodged > 0.0f)
+	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS && bHasDodged == true && DodgeTimer <= 0)
+	{
+		fHSpeed *= 35;
+		fVSpeed *= 35;
+		bHasDodged = false;
+	}
+
+	if (bHasDodged == true)
 	{
 		DodgeTimer -= Time::dTimeDelta;
+	}
+	if (DodgeTimer < -0.2)
+	{
+		bHasDodged = false;
 	}
 	//Reducing the velocity to 0 if the movement button is let go
 	

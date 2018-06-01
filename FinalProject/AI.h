@@ -28,8 +28,8 @@ public:
 	AI();
 	~AI();
 
-	static glm::vec3 SeekDirection(glm::vec3 Source, glm::vec3 Target);
-	static glm::vec3 FleeDirection(glm::vec3 Source, glm::vec3 Target);
+	static glm::vec3 SeekForce(glm::vec3 Source, glm::vec3 Target, float Force, glm::vec3 CurrentVelocity, float MaxSpeed);
+	static glm::vec3 FleeForce(glm::vec3 Source, glm::vec3 Target, float Force, glm::vec3 CurrentVelocity, float MaxSpeed);
 	static glm::vec3 PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, glm::vec3 PreviousPosition, float ScaleFactor);
 	static glm::vec3 EvadeForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, glm::vec3 PreviousPosition, float ScaleFactor);
 	static glm::vec3 SeekWithArrival(std::shared_ptr<Entity> Source, glm::vec3 Target, float _fSlowingRange, float _fMaxSpeed);
