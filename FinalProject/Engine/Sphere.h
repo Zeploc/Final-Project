@@ -28,7 +28,5 @@ public:
 
 	void Render(Utils::Transform Newtransform);
 	void Update();
-
-	float m_fDepth;
 };
 

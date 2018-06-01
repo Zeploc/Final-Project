@@ -50,6 +50,8 @@ public:
 
 	bool bPressed = false;
 
+	static bool bButtonPressedThisFrame;
+
 private:
 	using GMVoidFunc = void(*)();
 
@@ -63,5 +65,6 @@ private:
 	glm::vec4 btnHighlightColour;
 
 	const char* m_PressSoundPath = "";
+
 };
 

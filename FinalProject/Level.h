@@ -24,6 +24,7 @@
 #include "Engine\Entity.h"
 
 // Local Includes //
+#include "Model.h"
 
 // This Includes //
 
@@ -39,6 +40,7 @@ public:
 	~Level();
 	
 	void Update();
+	void RenderScene();
 
 	void AddCollidable(std::shared_ptr<Entity>);
 	void AddEnemy(std::shared_ptr<Entity>);
@@ -67,6 +69,8 @@ public:
 
 	void AddPoints(int _Points) { iScore += _Points; };
 	int GetTotalPoints() { return iScore; };
+
+	Model* TestModel;
 
 private:
 	float fCameraSpeed = 5.0f;

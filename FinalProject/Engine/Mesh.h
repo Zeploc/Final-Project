@@ -44,6 +44,7 @@ public:
 	Utils::ESHAPE m_eShape;
 	float m_fWidth;
 	float m_fHeight;
+	float m_fDepth = 0;
 	glm::vec4 Colour;
 	GLuint vao;
 	GLuint texture;

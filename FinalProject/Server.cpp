@@ -219,7 +219,7 @@ void Server::ProcessData(std::string _DataReceived)
 					_packetToSend.Serialize(CLIENTCONNECTED, const_cast<char*>(_strToSend.c_str()));
 					SendData(_packetToSend.PacketData);
 				}
-								
+							
 				// Send the new client to all current clients
 				_strToSend = m_pConnectedClients->find(SenderAddress)->second.m_strName + " " + SenderAddress;
 				SendToAllClients(_strToSend, CLIENTCONNECTED, SenderAddress);

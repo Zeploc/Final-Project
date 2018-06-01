@@ -27,7 +27,7 @@
 #include "UIButton.h"
 
 // Static Variables //
-
+bool UIButton::bButtonPressedThisFrame = false;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -174,14 +174,15 @@ void UIButton::Update()
 		{
 			HoldFuncCall();
 		}
-		else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS)
+		else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
 		{
 			if (m_PressSoundPath != "")
 			{
 				SoundManager::GetInstance()->PlayAudio(m_PressSoundPath, "FXC");
 			}
-			if (FuncCall != nullptr) FuncCall();
 			bPressed = true;
+			bButtonPressedThisFrame = true;
+			if (FuncCall != nullptr) FuncCall();
 		}
 		 
 	}

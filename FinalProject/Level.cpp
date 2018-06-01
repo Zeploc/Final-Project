@@ -133,7 +133,8 @@ Level::Level(std::string sSceneName)
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//NewCursor->SetVisibleRange({ 500, 150 });
 	//AddUIElement(NewCursor);
-		
+	//TestModel = new Model("Resources/Models/Tank/Tank.obj", Camera::GetInstance());
+	
 }
 
 /************************************************************
@@ -144,7 +145,8 @@ Level::Level(std::string sSceneName)
 ************************************************************/
 Level::~Level()
 {
-
+	delete TestModel;
+	TestModel = nullptr;
 }
 
 /************************************************************
@@ -182,6 +184,13 @@ void Level::Update()
 	}*/
 
 	//ScoreText->sText = "Score: " + std::to_string(iScore);
+}
+
+void Level::RenderScene()
+{
+	Scene::RenderScene();
+
+	//TestModel->Render();
 }
 
 /************************************************************

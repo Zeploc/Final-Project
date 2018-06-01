@@ -84,8 +84,7 @@ void NetworkSystem::InitServer(ServerInfo NewServerProperties)
 		//Diagnostic error messages to be added!!
 	}
 	m_bOnline = true;
-
-
+	
 	m_pNetworkEntity = std::make_shared<Server>();
 	std::dynamic_pointer_cast<Server>(m_pNetworkEntity)->Initialise(NewServerProperties);
 }

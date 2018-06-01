@@ -33,9 +33,11 @@ NetworkManager::~NetworkManager()
 
 void NetworkManager::JoinServer(ServerInfo _ServerProperties)
 {	
+	std::shared_ptr<Client> ClientRef = std::dynamic_pointer_cast<Client>(m_Network.m_pNetworkEntity);
+	ClientRef->ChangeServer(_ServerProperties._IPAddress);
 	TPacket _packet;
 	_packet.Serialize(HANDSHAKE, const_cast<char *>(std::dynamic_pointer_cast<Client>(m_Network.m_pNetworkEntity)->GetClientUserName().c_str()));
-	std::dynamic_pointer_cast<Client>(m_Network.m_pNetworkEntity)->SendData(_packet.PacketData);
+	ClientRef->SendData(_packet.PacketData);
 }
 
 /************************************************************

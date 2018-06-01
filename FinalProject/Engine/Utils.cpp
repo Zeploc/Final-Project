@@ -190,6 +190,11 @@ bool Utils::isColliding2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entit
 	return false;
 }
 
+bool Utils::isColliding(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2)
+{
+	return false;
+}
+
 /************************************************************
 #--Description--#:  Returns whether the object would collide given movement
 #--Author--#: 		Alex Coultas
@@ -213,6 +218,28 @@ bool Utils::CheckCollision2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<En
 		&& Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y + HalfHeight1 + Movement.y > Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y - HalfHeight2
 		&& Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y - HalfHeight1 + Movement.y < Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y + HalfHeight2)
 		return true;
+	return false;
+}
+
+bool Utils::CheckCollision(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2, glm::vec3 Movement)
+{
+	/*
+	std::shared_ptr<Mesh> Entity1Mesh = std::dynamic_pointer_cast<Plane>(Entity1->EntityMesh);
+	std::shared_ptr<Mesh> Entity2Mesh = std::dynamic_pointer_cast<Plane>(Entity2->EntityMesh);
+	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->transform.Scale.x);
+	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->transform.Scale.y);
+	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->transform.Scale.x);
+	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->transform.Scale.y);
+
+	glm::vec3 Entity1Pos = GetAncoredPosition(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * (glm::vec2)Entity1->transform.Scale, Entity1->EntityAnchor);
+	glm::vec3 Entity2Pos = GetAncoredPosition(Entity2->transform.Position + glm::vec3(Entity2Mesh->CollisionBox.v2Offset, 0), glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * (glm::vec2)Entity2->transform.Scale, Entity2->EntityAnchor);
+
+	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 + Movement.x > Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2
+		&& Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x - HalfWidth1 + Movement.x < Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x + HalfWidth2
+		&& Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y + HalfHeight1 + Movement.y > Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y - HalfHeight2
+		&& Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y - HalfHeight1 + Movement.y < Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y + HalfHeight2)
+		return true;
+	return false;*/
 	return false;
 }
 

@@ -31,8 +31,6 @@ void MenuScreenBtn();
 void SearchForServersBtn();
 
 // Local Variables //
-ServerInfo LocalVariable;
-
 
 JoinGameMenu::JoinGameMenu()
 {
@@ -42,6 +40,7 @@ JoinGameMenu::JoinGameMenu()
 
 JoinGameMenu::~JoinGameMenu()
 {
+	//LocalVariable._ServerName = "";
 }
 
 void JoinGameMenu::Init(std::shared_ptr<Scene> _Scene)
@@ -97,10 +96,33 @@ void JoinGameMenu::AddServers(std::vector<ServerInfo> Servers)
 	}
 }
 
+void JoinGameMenu::JoinCurrentServer()
+{
+	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
+	MenuRef->LobbyScreen.SetPlayerNameText(GetPlayerName());
+	std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)->SetClientUserName(GetPlayerName());
+	for (auto it : v_ScreenElements)
+	{
+		std::shared_ptr<UIButton> ButtonCast = std::dynamic_pointer_cast<UIButton>(it);
+		if (!ButtonCast) continue;
+		if (ButtonCast->bPressed)
+		{
+			for (auto Serv : v_ServerList)
+			{
+				if (ButtonCast == Serv.ServerButton)
+				{
+					NetworkManager::GetInstance()->JoinServer(Serv.CurrentServerInfo);
+					break;
+				}
+			}
+			break;
+		}
+	}
+}
+
 ServerItem::ServerItem(ServerInfo _ServerInfo, glm::vec2 _ItemPosition)
 {
 	CurrentServerInfo = _ServerInfo;
-	LocalVariable = _ServerInfo;
 	ServerButton = std::make_shared<UIButton>(UIButton(_ItemPosition, Utils::TOP_CENTER, 0, { 0.3f, 0.3f, 0.3f, 1.0f }, { 0.7f, 0.7f, 0.7f, 1.0f }, 1000, 60, JoinSerer));
 	std::string ServerText = "SERVER: \"" + CurrentServerInfo._ServerName + "\" with " + std::to_string(CurrentServerInfo._iPlayers) + " Players                     IP: " + ToString(CurrentServerInfo._IPAddress);
 	ServerButton->AddText(ServerText, "Resources/Fonts/Roboto-Light.ttf", 30, { 1.0f, 1.0f, 1.0f, 1.0f }, Utils::CENTER);
@@ -114,9 +136,7 @@ ServerItem::~ServerItem()
 void JoinSerer()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
-	std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)->SetClientUserName(MenuRef->JoinGameScreen.GetPlayerName());
-	NetworkManager::GetInstance()->JoinServer(LocalVariable);
-	MenuRef->LobbyScreen.SetPlayerNameText(MenuRef->JoinGameScreen.GetPlayerName());
+	MenuRef->JoinGameScreen.JoinCurrentServer();
 }
 
 void SearchForServersBtn()
