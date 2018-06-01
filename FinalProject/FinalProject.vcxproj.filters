@@ -219,14 +219,14 @@
     <ClCompile Include="Enemy3.cpp">
       <Filter>Game\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionBounds.cpp">
-      <Filter>Engine\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Model.cpp">
       <Filter>Engine\Render</Filter>
     </ClCompile>
     <ClCompile Include="Spectator.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\CollisionBounds.cpp">
+      <Filter>Engine\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,9 +389,6 @@
     <ClInclude Include="ModelMesh.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionBounds.h">
-      <Filter>Engine\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Model.h">
       <Filter>Engine\Render</Filter>
     </ClInclude>
@@ -400,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="Spectator.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\CollisionBounds.h">
+      <Filter>Engine\Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

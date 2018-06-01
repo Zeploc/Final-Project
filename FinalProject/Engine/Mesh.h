@@ -29,6 +29,9 @@
 // Library Include //
 #include <memory>
 
+
+class CollisionBounds;
+
 class Mesh
 {
 public:
@@ -53,7 +56,7 @@ public:
 	bool bHasTexture = false;
 	bool bIsLit = false;
 	int m_iIndicies;
-
+	CollisionBounds* MeshCollisionBounds;
 	//std::shared_ptr<Entity> EntityRef;
 };
 

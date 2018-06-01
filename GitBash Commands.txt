@@ -69,13 +69,13 @@ git config --global user.email "email@example.com"
 	
 ORDER IN UPDATING CHANGES
 git checkout <localbranch>
-git status 						// see the items to commit
-git add -A 						// git add .
+git status 							// see the items to commit
+git add -A 							// git add .
 git commit -m "Message"
-git pull 						// pull latest personal branch
-git push 						// push new changes
-git checkout master 			// switch to master
-git pull origin master 			// Get remote master latest version onto local master
-git branch --merged 			// Show current to merge
-git merge <localbranch>			// merge personal branch with local master
-git push origin master			// push local master to remote master
+git pull 							// pull latest personal branch
+git push 							// push new changes
+git checkout master 				// switch to master
+git pull origin master 				// Get remote master latest version onto local master
+git branch --merged 				// Show current to merge
+git merge <localbranch> --ff-only	// Get fast-forward updates from <localbranch> into the branch you're currently on
+git push origin master				// push local master to remote master

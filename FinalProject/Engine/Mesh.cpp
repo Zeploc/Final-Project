@@ -17,6 +17,7 @@
 
 // Engine Includes //
 #include "Camera.h"
+#include "CollisionBounds.h"
 
 /************************************************************
 #--Description--#:  Constructor function
