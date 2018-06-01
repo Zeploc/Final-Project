@@ -89,6 +89,7 @@ void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)
 ************************************************************/
 void Entity::DrawEntity()
 {
+	if (!EntityMesh) return;
 	Utils::Transform AnchoredTransform = transform;
 	AnchoredTransform.Position = Utils::GetAncoredPosition(transform.Position, glm::vec2(EntityMesh->m_fWidth * transform.Scale.x, EntityMesh->m_fHeight * transform.Scale.y), EntityAnchor);
 	EntityMesh->Render(AnchoredTransform);
@@ -102,8 +103,8 @@ void Entity::DrawEntity()
 ************************************************************/
 void Entity::Update()
 {
+	if (!EntityMesh) return;
 	EntityMesh->Update();
-
 }
 
 /************************************************************

@@ -31,6 +31,7 @@
 // Static Variables //
 
 class Player;
+class Spectator;
 class ParticleSystem;
 
 class Level : public Scene
@@ -52,7 +53,9 @@ public:
 
 	void OnLoadScene();
 
+	std::shared_ptr<Entity> CurrentController;
 	std::shared_ptr<Player> EPlayer;
+	std::shared_ptr<Spectator> ESpectator;
 
 	std::shared_ptr<Entity> TempTarget;
 	std::shared_ptr<Entity> TargetRef;

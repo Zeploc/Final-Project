@@ -36,6 +36,7 @@
 
 // Local Includes //
 #include "Player.h"
+#include "Spectator.h"
 #include "GameManager.h"
 #include "UIManager.h"
 #include "Enemy1.h"
@@ -58,9 +59,8 @@
 Level::Level(std::string sSceneName)
 	: Scene(sSceneName)
 {
-
-	Camera::GetInstance()->SetCameraForwardVector({0, -1, -1});
-	Camera::GetInstance()->m_bFPS = false;
+	Camera::GetInstance()->SetCameraForwardVector({0, -1, 0});
+	Camera::GetInstance()->SetCameraPos({ 0, 5, -1 });
 	std::shared_ptr<Entity> WorldCubeMap = std::make_shared<Entity>(Entity({ { 0, 0, 0 },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
 	char *  TextureSources[6] = { "right.jpg", "left.jpg" , "top.jpg" , "bottom.jpg" , "back.jpg" , "front.jpg" };
 	std::shared_ptr<CubeMap> WorldCubeMapMesh = std::make_shared<CubeMap>(CubeMap(1000.0f, 1000.0f, 1000.0f, TextureSources));
@@ -68,10 +68,14 @@ Level::Level(std::string sSceneName)
 	AddEntity(WorldCubeMap);
 	// Add cube map first so transpancy works
 	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
-	AddEntity(Player);
+	//AddEntity(Player);
 	Player->EntityMesh->MeshCollisionBounds = new CollisionBounds(0.5f, 1.0f, 0.5f, Player);
-	EPlayer = Player;                
+	EPlayer = Player;
 
+	std::shared_ptr<Spectator> Spec = std::make_shared<Spectator>(Spectator(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, Utils::CENTER));
+	ESpectator = Spec;
+
+	CurrentController = Spec;
 
 	FPSCounterText = std::make_shared<UIText>(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 30.0f, Camera::GetInstance()->SCR_HEIGHT - 20.0f), 0.0f, glm::vec4(0.6, 0.6, 0.6, 1.0), "FPS:", "Resources/Fonts/Roboto-Condensed.ttf", 20, Utils::TOP_RIGHT);
 	//std::shared_ptr<UIImage> ScoreBack(new UIImage(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 20.0f, 18.0f), Utils::TOP_RIGHT, 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0), 160, 50));
@@ -173,6 +177,14 @@ Level::~Level()
 ************************************************************/
 void Level::Update()
 {
+	if (Input::GetInstance()->KeyState['g'] == Input::INPUT_FIRST_PRESS)
+	{
+		if (CurrentController == EPlayer)
+			CurrentController = ESpectator;
+		else
+			CurrentController = EPlayer;
+	}
+	CurrentController->Update();
 	if (EPlayer->EntityMesh->MeshCollisionBounds->isColliding(TargetRef))
 	{
 		std::cout << "Player Colliding with Target!\n";
@@ -209,6 +221,7 @@ void Level::Update()
 void Level::RenderScene()
 {
 	Scene::RenderScene();
+	EPlayer->DrawEntity();
 
 	//TestModel->Render();
 }

@@ -93,45 +93,6 @@ void Camera::SetWindowScale(float _fNewScale)
 	projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
 }
 
-/************************************************************
-#--Description--#: 	Enables First person controls for perspective camera
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void Camera::FPSControls()
-{
-	glm::vec2 Offset = glm::vec2(Input::GetInstance()->MousePos - glm::vec2((float)SCR_WIDTH * 0.5f, (float)SCR_HEIGHT * 0.5f));
-	Offset *= MouseSensitivity;
-	Yaw -= Offset.x;
-	Pitch -= Offset.y;
-
-	glm::clamp((float)Pitch, 89.0f, -89.0f);
-	glm::vec3 frontVector(-cos(glm::radians(Pitch))*sin(glm::radians(Yaw)),
-		sin(glm::radians(Pitch)),
-		-cos(glm::radians(Pitch)) * cos(glm::radians(Yaw)));
-	cameraFront = glm::normalize(frontVector);
-
-	if (Input::GetInstance()->KeyState[(unsigned char)'w'] == Input::INPUT_HOLD)
-		cameraPos += cameraFront * cameraSpeed * (float)Time::dTimeDelta;
-	else if (Input::GetInstance()->KeyState[(unsigned char)'s'] == Input::INPUT_HOLD)
-		cameraPos -= cameraFront * cameraSpeed * (float)Time::dTimeDelta;
-
-	if (Input::GetInstance()->KeyState[(unsigned char)'a'] == Input::INPUT_HOLD)
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * (float)Time::dTimeDelta;
-	else if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD)
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * (float)Time::dTimeDelta;
-
-	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_HOLD)
-		cameraPos += cameraUp * cameraSpeed * (float)Time::dTimeDelta;
-	else if (Input::GetInstance()->KeyState[(unsigned char)'q'] == Input::INPUT_HOLD)
-			cameraPos -= cameraUp * cameraSpeed * (float)Time::dTimeDelta;
-
-	
-
-	glutWarpPointer((float)SCR_WIDTH * 0.5f, (float)SCR_HEIGHT * 0.5f);
-}
-
 
 /************************************************************
 #--Description--#: 	Passes in the new mvp to the current program shader

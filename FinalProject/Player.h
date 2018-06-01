@@ -51,5 +51,8 @@ private:
 
 	bool bHasDodged = false;
 	bool bJump = false;
+
+	float m_fHealth = 100;
+	int m_iScore = 0;
 };
 

@@ -35,17 +35,8 @@ public:
 	unsigned int SCR_WIDTH = 800;
 	unsigned int SCR_HEIGHT = 800;
 
-	GLfloat MouseSensitivity = 0.15f;
-	GLfloat Yaw = 0.0f;
-	GLfloat Pitch = 0.0f;
-	glm::vec2 LastPos = glm::vec2((float)SCR_WIDTH * 0.5f, (float)SCR_HEIGHT * 0.5f);
-	bool FirstMouse = true;
 	glm::mat4 view;
 	glm::mat4 projection;
-
-	bool m_bFPS = false;
-
-	float cameraSpeed = 5.0f;
 
 	void Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm::vec3 ForwardVec, glm::vec3 UpVec);
 	void Update();
@@ -69,7 +60,6 @@ public:
 
 	void MoveCamera(glm::vec3 _Movement);
 private:
-	void FPSControls();
 
 	glm::vec3 cameraPos;
 	glm::vec3 cameraFront;

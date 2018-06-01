@@ -389,9 +389,6 @@
     <ClInclude Include="Engine\Model.h">
       <Filter>Engine\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Spectator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\CollisionBounds.h">
       <Filter>Engine\Entity</Filter>
     </ClInclude>
@@ -400,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ModelObject.h">
       <Filter>Engine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Spectator.h">
+      <Filter>Game\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

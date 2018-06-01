@@ -87,7 +87,7 @@ int main(int argc, char **argv)
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutCreateWindow("Game Window");
 	//glutFullScreen();
-											 
+	
 	glewInit();				// OpenGL init
 	Init();					// Settings Initialised
 

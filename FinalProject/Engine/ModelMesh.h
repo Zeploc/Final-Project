@@ -44,9 +44,7 @@ public:
 	// Render the mesh
 	void Render(GLuint program, Utils::Transform ModelTransform)
 	{
-
 		glUseProgram(program);
-
 		
 		// Bind appropriate textures
 		GLuint diffuseNr = 1;

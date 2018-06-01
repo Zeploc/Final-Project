@@ -86,8 +86,8 @@ void UIManager::Update()
 		m_bDisplayTabScores = false;
 	}
 	// FPS mode only on when UI Mode is off
-	if (Camera::GetInstance()->m_bFPS == m_bUIMode)
-		Camera::GetInstance()->m_bFPS = !m_bUIMode;
+	if (m_bFPS == m_bUIMode)
+		m_bFPS = !m_bUIMode;
 	
 	// Update system instances
 	m_ChatInstance.Update();
@@ -120,8 +120,8 @@ void UIManager::SwitchUIMode(bool _bNewMode)
 		glutSetCursor(GLUT_CURSOR_NONE);
 
 	// FPS mode only on when UI Mode is off
-	if (Camera::GetInstance()->m_bFPS == m_bUIMode)
-		Camera::GetInstance()->m_bFPS = !m_bUIMode;
+	if (m_bFPS == m_bUIMode)
+		m_bFPS = !m_bUIMode;
 }
 
 /************************************************************

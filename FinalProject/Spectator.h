@@ -19,5 +19,17 @@ class Spectator : public Entity
 public:
 	Spectator(Utils::Transform _Transform, Utils::EANCHOR _Anchor);
 	~Spectator();
+
+	void Update();
+	void FPSControls();
+
+private:
+	GLfloat MouseSensitivity = 0.15f;
+	GLfloat Yaw = 0.0f;
+	GLfloat Pitch = 0.0f;
+	glm::vec2 LastPos;
+	bool FirstMouse = true;
+
+	float cameraSpeed = 5.0f;
 };
 
