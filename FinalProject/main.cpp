@@ -98,13 +98,13 @@ int main(int argc, char **argv)
 	
 	// here is the idle func registration
 	glutIdleFunc(Update);
-		
+	
 	// the input function registration
 	SI->Init();
 	
 	// Window Resize Function
 	glutReshapeFunc(changeSize);
-		
+	
 	// enter GLUT event processing cycle
 	glutMainLoop();
 

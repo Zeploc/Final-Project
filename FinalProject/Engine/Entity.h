@@ -46,6 +46,11 @@ public:
 	virtual void DrawEntity();
 	virtual void Update();
 	virtual void OnDestroy();
+
+	virtual void SetActive(bool _bIsActive);
+	bool IsActive() { return bActive; };
+	virtual void SetVisible(bool _bIsVisible);
+	bool IsVisible() { return bVisible; };
 	
 	void Translate(glm::vec3 _Movement);
 	void Rotate(glm::vec3 Rotate); 
@@ -54,6 +59,11 @@ public:
 	Utils::Transform transform;
 	Utils::EANCHOR EntityAnchor;
 	std::shared_ptr<Mesh> EntityMesh;
+
+protected:
+	bool bActive = true;
+	bool bVisible = true;
+
 };
 
 #endif

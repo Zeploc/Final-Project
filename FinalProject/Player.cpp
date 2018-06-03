@@ -85,7 +85,7 @@ Player::~Player()
 void Player::Update()
 {
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
-	if (!GotLevel) return;
+	if (!GotLevel || !bActive) return;
 
 	//if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
 	//{

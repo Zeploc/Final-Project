@@ -89,7 +89,7 @@ void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)
 ************************************************************/
 void Entity::DrawEntity()
 {
-	if (!EntityMesh) return;
+	if (!EntityMesh || !bVisible) return;
 	Utils::Transform AnchoredTransform = transform;
 	AnchoredTransform.Position = Utils::GetAncoredPosition(transform.Position, glm::vec2(EntityMesh->m_fWidth * transform.Scale.x, EntityMesh->m_fHeight * transform.Scale.y), EntityAnchor);
 	EntityMesh->Render(AnchoredTransform);
@@ -103,7 +103,7 @@ void Entity::DrawEntity()
 ************************************************************/
 void Entity::Update()
 {
-	if (!EntityMesh) return;
+	if (!EntityMesh || !bActive) return;
 	EntityMesh->Update();
 }
 
@@ -118,6 +118,16 @@ void Entity::OnDestroy()
 	
 }
 
+void Entity::SetActive(bool _bIsActive)
+{
+	bActive = _bIsActive;
+}
+
+
+void Entity::SetVisible(bool _bIsVisible)
+{
+	bVisible = _bIsVisible;
+}
 
 /************************************************************
 #--Description--#: 	Moves the position by adding on the movement

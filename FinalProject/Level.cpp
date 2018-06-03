@@ -71,9 +71,11 @@ Level::Level(std::string sSceneName)
 	//AddEntity(Player);
 	Player->EntityMesh->MeshCollisionBounds = new CollisionBounds(0.5f, 1.0f, 0.5f, Player);
 	EPlayer = Player;
+	AddEntity(EPlayer);
 
 	std::shared_ptr<Spectator> Spec = std::make_shared<Spectator>(Spectator(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, Utils::CENTER));
 	ESpectator = Spec;
+	AddEntity(ESpectator);
 
 	CurrentController = Spec;
 
@@ -180,11 +182,18 @@ void Level::Update()
 	if (Input::GetInstance()->KeyState['g'] == Input::INPUT_FIRST_PRESS)
 	{
 		if (CurrentController == EPlayer)
+		{
 			CurrentController = ESpectator;
+			EPlayer->SetActive(false);
+			ESpectator->SetActive(true);
+		}
 		else
+		{
 			CurrentController = EPlayer;
+			EPlayer->SetActive(true);
+			ESpectator->SetActive(false);
+		}
 	}
-	CurrentController->Update();
 	if (EPlayer->EntityMesh->MeshCollisionBounds->isColliding(TargetRef))
 	{
 		std::cout << "Player Colliding with Target!\n";
@@ -221,7 +230,6 @@ void Level::Update()
 void Level::RenderScene()
 {
 	Scene::RenderScene();
-	EPlayer->DrawEntity();
 
 	//TestModel->Render();
 }

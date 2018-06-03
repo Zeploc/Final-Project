@@ -42,7 +42,7 @@ public:
 	glm::vec4 Colour;
 
 protected:
-	glm::vec2 position;
 	bool bActive = true;
+	glm::vec2 position;
 };
 
