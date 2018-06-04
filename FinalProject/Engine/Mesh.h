@@ -57,7 +57,7 @@ public:
 	glm::vec4 UVCoords;
 	bool bHasTexture = false;
 	int m_iIndicies;
-	CollisionBounds* MeshCollisionBounds;
+	std::shared_ptr<CollisionBounds> MeshCollisionBounds;
 	//std::shared_ptr<Entity> EntityRef;
 protected:
 	bool bIsLit = false;

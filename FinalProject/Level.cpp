@@ -70,7 +70,7 @@ Level::Level(std::string sSceneName)
 	// Add cube map first so transpancy works
 	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
 	AddEntity(Player);
-	Player->EntityMesh->MeshCollisionBounds = new CollisionBounds(0.5f, 1.0f, 0.5f, Player);
+	Player->EntityMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(0.5f, 1.0f, 0.5f, Player);
 	EPlayer = Player;
 	EPlayer->SetActive(false);
 
@@ -119,7 +119,7 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(1.0f, 2.0f, 1.0f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
 	TargetMesh->SetLit(true);
 	Target->AddMesh(TargetMesh);
-	TargetMesh->MeshCollisionBounds = new CollisionBounds(1.0f, 2.0f, 1.0f, Target);
+	TargetMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(1.0f, 2.0f, 1.0f, Target);
 	//AddEntity(Target);
 	AddCollidable(Target);
 
@@ -127,7 +127,7 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 	NewEnemy->AddMesh(EnemeyMesh);
 	NewEnemy->Target = Target;
-	EnemeyMesh->MeshCollisionBounds = new CollisionBounds(1, 1, 1, NewEnemy);
+	EnemeyMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(1, 1, 1, NewEnemy);
 	AddEntity(NewEnemy);
 
 	TargetRef = Target;
