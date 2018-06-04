@@ -40,9 +40,7 @@ Enemy1::~Enemy1()
 void Enemy1::Update()
 {
 	if (Target)
-		//transform.Position += AI::SeekDirection(this->shared_from_this(), Target->transform.Position) *  m_fSpeed * (float)Time::dTimeDelta;
-		m_v3CurrentVelocity += AI::FleeForce(transform.Position, Target->transform.Position, 300.0f,m_v3CurrentVelocity, m_fSpeed);
-
-
+		m_v3CurrentVelocity += AI::SeekForce(transform.Position, Target->transform.Position, 100.0f, m_v3CurrentVelocity, m_fSpeed);
+	
 	transform.Position += m_v3CurrentVelocity * (float)Time::dTimeDelta;
 }

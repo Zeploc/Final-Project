@@ -103,6 +103,7 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Pyramid> PlainPyramidMesh = std::make_shared<Pyramid>(1.0f, 1.0f, 1.0f, glm::vec4(0.5f, 0.2f, 0.7f, 1.0f));
 	PlainPyamid->AddMesh(PlainPyramidMesh);
 	AddEntity(PlainPyamid);
+
 	std::shared_ptr<Entity> TexturedPyramid = std::make_shared<Entity>(Entity({ glm::vec3(-1, -3, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Pyramid> TexturedPyramidMesh = std::make_shared<Pyramid>(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "Resources/AwesomeFace.png");
 	TexturedPyramid->AddMesh(TexturedPyramidMesh);
@@ -122,7 +123,7 @@ Level::Level(std::string sSceneName)
 	//AddEntity(Target);
 	AddCollidable(Target);
 
-	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 2,0,0 }));
+	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 4,0,0 }));
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 	NewEnemy->AddMesh(EnemeyMesh);
 	NewEnemy->Target = Target;
@@ -139,8 +140,8 @@ Level::Level(std::string sSceneName)
 	AddEntity(TempTarget);
 
 	std::shared_ptr<Enemy2> NewPersueEnemy = std::make_shared<Enemy2>(Enemy2({ glm::vec3(5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-	std::shared_ptr<Cube> EnemeyPursueMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
-	NewPersueEnemy->AddMesh(EnemeyMesh);
+	std::shared_ptr<Cube> EnemeyPursueMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	NewPersueEnemy->AddMesh(EnemeyPursueMesh);
 	NewPersueEnemy->SetTarget(TempTarget);
 	AddEntity(NewPersueEnemy);
 	

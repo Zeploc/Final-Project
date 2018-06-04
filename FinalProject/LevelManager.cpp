@@ -96,9 +96,6 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 		case 1:
 		{
 			_Scene->SetPlayerPosition({ 0, -2.5f, 0 });
-			/*std::shared_ptr<Entity> BottomPlat = std::make_shared<Entity>(Utils::Transform{ glm::vec3(-6, 0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2.0f, 0.5f, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			BottomPlat->CollisionBox.fHeight /= 2.0f;*/
-			//_Scene->AddCollidable(BottomPlat);
 			_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/groundEarth.fbx", { 5, -5.0, 8 });
 
 			break;

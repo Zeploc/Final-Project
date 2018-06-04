@@ -29,7 +29,10 @@ private:
 
 	std::shared_ptr<Entity> Target;
 	glm::vec3 PreviousPosition;
-	float m_fSpeed = 4;
+
+private:
+
+	float m_fSpeed = 10;
 
 	glm::vec3 m_v3CurrentVelocity = { 0, 0, 0 };
 

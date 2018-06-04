@@ -27,10 +27,11 @@ public:
 private:
 	float m_fDecisonTime = 0;
 	glm::vec3 Target;
-	float m_fSpeed = 4;
+
+private:
+	float m_fSpeed = 10;
 
 	glm::vec3 m_v3CurrentVelocity = { 0, 0, 0 };
-
 
 };
 

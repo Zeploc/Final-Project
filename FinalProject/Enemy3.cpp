@@ -34,7 +34,9 @@ Enemy3::~Enemy3()
 }
 
 void Enemy3::Update()
-{
-	transform.Position += AI::WanderDirection(this->shared_from_this(), Target, {-5, 5}, {-5, 5}, m_fDecisonTime) *  m_fSpeed * (float)Time::dTimeDelta;
+{	
+	m_v3CurrentVelocity += AI::WanderForce(this->shared_from_this(), Target, { -5, 5 }, { -5, 5 }, m_fDecisonTime, 100.0f, m_v3CurrentVelocity, m_fSpeed);
+	
+	transform.Position += m_v3CurrentVelocity * (float)Time::dTimeDelta;
 }
 

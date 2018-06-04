@@ -26,10 +26,8 @@ public:
 
 private:
 
-	float m_fSpeed;
+	float m_fSpeed = 4;
 
-	glm::vec3 m_v3CurrentVelocity = { 0, 0, 0 };
-
-	
+	glm::vec3 m_v3CurrentVelocity = { 0, 0, 0 };	
 };
 
