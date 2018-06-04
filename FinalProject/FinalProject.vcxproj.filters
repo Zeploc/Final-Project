@@ -222,11 +222,11 @@
     <ClCompile Include="Engine\Model.cpp">
       <Filter>Engine\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Spectator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\CollisionBounds.cpp">
       <Filter>Engine\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Spectator.cpp">
+      <Filter>Game\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

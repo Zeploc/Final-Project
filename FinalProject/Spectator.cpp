@@ -38,6 +38,7 @@ Spectator::~Spectator()
 
 void Spectator::Update()
 {
+	if (!bActive) return;
 	if (UIManager::GetInstance()->m_bFPS) FPSControls();
 	Entity::Update();
 }

@@ -25,6 +25,7 @@ public:
 
 	void BindSphere();
 	void Rebind();
+	void SetLit(bool _bIsLit);
 
 	void Render(Utils::Transform Newtransform);
 	void Update();

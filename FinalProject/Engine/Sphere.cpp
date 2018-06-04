@@ -83,25 +83,11 @@ Sphere::Sphere(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, con
 	m_eShape = Utils::SPHERE;
 	if (bHasTexture)
 	{
-		if (bIsLit)
-		{
-			program = Shader::LitTextureprogram;
-		}
-		else
-		{
-			program = Shader::Textureprogram;
-		}
+		program = Shader::Textureprogram;
 	}
 	else
 	{
-		if (bIsLit)
-		{
-			program = Shader::LitTextureprogram;
-		}
-		else
-		{
-			program = Shader::program;
-		}
+		program = Shader::program;
 	}
 }
 
@@ -239,6 +225,33 @@ void Sphere::BindSphere()
 void Sphere::Rebind()
 {
 	BindSphere();
+}
+
+void Sphere::SetLit(bool _bIsLit)
+{
+	Mesh::SetLit(_bIsLit);
+	if (bHasTexture)
+	{
+		if (bIsLit)
+		{
+			program = Shader::LitTextureprogram;
+		}
+		else
+		{
+			program = Shader::Textureprogram;
+		}
+	}
+	else
+	{
+		if (bIsLit)
+		{
+			program = Shader::LitTextureprogram;
+		}
+		else
+		{
+			program = Shader::program;
+		}
+	}
 }
 
 /************************************************************

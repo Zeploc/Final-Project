@@ -43,6 +43,7 @@ public:
 	virtual void OnDestroy() {};
 
 	virtual void Rebind() {}; // Will replace if texture exists
+	virtual void SetLit(bool _bIsLit) { bIsLit = _bIsLit; };
 
 	Utils::ESHAPE m_eShape;
 	float m_fWidth;
@@ -55,10 +56,11 @@ public:
 	const char * TextureSource;
 	glm::vec4 UVCoords;
 	bool bHasTexture = false;
-	bool bIsLit = false;
 	int m_iIndicies;
 	CollisionBounds* MeshCollisionBounds;
 	//std::shared_ptr<Entity> EntityRef;
+protected:
+	bool bIsLit = false;
 };
 
 #endif

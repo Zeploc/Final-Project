@@ -26,12 +26,13 @@
 ************************************************************/
 Model::Model(glm::vec4 _Colour, const char *  ModelSource)
 {
-	/*m_fWidth = fWidth;
-	m_fHeight = fHeight;
-	m_fDepth = fDepth;*/
+	m_fWidth = 0;// fWidth;
+	m_fHeight = 0;// fHeight;
+	m_fDepth = 0;// fDepth;
 	Colour = _Colour;
 	TextureSource = ModelSource;
 	bHasTexture = true;
+	program = Shader::ModelProgram;
 	//m_iIndicies = 36;
 	BindModel();
 	m_eShape = Utils::MODEL;
@@ -77,6 +78,7 @@ void Model::Rebind()
 ************************************************************/
 void Model::Render(Utils::Transform Newtransform)
 {
+	//glUniform4fv(glGetUniformLocation(program, "fragcolor"), 4, glm::value_ptr(Colour));
 	pModelObject->Render(Newtransform);
 }
 
@@ -88,4 +90,5 @@ void Model::Render(Utils::Transform Newtransform)
 ************************************************************/
 void Model::Update()
 {
+
 }

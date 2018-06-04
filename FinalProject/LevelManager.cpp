@@ -96,42 +96,17 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 		case 1:
 		{
 			_Scene->SetPlayerPosition({ 0, -2.5f, 0 });
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-8.25,-2.25f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5, 6, Utils::BOTTOM_CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block4.png", 1, true);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-2, -1.75f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 1, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block4Ice.png", 2, true);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-6, -1.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 1.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block2Ice.png", 4, true);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-6, 1.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block2Ice.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-6, 1.0f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block1.png", 1, false);
 			/*std::shared_ptr<Entity> BottomPlat = std::make_shared<Entity>(Utils::Transform{ glm::vec3(-6, 0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2.0f, 0.5f, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
 			BottomPlat->CollisionBox.fHeight /= 2.0f;*/
 			//_Scene->AddCollidable(BottomPlat);
+			_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/groundEarth.fbx", { 5, -5.0, 8 });
 
 			break;
 		}
 		case 2:
 		{
 			_Scene->SetPlayerPosition({ -3, 2.0f, 0 });
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-8.25,-2.25f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5, 6, Utils::BOTTOM_CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block4Ice.png", 1, true);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-7, -1.0f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 1.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block2Ice.png", 4, true);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(5, -0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block2Ice.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(5, -1.0f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block1.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(5, -1.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(9.5, -0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block2Ice.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(9.5, -1.0f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(14, -2.0f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 1, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(16, -0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 1, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(17, 0.25f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 1, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(19, 1.0f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 1, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(28, -1.0f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(29, 0.1f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(30, 1.0f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(26, 0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(25, -0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5, 0.5, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
-			
 			//At 0 player cant move/strafe//_Scene->AddCollidable(Utils::Transform{ glm::vec3(-7, -0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 1.5, Utils::CENTER, glm::vec4(0.8, 0.8, 0.8, 1.0), "Resources/Level/Block2.png", 4, true);
-
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(-1, -2.75f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 1, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block4.png", 2, true);
-			// add coin on the 3 enemies
-			_Scene->AddCollidable(Utils::Transform{ glm::vec3(32, -2.0f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 1.5f, 0.5f, Utils::CENTER, glm::vec4(1, 1, 1, 1.0), "Resources/Level/Block3.png", 1, false);
 			break;
 		}
 		default:

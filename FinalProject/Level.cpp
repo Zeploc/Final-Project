@@ -66,12 +66,13 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<CubeMap> WorldCubeMapMesh = std::make_shared<CubeMap>(CubeMap(1000.0f, 1000.0f, 1000.0f, TextureSources));
 	WorldCubeMap->AddMesh(WorldCubeMapMesh);
 	AddEntity(WorldCubeMap);
+
 	// Add cube map first so transpancy works
 	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
-	//AddEntity(Player);
+	AddEntity(Player);
 	Player->EntityMesh->MeshCollisionBounds = new CollisionBounds(0.5f, 1.0f, 0.5f, Player);
 	EPlayer = Player;
-	AddEntity(EPlayer);
+	EPlayer->SetActive(false);
 
 	std::shared_ptr<Spectator> Spec = std::make_shared<Spectator>(Spectator(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, Utils::CENTER));
 	ESpectator = Spec;
@@ -110,15 +111,16 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Entity> TexturedLitSphere = std::make_shared<Entity>(Entity({ glm::vec3(3, -3, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Sphere> TexturedLitSphereMesh = std::make_shared<Sphere>(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "Resources/Rayman.jpg");
 	TexturedLitSphere->AddMesh(TexturedLitSphereMesh);
-	TexturedLitSphereMesh->bIsLit = true;
+	TexturedLitSphereMesh->SetLit(true);
 	AddEntity(TexturedLitSphere);
 
 	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-	std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(1.0f, 2.0f, 1.0f, glm::vec4(1.0f, 0.1f, 0.1f, 1.0f));
-	TargetMesh->bIsLit = true;
+	std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(1.0f, 2.0f, 1.0f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
+	TargetMesh->SetLit(true);
 	Target->AddMesh(TargetMesh);
-	TargetMesh->MeshCollisionBounds = new CollisionBounds(1, 2, 1, Target);
-	AddEntity(Target);
+	TargetMesh->MeshCollisionBounds = new CollisionBounds(1.0f, 2.0f, 1.0f, Target);
+	//AddEntity(Target);
+	AddCollidable(Target);
 
 	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 2,0,0 }));
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
@@ -130,9 +132,9 @@ Level::Level(std::string sSceneName)
 	TargetRef = Target;
 	Enemy1Ref = NewEnemy;
 
-	TempTarget = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	TempTarget = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, Utils::BOTTOM_CENTER));
 	TargetMesh = std::make_shared<Sphere>(1.0f, 2.0f, 1.0f, glm::vec4(0.0f, 0.9f, 0.1f, 1.0f));
-	TargetMesh->bIsLit = true;
+	TargetMesh->SetLit(true);
 	TempTarget->AddMesh(TargetMesh);
 	AddEntity(TempTarget);
 
@@ -147,10 +149,11 @@ Level::Level(std::string sSceneName)
 	NewWanderEnemy->AddMesh(EnemeyBlueMesh);
 	AddEntity(NewWanderEnemy);
 
-	std::shared_ptr<Entity> ModelEnt = std::make_shared<Entity>(Entity({ glm::vec3(5, -2.5, 8), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(Model({ 1.0f, 1.0f, 1.0f, 1.0f }, "Resources/Models/Tank/Tank.obj"));
+	/*std::shared_ptr<Entity> ModelEnt = std::make_shared<Entity>(Entity({ glm::vec3(5, -5.0, 8), glm::vec3(0, 0, 0), glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(Model({ 1.0f, 1.0f, 1.0f, 1.0f }, "Resources/Models/Isometric_3D_Hex_Pack/groundEarth.fbx"));
 	ModelEnt->AddMesh(NewModelMesh);
-	AddEntity(ModelEnt);
+	AddEntity(ModelEnt);*/
+
 
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//NewCursor->SetVisibleRange({ 500, 150 });
@@ -291,6 +294,14 @@ void Level::DestroyCollidable(std::shared_ptr<Entity> _Entity)
 	}
 	DestroyEntity(_Entity);
 	_Entity = nullptr;
+}
+
+void Level::AddHexPlatform(std::string _ModelPath, glm::vec3 _v3Postion)
+{
+	std::shared_ptr<Entity> ModelEnt = std::make_shared<Entity>(Entity({ _v3Postion, glm::vec3(0, 0, 0), glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(Model({ 1.0f, 1.0f, 1.0f, 1.0f }, _ModelPath.c_str()));
+	ModelEnt->AddMesh(NewModelMesh);
+	AddEntity(ModelEnt);
 }
 
 /************************************************************

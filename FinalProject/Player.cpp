@@ -26,6 +26,7 @@
 #include "Engine\Input.h"
 #include "Engine\Time.h"
 #include "Engine\Sphere.h"
+#include "Engine\CollisionBounds.h"
 
 // Local Includes //
 #include "Level.h"
@@ -49,7 +50,7 @@ Player::Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float
 {
 	std::shared_ptr<Sphere> NewMesh = std::make_shared<Sphere>(_fWidth, _fHeight, _fDepth, _Colour);
 	AddMesh(NewMesh);
-	EntityMesh->bIsLit = true;
+	EntityMesh->SetLit(true);	
 }
 
 /************************************************************
@@ -63,7 +64,7 @@ Player::Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float
 {
 	std::shared_ptr<Sphere> NewMesh = std::make_shared<Sphere>(_fWidth, _fHeight, _fDepth, _Colour, TextureSource, UVCoords);
 	AddMesh(NewMesh);
-	EntityMesh->bIsLit = true;
+	EntityMesh->SetLit(true);
 }
 
 /************************************************************
@@ -191,6 +192,8 @@ void Player::Update()
 	{
 		bHasDodged = false;
 	}
+
+
 	//Reducing the velocity to 0 if the movement button is let go
 	
 
@@ -261,11 +264,6 @@ void Player::Update()
 	//			else
 	//			{
 	//				fVSpeed = -Utils::GetDistance2D(std::make_shared<Entity>(*this), it).y; // Moves up to object (moves down the distance from object)
-	//				if (AnimationInfo.v2CurrentFrame.x < 5 && AnimationInfo.v2CurrentFrame.y == 2)
-	//				{
-	//					AnimationInfo.v2CurrentFrame = { 5, 2 };
-	//					AnimationInfo.v2EndFrame = { 2, 3 };
-	//				}
 	//				bJump = false;
 	//			}
 	//			bAddGrav = false;
@@ -317,17 +315,14 @@ void Player::MoveHorizontally(bool bLeft)
 				fHSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
 			else
 				fHSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
-
 			return;
 		}
 		for (auto it : GotLevel->Collidables)
 		{
-
-			if (Utils::CheckCollision2D(this->shared_from_this(), it, glm::vec2(GameSettings::fMoveSpeed * Time::dTimeDelta * Direction, 0)))
+			if (EntityMesh->MeshCollisionBounds->CheckCollision(it, glm::vec3(GameSettings::fMoveSpeed * Time::dTimeDelta * Direction, 0, 0)))
 			{
-					fHSpeed = Direction * abs(Utils::GetDistance2D(std::make_shared<Entity>(*this), it).x);
+					fHSpeed = Direction * abs(EntityMesh->MeshCollisionBounds->GetDistance(it).x);
 					break;
-
 			}
 			else
 			{
@@ -354,17 +349,15 @@ void Player::MoveVertical(bool bUp)
 				fVSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
 			else
 				fVSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
-
 			return;
 		}
 		for (auto it : GotLevel->Collidables)
 		{
 
-			if (Utils::CheckCollision2D(this->shared_from_this(), it, glm::vec2(GameSettings::fMoveSpeed * Time::dTimeDelta * Direction, 0)))
+			if (EntityMesh->MeshCollisionBounds->CheckCollision(it, glm::vec3(0, 0, GameSettings::fMoveSpeed * Time::dTimeDelta * Direction)))
 			{
-				fHSpeed = Direction * abs(Utils::GetDistance2D(std::make_shared<Entity>(*this), it).x);
+				fVSpeed = Direction * abs(EntityMesh->MeshCollisionBounds->GetDistance(it).z);
 				break;
-
 			}
 			else
 			{

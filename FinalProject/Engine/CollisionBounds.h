@@ -32,6 +32,7 @@ public:
 	void SetOffset(glm::vec3 _NewOffset) { v3Offset = _NewOffset; };
 	bool isColliding(std::shared_ptr<Entity> Entity2);
 	bool CheckCollision(std::shared_ptr<Entity> Entity2, glm::vec3 Movement);
+	glm::vec3 GetDistance(std::shared_ptr<Entity> Entity2);
 
 private:
 	float fHeight;
