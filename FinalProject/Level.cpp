@@ -115,13 +115,14 @@ Level::Level(std::string sSceneName)
 	TexturedLitSphereMesh->SetLit(true);
 	AddEntity(TexturedLitSphere);
 
-	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-	std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(1.0f, 2.0f, 1.0f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
+	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::CENTER));
+	std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(0.5f, 1.0f, 0.5f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
 	TargetMesh->SetLit(true);
 	Target->AddMesh(TargetMesh);
 	TargetMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(1.0f, 2.0f, 1.0f, Target);
 	//AddEntity(Target);
 	AddCollidable(Target);
+	PersuitTarget = Target;
 
 	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 4,0,0 }));
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
@@ -184,6 +185,19 @@ Level::~Level()
 ************************************************************/
 void Level::Update()
 {
+	float fDotProductDirections = glm::dot(Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos), glm::vec3(0, 1, 0));
+	if (fDotProductDirections == 0) // Perpendicular
+	{
+		std::cout << "Perpendicular to plane\n";
+		PersuitTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * 15.0f + Camera::GetInstance()->GetCameraPosition();
+	}
+	else
+	{
+		float fDistance = -((glm::dot(Camera::GetInstance()->GetCameraPosition(), glm::vec3(0, 1, 0)) + 3.0f) /
+			(fDotProductDirections));
+		PersuitTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * fDistance + Camera::GetInstance()->GetCameraPosition();
+	}
+	
 	if (Input::GetInstance()->KeyState['g'] == Input::INPUT_FIRST_PRESS)
 	{
 		if (CurrentController == EPlayer)
