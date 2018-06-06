@@ -19,6 +19,7 @@
 // OpenGL Library Includes //
 #include <glm\gtc\type_ptr.hpp>
 #include <glm\gtc/matrix_transform.hpp>
+#include <glm\gtx\string_cast.hpp>
 
 // Engine Includes //
 #include "Input.h"
@@ -91,6 +92,24 @@ void Camera::SetWindowScale(float _fNewScale)
 	float HalfWidth = (float)SCR_WIDTH / fWindowScale;
 	float HalfHeight = (float)SCR_HEIGHT / fWindowScale;
 	projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
+}
+
+glm::vec3 Camera::ScreenToWorldDirection(glm::vec2 _ScreenPosition)
+{
+	float x = (2.0f * _ScreenPosition.x) / SCR_WIDTH - 1.0f;
+	float y = 1.0f - (2.0f * _ScreenPosition.y) / SCR_HEIGHT;
+	glm::vec2 ray_nds = { x, y};
+
+	glm::vec4 ray_clip = glm::vec4(ray_nds.x, ray_nds.y, -1.0f, 1.0f);
+
+	glm::vec4 ray_eye = glm::inverse(projection) * ray_clip;
+	ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0f, 0.0f);
+
+	glm::vec3 ray_wor = glm::inverse(view) * ray_eye;
+	ray_wor = glm::normalize(ray_wor);
+
+
+	return ray_wor;
 }
 
 

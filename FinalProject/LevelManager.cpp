@@ -96,9 +96,13 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 		case 1:
 		{
 			_Scene->SetPlayerPosition({ 0, -2.5f, 0 });
+<<<<<<< HEAD
 			_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/groundEarth.fbx", { 5, -5.0, 8 }, { 0,30,0 });
 			_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/groundEarth.fbx", { -3.6, -5.0, 8 }, { 0,30,0 });
 			_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/groundEarth.fbx", { 0.7, -5.0, 0.48 }, { 0,30,0 });
+=======
+			_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/ground.fbx", { 5, -5.0, 8 });
+>>>>>>> ZepLocal
 
 			break;
 		}

@@ -88,6 +88,7 @@ Level::Level(std::string sSceneName)
 	//AddUITextElement(ScoreText);
 	fCameraSpeed = 0;// GameSettings::fMoveSpeed;
 
+
 	//std::shared_ptr<Entity> Floor = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::CENTER));
 	//std::shared_ptr<Plane> FloorMesh = std::make_shared<Plane>(20.0f, 20.0f, glm::vec4(0.3f, 0.5f, 1.0f, 1.0f), "Resources/BlockWithEdge.png", glm::vec4(0, 10, 0, 10));
 	//Floor->AddMesh(FloorMesh);
@@ -186,6 +187,19 @@ Level::~Level()
 ************************************************************/
 void Level::Update()
 {
+	float fDotProductDirections = glm::dot(Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos), glm::vec3(0, 1, 0));
+	if (fDotProductDirections == 0) // Perpendicular
+	{
+		std::cout << "Perpendicular to plane\n";
+		PersuitTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * 15.0f + Camera::GetInstance()->GetCameraPosition();
+	}
+	else
+	{
+		float fDistance = -((glm::dot(Camera::GetInstance()->GetCameraPosition(), glm::vec3(0, 1, 0)) + 3.0f) /
+			(fDotProductDirections));
+		PersuitTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * fDistance + Camera::GetInstance()->GetCameraPosition();
+	}
+	
 	if (Input::GetInstance()->KeyState['g'] == Input::INPUT_FIRST_PRESS)
 	{
 		if (CurrentController == EPlayer)

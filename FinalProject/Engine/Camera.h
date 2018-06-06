@@ -47,9 +47,9 @@ public:
 
 	void SetWindowScale(float _fNewScale);
 	void SetCameraForwardVector(glm::vec3 _Forward) {
-		cameraFront = _Forward;
+		cameraFront = _Forward;	};
 
-	};
+	glm::vec3 ScreenToWorldDirection(glm::vec2 _ScreenPosition);
 
 	// Getters
 	glm::vec3 GetCameraPosition() { return cameraPos; };
