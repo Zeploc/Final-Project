@@ -96,7 +96,8 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 		case 1:
 		{
 			_Scene->SetPlayerPosition({ 0, -2.5f, 0 });
-			_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/groundEarth.fbx", { 5, -5.0, 8 });
+			_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/groundEarth.fbx", { 5, -5.0, 8 }, { 0,0,0 });
+			_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/groundEarth.fbx", { -5, -5.0, 15 }, { 0,0,0 });
 
 			break;
 		}
