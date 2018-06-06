@@ -95,8 +95,23 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 	{
 		case 1:
 		{
+			float Width = 8.6f;
+			float Height = 7.5f;
+			int BoardSize = 5;
+			for (int z = 0; z < BoardSize; z++)
+			{
+				for (int x = 0; x < BoardSize; x++)
+				{
+					float fCurrentX = Width * x;
+					if (z % 2 != 0)
+					{
+						fCurrentX -= Width / 2;
+					}
+					_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/ground.fbx", { fCurrentX, -5.0, Height * z }, { 0,30,0 });
+				}
+			}
+
 			_Scene->SetPlayerPosition({ 0, -2.5f, 0 });
-			_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/ground.fbx", { 5, -5.0, 8 });
 
 			break;
 		}
