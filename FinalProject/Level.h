@@ -47,7 +47,7 @@ public:
 	void AddEnemy(std::shared_ptr<Entity>);
 	std::shared_ptr<Entity> AddCollidable(Utils::Transform _Transform, float _fWidth, float _fHeight, Utils::EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, int iCount, bool bHorizontal);
 	void DestroyCollidable(std::shared_ptr<Entity>);
-	void AddHexPlatform(std::string _ModelPath, glm::vec3 _v3Postion);
+	void AddHexPlatform(std::string _ModelPath, glm::vec3 _v3Postion, glm::vec3 Rotation);
 
 	void RespawnEnemies();
 	void PlayRandomTrack();

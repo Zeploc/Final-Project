@@ -89,7 +89,8 @@ void Player::Update()
 {
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 	if (!GotLevel || !bActive) return;
-
+	
+	glm::vec3 LookAtDirection = Target - Source;
 	//if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
 	//{
 	//	transform.Scale.x = 1;
@@ -142,6 +143,11 @@ void Player::Update()
 	//	CollisionBox.fHeight = 0.86f;
 	//	CollisionBox.v2Offset.y = -0.10f;
 	//}
+
+	if (Input::GetInstance()->MouseState[MOUSE_LEFT] == Input::INPUT_HOLD || Input::GetInstance()->MouseState[MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
+	{
+
+	}
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
 	{
