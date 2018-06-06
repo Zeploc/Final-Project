@@ -90,7 +90,7 @@ void Player::Update()
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 	if (!GotLevel || !bActive) return;
 	
-	glm::vec3 LookAtDirection = Target - Source;
+	/*glm::vec3 LookAtDirection = Target - Source;*/
 	//if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
 	//{
 	//	transform.Scale.x = 1;
@@ -144,10 +144,10 @@ void Player::Update()
 	//	CollisionBox.v2Offset.y = -0.10f;
 	//}
 
-	if (Input::GetInstance()->MouseState[MOUSE_LEFT] == Input::INPUT_HOLD || Input::GetInstance()->MouseState[MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
+	/*if (Input::GetInstance()->MouseState[MOUSE_LEFT] == Input::INPUT_HOLD || Input::GetInstance()->MouseState[MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
 	{
 
-	}
+	}*/
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
 	{
@@ -176,30 +176,33 @@ void Player::Update()
 		fVSpeed = 0;
 	}
 	
-	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS && bHasDodged == false)
+	if (RollTimer > 0 && Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS && bHasDodged == true)
+	{
+		fHSpeed *= 20;
+		fVSpeed *= 20;
+		bHasDodged = false;
+		DodgeCooldown = 0.4;
+	}
+
+	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS && bHasDodged == false && DodgeCooldown < 0 )
 	{
 		fHSpeed *= 10;
-        fVSpeed *= 10;
-
-		bHasDodged = true;
-		DodgeTimer = 0.2f;
+		fVSpeed *= 10;
+		bHasDodged = true;         
 	}
 
-	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS && bHasDodged == true && DodgeTimer <= 0)
-	{
-		fHSpeed *= 35;
-		fVSpeed *= 35;
-		bHasDodged = false;
-	}
 
 	if (bHasDodged == true)
 	{
-		DodgeTimer -= Time::dTimeDelta;
+		RollTimer -= Time::dTimeDelta;
 	}
-	if (DodgeTimer < -0.2)
+
+	if (RollTimer < 0);
 	{
-		bHasDodged = false;
+		bHasDodged = false; 
 	}
+	
+	DodgeCooldown -= Time::dTimeDelta;
 
 
 	//Reducing the velocity to 0 if the movement button is let go
