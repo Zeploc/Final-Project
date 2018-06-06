@@ -88,7 +88,6 @@ Level::Level(std::string sSceneName)
 	//AddUITextElement(ScoreText);
 	fCameraSpeed = 0;// GameSettings::fMoveSpeed;
 
-
 	//std::shared_ptr<Entity> Floor = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::CENTER));
 	//std::shared_ptr<Plane> FloorMesh = std::make_shared<Plane>(20.0f, 20.0f, glm::vec4(0.3f, 0.5f, 1.0f, 1.0f), "Resources/BlockWithEdge.png", glm::vec4(0, 10, 0, 10));
 	//Floor->AddMesh(FloorMesh);
