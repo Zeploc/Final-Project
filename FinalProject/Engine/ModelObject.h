@@ -38,7 +38,6 @@ public:
 	// Constructor, expects a filepath to a 3D model.
 	ModelObject(std::string path)
 	{
-
 		this->program = Shader::ModelProgram;
 		this->loadModel(path);
 	}

@@ -68,9 +68,9 @@ Level::Level(std::string sSceneName)
 	AddEntity(WorldCubeMap);
 
 	// Add cube map first so transpancy works
-	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
+	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
 	AddEntity(Player);
-	Player->EntityMesh->MeshCollisionBounds = new CollisionBounds(0.5f, 1.0f, 0.5f, Player);
+	Player->EntityMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(0.5f, 1.0f, 0.5f, Player);
 	EPlayer = Player;
 	EPlayer->SetActive(false);
 
@@ -131,6 +131,7 @@ Level::Level(std::string sSceneName)
 	//AddEntity(NewEnemy);
 
 	/*TargetRef = Target;
+
 	Enemy1Ref = NewEnemy;
 
 	TempTarget = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, Utils::BOTTOM_CENTER));
@@ -143,12 +144,14 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Cube> EnemeyPursueMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 	NewPersueEnemy->AddMesh(EnemeyPursueMesh);
 	NewPersueEnemy->SetTarget(TempTarget);
-	AddEntity(NewPersueEnemy);
-	*/
-	/*std::shared_ptr<Enemy3> NewWanderEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(-5, -2.5, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-	std::shared_ptr<Cube> EnemeyBlueMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 0.1f, 1.0f, 1.0f), "Resources/Enemy1.png");
-	NewWanderEnemy->AddMesh(EnemeyBlueMesh);
-	AddEntity(NewWanderEnemy);*/
+	AddEntity(NewPersueEnemy);*/
+
+	//std::shared_ptr<Enemy3> NewWanderEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(-5, -2.5, 5), glm::vec3(0, 0, 0), glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
+	////std::shared_ptr<Cube> EnemeyBlueMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 0.1f, 1.0f, 1.0f), "Resources/Enemy1.png");
+	//std::shared_ptr<Model> SkullMesh = std::make_shared<Model>(Model({ 1.0f, 1.0f, 1.0f, 1.0f },"Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/skull.obj"));
+	//NewWanderEnemy->AddMesh(SkullMesh);
+	//AddEntity(NewWanderEnemy);
+
 
 	/*std::shared_ptr<Entity> ModelEnt = std::make_shared<Entity>(Entity({ glm::vec3(5, -5.0, 8), glm::vec3(0, 0, 0), glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(Model({ 1.0f, 1.0f, 1.0f, 1.0f }, "Resources/Models/Isometric_3D_Hex_Pack/groundEarth.fbx"));

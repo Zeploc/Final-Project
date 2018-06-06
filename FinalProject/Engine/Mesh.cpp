@@ -50,6 +50,8 @@ Mesh::Mesh()
 ************************************************************/
 Mesh::~Mesh()
 {
+	//if (MeshCollisionBounds) delete MeshCollisionBounds;
+	MeshCollisionBounds = nullptr;
 }
 
 /************************************************************

@@ -37,6 +37,7 @@ CollisionBounds::CollisionBounds(float _fWidth, float _fHeight, float _fDepth, s
 ************************************************************/
 CollisionBounds::~CollisionBounds()
 {
+
 }
 
 bool CollisionBounds::isColliding(std::shared_ptr<Entity> Entity2)

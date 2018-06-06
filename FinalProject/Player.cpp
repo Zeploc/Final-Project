@@ -26,6 +26,7 @@
 #include "Engine\Input.h"
 #include "Engine\Time.h"
 #include "Engine\Sphere.h"
+#include "Engine\Model.h"
 #include "Engine\CollisionBounds.h"
 
 // Local Includes //
@@ -48,8 +49,9 @@
 Player::Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float _fDepth, Utils::EANCHOR _Anchor, glm::vec4 _Colour)
 	: Entity(_Transform, _Anchor)
 {
-	std::shared_ptr<Sphere> NewMesh = std::make_shared<Sphere>(_fWidth, _fHeight, _fDepth, _Colour);
-	AddMesh(NewMesh);
+	//std::shared_ptr<Sphere> NewMesh = std::make_shared<Sphere>(_fWidth, _fHeight, _fDepth, _Colour);
+	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/char01.obj");
+	AddMesh(NewModelMesh);
 	EntityMesh->SetLit(true);	
 }
 

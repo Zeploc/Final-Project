@@ -79,6 +79,7 @@ void Scene::DeleteScene()
 void Scene::RenderScene()
 {
 	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
 	for (auto it : Entities)
 	{
 		//if (it->transform.Scale.x < 0)	// || it->transform.Scale.y < 0 || it->transform.Scale.z < 0)
@@ -89,6 +90,7 @@ void Scene::RenderScene()
 		it->DrawEntity();
 	}
 	glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_CULL_FACE);
 	for (auto it : UIElements)
 	{
 		it->DrawUIElement();

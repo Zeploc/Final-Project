@@ -55,6 +55,7 @@
 
 // Static Function Prototypes //
 
+
 // Types //
 using namespace std;
 
@@ -122,15 +123,11 @@ void renderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	//glUseProgram(Shader::program);
-	// Square
-	
 	Camera::GetInstance()->Update();
 
 	SM->RenderCurrentScene();
-	UIManager::GetInstance()->Render();
-
-
+	UIManager::GetInstance()->Render();	
+	
 	glutSwapBuffers();
 }
 
