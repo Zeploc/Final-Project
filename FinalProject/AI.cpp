@@ -34,7 +34,8 @@ AI::~AI()
 glm::vec3 AI::SeekForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed)
 {
 	glm::vec3 LookAtDirection =  Target - Source;
-	if (0 != (LookAtDirection.x || LookAtDirection.y || LookAtDirection.z)) // In case vector is zero vector (Can't normalise zero vector)
+	
+	if (glm::length(LookAtDirection) != 0) // In case vector is zero vector (Can't normalise zero vector)
 	{
 		LookAtDirection = glm::vec3(glm::normalize(LookAtDirection));
 	}	
@@ -48,7 +49,7 @@ glm::vec3 AI::SeekForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::ve
 glm::vec3 AI::FleeForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed)
 {
 	glm::vec3 LookAtDirection = Target - Source;
-	if (0 != (LookAtDirection.x || LookAtDirection.y || LookAtDirection.z)) // In case vector is zero vector (Can't normalise zero vector)
+	if (glm::length(LookAtDirection) != 0) // In case vector is zero vector (Can't normalise zero vector)
 	{
 		LookAtDirection = glm::vec3(glm::normalize(LookAtDirection));
 	}
@@ -63,7 +64,7 @@ glm::vec3 AI::PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity
 {	
 	//glm::vec3 TargetVelocity = SeekForce(PreviousPosition, Target->transform.Position, fMass, CurrentVelocity, MaxSpeed);
 	glm::vec3 TargetDirection = Target->transform.Position - PreviousPosition;
-	if (0 != (TargetDirection.x || TargetDirection.y || TargetDirection.z)) // In case vector is zero vector (Can't normalise zero vector)
+	if (glm::length(TargetDirection) != 0) // In case vector is zero vector (Can't normalise zero vector)
 	{
 		TargetDirection = glm::vec3(glm::normalize(TargetDirection));
 	}
