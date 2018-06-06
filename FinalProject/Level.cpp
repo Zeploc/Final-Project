@@ -59,26 +59,27 @@
 Level::Level(std::string sSceneName)
 	: Scene(sSceneName)
 {
-	Camera::GetInstance()->SetCameraForwardVector({0, -1, 0});
-	Camera::GetInstance()->SetCameraPos({ 0, 5, -1 });
+	Camera::GetInstance()->SetCameraForwardVector({0, -1, -1});
+	Camera::GetInstance()->SetCameraPos({ 17, 15, 30 });
 	std::shared_ptr<Entity> WorldCubeMap = std::make_shared<Entity>(Entity({ { 0, 0, 0 },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
 	char *  TextureSources[6] = { "right.jpg", "left.jpg" , "top.jpg" , "bottom.jpg" , "back.jpg" , "front.jpg" };
 	std::shared_ptr<CubeMap> WorldCubeMapMesh = std::make_shared<CubeMap>(CubeMap(1000.0f, 1000.0f, 1000.0f, TextureSources));
 	WorldCubeMap->AddMesh(WorldCubeMapMesh);
 	AddEntity(WorldCubeMap);
-
+	SpawnPos = glm::vec3(17, -2.5f, 20);
 	// Add cube map first so transpancy works
 	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
 	AddEntity(Player);
 	Player->EntityMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(0.5f, 1.0f, 0.5f, Player);
 	EPlayer = Player;
-	EPlayer->SetActive(false);
+	EPlayer->SetActive(true);
 
 	std::shared_ptr<Spectator> Spec = std::make_shared<Spectator>(Spectator(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, Utils::CENTER));
 	ESpectator = Spec;
 	AddEntity(ESpectator);
+	ESpectator->SetActive(false);
 
-	CurrentController = Spec;
+	CurrentController = Player;
 
 	FPSCounterText = std::make_shared<UIText>(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 30.0f, Camera::GetInstance()->SCR_HEIGHT - 20.0f), 0.0f, glm::vec4(0.6, 0.6, 0.6, 1.0), "FPS:", "Resources/Fonts/Roboto-Condensed.ttf", 20, Utils::TOP_RIGHT);
 	//std::shared_ptr<UIImage> ScoreBack(new UIImage(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 20.0f, 18.0f), Utils::TOP_RIGHT, 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0), 160, 50));
@@ -115,13 +116,14 @@ Level::Level(std::string sSceneName)
 	//TexturedLitSphereMesh->SetLit(true);
 	//AddEntity(TexturedLitSphere);
 
-	//std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-	//std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(1.0f, 2.0f, 1.0f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
-	//TargetMesh->SetLit(true);
-	//Target->AddMesh(TargetMesh);
-	//TargetMesh->MeshCollisionBounds = new CollisionBounds(1.0f, 2.0f, 1.0f, Target);
-	////AddEntity(Target);
-	//AddCollidable(Target);
+	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(0.5f, 2.0f, 0.5f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
+	TargetMesh->SetLit(true);
+	Target->AddMesh(TargetMesh);
+	TargetMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(0.5f, 2.0f, 0.5f, Target);
+	//AddEntity(Target);
+	AddCollidable(Target);
+	PersuitTarget = Target;
 
 	//std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 4,0,0 }));
 	//std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
@@ -194,7 +196,7 @@ void Level::Update()
 	}
 	else
 	{
-		float fDistance = -((glm::dot(Camera::GetInstance()->GetCameraPosition(), glm::vec3(0, 1, 0)) + 3.0f) /
+		float fDistance = -((glm::dot(Camera::GetInstance()->GetCameraPosition(), glm::vec3(0, 1, 0)) + 2.5f) /
 			(fDotProductDirections));
 		PersuitTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * fDistance + Camera::GetInstance()->GetCameraPosition();
 	}
