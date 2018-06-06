@@ -66,7 +66,7 @@ public:
 	std::vector<std::shared_ptr<Entity>> Collidables;
 	std::vector<std::shared_ptr<Entity>> Enemies;
 
-	glm::vec3 SpawnPos = glm::vec3(0, -2.5f, 0);
+	glm::vec3 SpawnPos;
 
 	std::shared_ptr<UIText> ScoreText;
 	std::shared_ptr<UIText> FPSCounterText;

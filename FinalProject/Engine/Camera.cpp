@@ -51,6 +51,9 @@ void Camera::Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm:
 	float HalfWidth = (float)SCR_WIDTH / fWindowScale;
 	float HalfHeight = (float)SCR_HEIGHT / fWindowScale;
 	projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, 100.0f);
+	view = glm::lookAt(cameraPos,
+		cameraPos + cameraFront,
+		cameraUp);
 }
 
 /************************************************************
@@ -107,7 +110,6 @@ glm::vec3 Camera::ScreenToWorldDirection(glm::vec2 _ScreenPosition)
 
 	glm::vec3 ray_wor = glm::inverse(view) * ray_eye;
 	ray_wor = glm::normalize(ray_wor);
-
 
 	return ray_wor;
 }
