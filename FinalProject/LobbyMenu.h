@@ -18,6 +18,8 @@
 // Engine Includes //
 #include "Engine\Scene.h"
 
+class UIButton;
+
 #pragma once
 class LobbyMenu
 {
@@ -41,6 +43,7 @@ public:
 private:
 	std::shared_ptr<UIText> CurrentServerName;
 	std::shared_ptr<UIText> PlayerName;
+	std::shared_ptr<UIButton> StartServerBtn;
 
 	std::vector<std::shared_ptr<UIElement>> v_PlayersConnected;
 };

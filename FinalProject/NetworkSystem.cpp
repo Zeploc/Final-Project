@@ -115,6 +115,13 @@ void NetworkSystem::ShutDown()
 	m_bOnline = false;
 }
 
+bool NetworkSystem::IsServer()
+{
+	if (std::dynamic_pointer_cast<Server>(m_pNetworkEntity))
+		return true;
+	return false;
+}
+
 
 void ErrorRoutines::PrintWSAErrorInfo(int iError)
 {

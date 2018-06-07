@@ -279,6 +279,11 @@ void Client::ProcessData(std::string _DataReceived)
 			MenuRef->LobbyScreen.ClientConnected(Username, Address);
 			break;
 		}
+		case LOADLEVEL:
+		{
+			SceneManager::GetInstance()->SwitchScene(_packetRecvd.MessageContent);
+			break;
+		}
 	}
 }
 

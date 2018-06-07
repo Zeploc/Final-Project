@@ -57,7 +57,6 @@ public:
 	void OnLoadScene();
 	void PlayRandomTrack();
 	void ToggleMenuSection(MENUSECTION);
-	void GoToLobby();
 	std::shared_ptr<UIText> PlayerName;
 	LobbyMenu LobbyScreen;
 	JoinGameMenu JoinGameScreen;

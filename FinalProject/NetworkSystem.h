@@ -53,6 +53,7 @@ public:
 	void InitServer(ServerInfo NewServerProperties);
 	void Update();
 	void ShutDown();
+	bool IsServer();
 
 	std::shared_ptr<NetworkEntity> m_pNetworkEntity;
 

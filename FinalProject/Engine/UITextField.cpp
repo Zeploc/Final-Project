@@ -96,11 +96,13 @@ void UITextField::Update()
 		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == (Input::InputState::INPUT_HOLD | Input::InputState::INPUT_FIRST_PRESS))
 		{
 			bIsFocussed = true;
+			BackImage.Colour = { Colour.r/ 2, Colour.g / 2, Colour.b / 2, Colour.a };
 		}
 	}
 	else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == (Input::InputState::INPUT_HOLD | Input::InputState::INPUT_FIRST_PRESS))
 	{
 		bIsFocussed = false;
+		BackImage.Colour = { Colour.r, Colour.g, Colour.b, Colour.a };
 	}
 	if (bIsFocussed && (Input::GetInstance()->bKBHit || Input::GetInstance()->KeyState[Input::GetInstance()->cLastKey] == Input::INPUT_HOLD))
 	{

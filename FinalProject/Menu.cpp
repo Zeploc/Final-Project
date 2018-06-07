@@ -234,12 +234,6 @@ void Menu::ToggleMenuSection(MENUSECTION _NewSection)
 	}
 }
 
-void Menu::GoToLobby()
-{
-
-}
-
-
 
 
 /************************************************************
@@ -253,7 +247,7 @@ void StartGameBtn()
 	std::cout << "Start Game (Switch to Level)\n";
 	SoundManager::GetInstance()->StopAudio("BackgroundC");
 	SceneManager::GetInstance()->SwitchScene("Level " + std::to_string(LevelManager::GetInstance()->CurrentLevel()));
-	LevelManager::GetInstance()->GetCurrentLevel()->PlayRandomTrack();
+	LevelManager::GetInstance()->GetCurrentActiveLevel()->PlayRandomTrack();
 }
 
 /************************************************************

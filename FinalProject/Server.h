@@ -49,7 +49,7 @@ public:
 	std::string CurrentServerAddress() { return m_pServerSocket->GetSocketAddress(); };
 	void SetServerUserName(std::string _NewName) { strncpy_s(m_cUserName, _NewName.c_str(), sizeof(_NewName) - 1); };
 
-	void SendToAllClients(std::string _pcMessage, EMessageType _Message, std::string ExcludeAddress);
+	void SendToAllClients(std::string _pcMessage, EMessageType _Message, std::string ExcludeAddress = "");
 
 private:
 	bool AddClient(std::string _strClientName);

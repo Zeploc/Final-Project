@@ -144,8 +144,18 @@ void LevelManager::NextLevel()
 	{
 		iCurrentLevelID++;
 		SceneManager::GetInstance()->SwitchScene(LevelScene->SceneName);
-		LevelManager::GetInstance()->GetCurrentLevel()->PlayRandomTrack();
+		LevelManager::GetInstance()->GetCurrentActiveLevel()->PlayRandomTrack();
 	}
+}
+/************************************************************
+#--Description--#:  Switches to current level
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	NA
+#--Return--#: 		NA
+************************************************************/
+void LevelManager::SwitchToCurrentLevel()
+{
+	SceneManager::GetInstance()->SwitchScene("Level " + std::to_string(iCurrentLevelID));
 }
 
 /************************************************************
@@ -154,7 +164,7 @@ void LevelManager::NextLevel()
 #--Parameters--#:	NA
 #--Return--#: 		Returns current level pointer
 ************************************************************/
-std::shared_ptr<Level> LevelManager::GetCurrentLevel()
+std::shared_ptr<Level> LevelManager::GetCurrentActiveLevel()
 {
 	return std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 }

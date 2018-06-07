@@ -23,7 +23,8 @@ enum EMessageType : unsigned char
 	DATA,
 	KEEPALIVE,
 	BROADCAST,
-	CLIENTCONNECTED
+	CLIENTCONNECTED,
+	LOADLEVEL
 };
 
 struct TPacket
