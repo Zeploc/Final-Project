@@ -22,6 +22,7 @@
 #include FT_FREETYPE_H
 
 // Engine Includes //
+#include "ModelObject.h"
 
 // Local Includes //
 
@@ -37,6 +38,9 @@ GLuint Shader::UIprogram;
 GLuint Shader::LitTextureprogram;
 GLuint Shader::CubeMapProgram;
 GLuint Shader::ModelProgram;
+
+std::map<std::string, std::shared_ptr<ModelObject>> Shader::Models;
+std::map<const char *, GLuint> Shader::Textures;
 
 
 /************************************************************
@@ -663,34 +667,54 @@ GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool b
 	GLuint vbo;
 	GLuint ebo;
 	GLuint texture;
+	bool bTextureExists = false;
+	for (auto& it : Textures)
+	{
+		if (it.first == TextureSource)
+		{
+			Texture == it.second;
+			texture = it.second;
+			bTextureExists = true;
+		}
+	}
 
 	if (TextureSource != "")
 	{
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		if (bAA)
+		if (bTextureExists == false)
 		{
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glGenTextures(1, &texture);
+			glBindTexture(GL_TEXTURE_2D, texture);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			if (bAA)
+			{
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			}
+			else
+			{
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			}
+
+			int width, height;
+			unsigned char* image = SOIL_load_image(TextureSource, &width, &height, 0, SOIL_LOAD_RGBA);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
+			glGenerateMipmap(GL_TEXTURE_2D);
+			SOIL_free_image_data(image);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+
+			Textures.insert(std::pair<const char*, GLuint>(TextureSource, texture));
+			std::cout << "Adding Texture, \"" << TextureSource << "\", Total Texture Count : " << Textures.size() << std::endl;
+			Texture = texture;
 		}
 		else
 		{
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture(GL_TEXTURE_2D, texture);
 		}
-
-		int width, height;
-		unsigned char* image = SOIL_load_image(TextureSource, &width, &height, 0, SOIL_LOAD_RGBA);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-
-		glGenerateMipmap(GL_TEXTURE_2D);
-		SOIL_free_image_data(image);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		Texture = texture;
 	}
 
 	glGenVertexArrays(1, &vao);
