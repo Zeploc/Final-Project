@@ -80,14 +80,14 @@ void Scene::RenderScene()
 {
 	glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_CULL_FACE);
-	for (auto it : Entities)
+	for (int i = 0; i < Entities.size(); i++)
 	{
 		//if (it->transform.Scale.x < 0)	// || it->transform.Scale.y < 0 || it->transform.Scale.z < 0)
 		//{
 		//	glCullFace(GL_FRONT);		// Switches to front culling if scale is negative
 		//}
 		//else glCullFace(GL_BACK);		// Cull the Back faces as per normal
-		it->DrawEntity();
+		Entities[i]->DrawEntity();
 	}
 	glDisable(GL_DEPTH_TEST);
 	//glDisable(GL_CULL_FACE);
@@ -236,7 +236,7 @@ void Scene::Update()
 			if (Entities[iEndPos] != Entities.back()) // if current last value is not equal to the back of the vector
 			{
 				iEndPos = Entities.size() - 1;
-				i--;
+				//i--;
 			}
 		}
 	}

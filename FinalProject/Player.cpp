@@ -168,12 +168,30 @@ void Player::Update()
 	this->transform.Rotation.y = (AngleToMouse / (M_PI * 2)) * 360;
 	 
 
-	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
+
+	
+	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD || Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
 	{
-		std::shared_ptr<Entity> Bullet = std::make_shared<Entity>(Entity({ this->transform.Position, this->transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
-		std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,1,1,1}));
-		Bullet->AddMesh(BulletCube);
-		SceneManager::GetInstance()->GetCurrentScene()->AddEntity(Bullet);
+		if (BulletTimer <= 0)
+		{
+			Bullet NewBullet;
+			std::shared_ptr<Entity> Bullet = std::make_shared<Entity>(Entity({ this->transform.Position, this->transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
+			std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
+			Bullet->AddMesh(BulletCube);
+			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(Bullet);
+			glm::vec3 BulletDirection = glm::normalize(VectorToMouseFromPlayer);
+			NewBullet.CurrentVelocity = (BulletDirection*BulletSpeed);
+			NewBullet.BulletEntity = Bullet;
+			Bullets.push_back(NewBullet);
+			BulletTimer = 0.12f;
+		}
+	}
+
+	BulletTimer -= Time::dTimeDelta;
+
+	for (int i = 0; i < Bullets.size(); i++)
+	{
+		Bullets[i].BulletEntity->transform.Position += Bullets[i].CurrentVelocity;
 	}
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)

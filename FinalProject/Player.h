@@ -14,7 +14,7 @@
 //
 
 // Library Includes //
-
+#include <vector>
 // OpenGL Library Includes //
 
 // Engine Includes //
@@ -24,6 +24,7 @@
 #include "GameSettings.h"
 
 // This Includes //
+
 
 // Static Variables //
 
@@ -42,14 +43,23 @@ public:
 
 private:
 
+	struct Bullet
+	{
+		std::shared_ptr<Entity> BulletEntity;
+		glm::vec3 CurrentVelocity;
+	};
+
 	void MoveHorizontally(bool bLeft);
 
 	void MoveVertical(bool bUp);
 	float RollTimer = 0.8f;
+	float BulletTimer = 0.12f;
 	float DodgeCooldown;
 	float fHSpeed = 0;
 	float fVSpeed = 0;
-
+	float BulletSpeed = 1.0f;
+	std::vector<Bullet> Bullets;
+	
 	bool bHasDodged = false;
 	bool bJump = false;
 

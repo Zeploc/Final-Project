@@ -230,6 +230,14 @@ void Level::Update()
 		RestartLevel();
 	}
 
+	/*if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
+	{
+		std::shared_ptr<Entity> Bullet = std::make_shared<Entity>(Entity({ EPlayer->transform.Position, EPlayer->transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
+		std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,1,1,1 }));
+		Bullet->AddMesh(BulletCube);
+		AddEntity(Bullet);
+	}*/
+
 	/*TempTarget->transform.Position += glm::vec3(4 * Time::dTimeDelta, 0, 0);*/
 
 	/*if (EPlayer->transform.Position.y < -5)
