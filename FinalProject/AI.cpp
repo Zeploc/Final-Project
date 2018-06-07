@@ -113,7 +113,34 @@ glm::vec3 AI::WanderForce(std::shared_ptr<Entity> Source, glm::vec3& TargetRef, 
 	return SeekForce(Source->transform.Position, TargetRef, fMass, CurrentVelocity, MaxSpeed);
 }
 
+glm::vec3 AI::pathFollowingForce(glm::vec3 Source, Path Currentpath, glm::vec3 CurrentVelocity, float fMass, float MaxSpeed)
+{
+	glm::vec3 VelocityDirection = glm::normalize(CurrentVelocity);
+	glm::vec3 PredictPosition = VelocityDirection * 25.0f;
+	PredictPosition += Source;
+
+	glm::vec3 PathDirection = glm::normalize(Currentpath.v3Points[1] - Currentpath.v3Points[0]);
+	glm::vec3 NormalPosition = FindNormal(PredictPosition, Currentpath.v3Points[0], Currentpath.v3Points[1]);
+
+	float Distance = abs(glm::length(PredictPosition - NormalPosition));
+	if (Distance > Currentpath.fRadius)
+	{
+		return SeekForce(Source, NormalPosition + PathDirection * 25.0f, fMass, CurrentVelocity, MaxSpeed);
+	}	
+
+	return glm::vec3();
+}
+
 glm::vec3 AI::FindFutureLocation(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, float _fScaleFactor, float _fVelTarget)
 {
 	return glm::vec3();
+}
+
+glm::vec3 AI::FindNormal(glm::vec3 Point, glm::vec3 LineStart, glm::vec3 LineEnd)
+{
+	glm::vec3 StartToPredict = Point - LineStart;
+	glm::vec3 PathDirection = glm::normalize(LineEnd - LineStart);
+	glm::vec3 StartToNormal = PathDirection * glm::dot(StartToPredict, PathDirection);
+	glm::vec3 NormalPosition = LineStart + StartToNormal;
+	return NormalPosition;
 }

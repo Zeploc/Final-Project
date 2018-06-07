@@ -14,6 +14,7 @@
 #pragma once
 // Local Includes //
 #include "Engine\Entity.h"
+#include "AI.h"
 
 class Enemy1 :	public Entity
 {
@@ -27,7 +28,7 @@ public:
 private:
 
 	float m_fSpeed = 4;
-
+	Path CurrentPath;
 	glm::vec3 m_v3CurrentVelocity = { 0, 0, 0 };	
 };
 

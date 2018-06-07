@@ -116,7 +116,7 @@ Level::Level(std::string sSceneName)
 	//TexturedLitSphereMesh->SetLit(true);
 	//AddEntity(TexturedLitSphere);
 
-	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(5, -3, 5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(0.5f, 2.0f, 0.5f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
 	TargetMesh->SetLit(true);
 	Target->AddMesh(TargetMesh);
@@ -125,12 +125,12 @@ Level::Level(std::string sSceneName)
 	AddCollidable(Target);
 	PersuitTarget = Target;
 
-	//std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 4,0,0 }));
-	//std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
-	//NewEnemy->AddMesh(EnemeyMesh);
-	//NewEnemy->Target = Target;
-	//EnemeyMesh->MeshCollisionBounds = new CollisionBounds(1, 1, 1, NewEnemy);
-	//AddEntity(NewEnemy);
+	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 6,0,0 }));
+	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	NewEnemy->AddMesh(EnemeyMesh);
+	NewEnemy->Target = Target;
+	EnemeyMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(1, 1, 1, NewEnemy);
+	AddEntity(NewEnemy);
 
 	/*TargetRef = Target;
 
