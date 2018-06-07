@@ -21,8 +21,6 @@
 
 // OpenGL Library //
 #include <SOIL.h>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -230,28 +228,21 @@ void Sphere::Rebind()
 void Sphere::SetLit(bool _bIsLit)
 {
 	Mesh::SetLit(_bIsLit);
-	if (bHasTexture)
+	if (bIsLit)
 	{
-		if (bIsLit)
-		{
-			program = Shader::LitTextureprogram;
-		}
-		else
-		{
-			program = Shader::Textureprogram;
-		}
+		program = Shader::LitTextureprogram;
 	}
 	else
 	{
-		if (bIsLit)
+		if (bHasTexture)
 		{
-			program = Shader::LitTextureprogram;
+			program = Shader::Textureprogram;
 		}
 		else
 		{
 			program = Shader::program;
 		}
-	}
+	}	
 }
 
 /************************************************************
@@ -262,28 +253,18 @@ void Sphere::SetLit(bool _bIsLit)
 ************************************************************/
 void Sphere::Render(Utils::Transform Newtransform)
 {
-	if (bHasTexture)
+	if (bIsLit)
+	{
+		glUseProgram(program);
+		glUniform1i(glGetUniformLocation(program, "bIsTex"), bHasTexture);
+		Lighting::PassLightingToShader(program, LightProperties, Newtransform);
+	}
+	else
+	{
+		glUseProgram(program);
+	}
+	/*if (bHasTexture)
 	{		
-		if (bIsLit)
-		{
-			glUseProgram(program);
-			glm::mat4 translate = glm::translate(glm::mat4(), Newtransform.Position);
-			glm::mat4 scale = glm::scale(glm::mat4(), Newtransform.Scale);
-			glm::mat4 rotation = glm::rotate(glm::mat4(), glm::radians(Newtransform.Rotation.x), glm::vec3(1, 0, 0));
-			rotation = glm::rotate(rotation, glm::radians(Newtransform.Rotation.y), glm::vec3(0, 1, 0));
-			rotation = glm::rotate(rotation, glm::radians(Newtransform.Rotation.z), glm::vec3(0, 0, 1));
-			glm::mat4 model = translate * rotation * scale;
-			GLint UVCoordsLoc = glGetUniformLocation(Shader::LitTextureprogram, "model");
-			glUniformMatrix4fv(UVCoordsLoc, 1, GL_FALSE, glm::value_ptr(model));
-			Lighting::m_v3SunDirection = { 10, 1, 10 };
-			GLint LightPosLoc = glGetUniformLocation(Shader::LitTextureprogram, "lightPos");
-			glUniform3fv(LightPosLoc, 3, glm::value_ptr(Lighting::m_v3SunDirection));
-			glUniform1i(glGetUniformLocation(Shader::LitTextureprogram, "bIsTex"), bHasTexture);
-		}
-		else
-		{
-			glUseProgram(program);
-		}
 
 		glEnable(GL_BLEND);
 	}
@@ -292,14 +273,14 @@ void Sphere::Render(Utils::Transform Newtransform)
 		if (bIsLit)
 		{
 			glUseProgram(program);
-			glUniform1i(glGetUniformLocation(Shader::LitTextureprogram, "bIsTex"), bHasTexture);
+			glUniform1i(glGetUniformLocation(program, "bIsTex"), bHasTexture);
 		}
 		else
 		{
 			glUseProgram(program);
 		}
 		glDisable(GL_BLEND);
-	}
+	}*/
 	Mesh::Render(Newtransform);
 }
 

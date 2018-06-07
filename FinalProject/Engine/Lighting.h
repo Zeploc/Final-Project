@@ -14,6 +14,20 @@
 
 // OpenGL Library //
 #include <glm\common.hpp>
+#include <glew.h>
+#include <freeglut.h>
+
+// Local Libraries //
+#include "Utils.h"
+
+struct LightInfo
+{
+	glm::vec3 v3AmbientColour = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 v3LightColour = glm::vec3(1.0f, 1.0f, 1.0f);
+	float fAmbientStrength = 0.1f;
+	float fLightSpecStrength = 1.0f;
+	float fShininess = 32.0f;
+};
 
 #pragma once
 class Lighting
@@ -23,5 +37,7 @@ public:
 	~Lighting();
 
 	static glm::vec3 m_v3SunDirection;
+
+	static void PassLightingToShader(GLuint program, LightInfo _LightInfo, Utils::Transform ModelTransform);
 };
 

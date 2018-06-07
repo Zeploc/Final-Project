@@ -38,6 +38,7 @@ GLuint Shader::UIprogram;
 GLuint Shader::LitTextureprogram;
 GLuint Shader::CubeMapProgram;
 GLuint Shader::ModelProgram;
+GLuint Shader::ModelProgramLit;
 
 std::map<std::string, std::shared_ptr<ModelObject>> Shader::Models;
 std::map<const char *, GLuint> Shader::Textures;
@@ -661,7 +662,7 @@ Text::cFont Shader::AddFont(std::string fontPath, int iPSize)
 #--Parameters--#: 	Takes texture path and texture gluint ref
 #--Return--#: 		New vao gluint
 ************************************************************/
-GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool bAA)
+GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool bAA, bool bHasNormals)
 {
 	GLuint vao;
 	GLuint vbo;
@@ -672,7 +673,7 @@ GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool b
 	{
 		if (it.first == TextureSource)
 		{
-			Texture == it.second;
+			Texture = it.second;
 			texture = it.second;
 			bTextureExists = true;
 		}
@@ -726,19 +727,45 @@ GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool b
 
 	if (TextureSource != "")
 	{
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)0);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
+		if (bHasNormals)
+		{
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)0);
+			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
+			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)(9 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(1);
+			glEnableVertexAttribArray(2);
+			glEnableVertexAttribArray(3);
+		}
+		else
+		{
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)0);
+			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(1);
+			glEnableVertexAttribArray(2);
+		}
 	}
 	else
 	{
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (GLvoid*)0);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
+		if (bHasNormals)
+		{
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)0);
+			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(1);
+			glEnableVertexAttribArray(3);
+		}
+		else
+		{
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (GLvoid*)0);
+			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(1);
+		}
 	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);

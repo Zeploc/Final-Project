@@ -97,71 +97,71 @@ void Cube::BindCube()
 	float fHalfDepth = m_fDepth / 2;
 	
 	GLfloat Texturedvertices[] = {
-		// Positions								// Colors									// UV Cords
+		// Positions								// Colors									// UV Cords		// Normals
 		// Front Face
-		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,
-		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,
-		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f,
+		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,		0.0f, 0.0f, 1.0f,
+		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,		0.0f, 0.0f, 1.0f,
+		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,		0.0f, 0.0f, 1.0f,
+		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f,		0.0f, 0.0f, 1.0f,
 		// Right Face
-		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,
-		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,
-		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f,
+		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,		1.0f, 0.0f, 0.0f,
+		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,		1.0f, 0.0f, 0.0f,
+		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,		1.0f, 0.0f, 0.0f,
+		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f,		1.0f, 0.0f, 0.0f,
 		// Back Face
-		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,
-		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,
-		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f,
+		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,		0.0f, 0.0f, -1.0f,
+		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,		0.0f, 0.0f, -1.0f,
+		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,		0.0f, 0.0f, -1.0f,
+		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f,		0.0f, 0.0f, -1.0f,
 		// Left Face
-		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,
-		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,
-		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f,
+		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,		-1.0f, 0.0f, 0.0f,
+		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,		-1.0f, 0.0f, 0.0f,
+		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,		-1.0f, 0.0f, 0.0f,
+		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f,		-1.0f, 0.0f, 0.0f,
 		// Top Face
-		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,
-		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,
-		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,
-		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f,
+		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
+		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
 		// Bottom Face
-		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f
+		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
+		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f,		0.0f, -1.0f, 0.0f,
+		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f,		0.0f, -1.0f, 0.0f
 
 	};
 	GLfloat vertices[] = {
-		// Positions								// Colors			
+		// Positions								// Colors									// Normals
 		// Front Face
-		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
+		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f, 1.0f,
+		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f, 1.0f,
+		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f, 1.0f,
+		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f, 1.0f,
 		// Right Face
-		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
+		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f, 0.0f,
+		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f, 0.0f,
+		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f, 0.0f,
+		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		1.0f, 0.0f, 0.0f,
 		// Back Face
-		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
+		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f, -1.0f,
+		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f, -1.0f,
+		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f, -1.0f,
+		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 0.0f, -1.0f,
 		// Left Face
-		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
+		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		-1.0f, 0.0f, 0.0f,
+		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		-1.0f, 0.0f, 0.0f,
+		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		-1.0f, 0.0f, 0.0f,
+		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		-1.0f, 0.0f, 0.0f,
 		// Top Face
-		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
+		-fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f, 0.0f,
+		fHalfWidth, fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f, 0.0f,
+		fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f, 0.0f,
+		-fHalfWidth, fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, 1.0f, 0.0f,
 		// Bottom Face
-		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a
+		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, -1.0f, 0.0f,
+		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, -1.0f, 0.0f,
+		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, -1.0f, 0.0f,
+		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		0.0f, -1.0f, 0.0f
 
 
 	};
@@ -187,7 +187,7 @@ void Cube::BindCube()
 		20, 22, 23
 	};
 
-	vao = Shader::CreateBuffer(TextureSource, texture, true);
+	vao = Shader::CreateBuffer(TextureSource, texture, true, true);
 	if (TextureSource != "")
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Texturedvertices), Texturedvertices, GL_STATIC_DRAW);
 	else
@@ -206,6 +206,26 @@ void Cube::Rebind()
 	BindCube();
 }
 
+void Cube::SetLit(bool _bIsLit)
+{
+	Mesh::SetLit(_bIsLit);
+	if (bIsLit)
+	{
+		program = Shader::LitTextureprogram;
+	}
+	else
+	{
+		if (bHasTexture)
+		{
+			program = Shader::Textureprogram;
+		}
+		else
+		{
+			program = Shader::program;
+		}
+	}
+}
+
 /************************************************************
 #--Description--#:	Render Current Mesh to the screen
 #--Author--#: 		Alex Coultas
@@ -214,15 +234,16 @@ void Cube::Rebind()
 ************************************************************/
 void Cube::Render(Utils::Transform Newtransform)
 {
+	glUseProgram(program);
+	glUniform1i(glGetUniformLocation(program, "bIsTex"), bHasTexture);
+	Lighting::PassLightingToShader(program, LightProperties, Newtransform);
 	if (bHasTexture)
 	{
-		glUseProgram(program);
 		glEnable(GL_BLEND);
 	}
 	else
 	{
-		glUseProgram(program);
-		glDisable(GL_BLEND);
+		//glDisable(GL_BLEND);
 	}
 	Mesh::Render(Newtransform);
 }

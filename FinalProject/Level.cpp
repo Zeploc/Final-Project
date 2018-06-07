@@ -121,12 +121,14 @@ Level::Level(std::string sSceneName)
 	TargetMesh->SetLit(true);
 	Target->AddMesh(TargetMesh);
 	TargetMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(0.5f, 2.0f, 0.5f, Target);
+	//TargetMesh->LightProperties.v3LightColour = {0.8f, 0.1f, 0.1f};
 	//AddEntity(Target);
 	AddCollidable(Target);
 	PersuitTarget = Target;
 
 	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 8,0,0 }));
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	EnemeyMesh->SetLit(true);
 	NewEnemy->AddMesh(EnemeyMesh);
 	NewEnemy->Target = Target;
 	EnemeyMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(1, 1, 1, NewEnemy);
@@ -328,6 +330,8 @@ void Level::AddHexPlatform(std::string _ModelPath, glm::vec3 _v3Postion, glm::ve
 	std::shared_ptr<Entity> ModelEnt = std::make_shared<Entity>(Entity({ _v3Postion, Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(Model({ 1.0f, 1.0f, 1.0f, 1.0f }, _ModelPath.c_str()));
 	ModelEnt->AddMesh(NewModelMesh);
+	NewModelMesh->SetLit(true);
+	NewModelMesh->LightProperties.fAmbientStrength = 0.7f;
 	AddEntity(ModelEnt);
 }
 

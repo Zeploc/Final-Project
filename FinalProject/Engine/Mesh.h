@@ -24,6 +24,7 @@
 
 // Engine Includes //
 #include "Utils.h"
+#include "Lighting.h"
 //#include "Entity.h"
 
 // Library Include //
@@ -58,6 +59,7 @@ public:
 	bool bHasTexture = false;
 	int m_iIndicies;
 	std::shared_ptr<CollisionBounds> MeshCollisionBounds;
+	LightInfo LightProperties;
 	//std::shared_ptr<Entity> EntityRef;
 protected:
 	bool bIsLit = false;

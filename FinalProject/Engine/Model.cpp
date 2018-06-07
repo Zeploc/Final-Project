@@ -17,9 +17,11 @@
 
 // Engine Includes //
 #include "Shader.h"
+#include "Lighting.h"
 
 // Library Includes //
 #include <map>
+#include <glm\gtc\type_ptr.hpp>
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -82,6 +84,21 @@ void Model::Rebind()
 	BindModel();
 }
 
+void Model::SetLit(bool _bIsLit)
+{
+	Mesh::SetLit(_bIsLit);
+	if (bIsLit)
+	{
+		program = Shader::ModelProgramLit;
+		pModelObject->program = program;
+	}
+	else
+	{
+		program = Shader::ModelProgram;
+		pModelObject->program = program;
+	}
+}
+
 /************************************************************
 #--Description--#:	Render Current Mesh to the screen
 #--Author--#: 		Alex Coultas
@@ -90,6 +107,11 @@ void Model::Rebind()
 ************************************************************/
 void Model::Render(Utils::Transform Newtransform)
 {
+	if (bIsLit)
+	{
+		glUseProgram(program);
+		Lighting::PassLightingToShader(program, LightProperties, Newtransform);
+	}
 	//glUniform4fv(glGetUniformLocation(program, "fragcolor"), 4, glm::value_ptr(Colour));
 	pModelObject->Render(Newtransform);
 }

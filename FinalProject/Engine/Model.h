@@ -30,6 +30,7 @@ public:
 
 	void BindModel();
 	void Rebind();
+	void SetLit(bool _bIsLit);
 
 	void Render(Utils::Transform Newtransform);
 	void Update();

@@ -49,10 +49,12 @@ void Enemy1::AddPathPoints()
 	{
 		std::shared_ptr<Entity> NewPoint = std::make_shared<Entity>(Entity({ CurrentPath.v3Points[i] , glm::vec3(0, 0, 0), glm::vec3(1.0f, 1.0f, 1.0f) }, Utils::CENTER));
 		std::shared_ptr<Cube> CubeMesh = std::make_shared<Cube>(Cube(0.5f, 1.5f, 0.5f, glm::vec4(0.1f, 0.8f, 0.1f, 1.0f)));
+		CubeMesh->SetLit(true);
 		NewPoint->AddMesh(CubeMesh);
 		SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewPoint);
 		std::shared_ptr<Entity> Width = std::make_shared<Entity>(Entity({ CurrentPath.v3Points[i] , glm::vec3(0, 0, 0), glm::vec3(1.0f, 1.0f, 1.0f) }, Utils::CENTER));
 		std::shared_ptr<Cube> RadiusWidth = std::make_shared<Cube>(Cube(CurrentPath.fRadius, 0.5f, CurrentPath.fRadius, glm::vec4(0.6f, 0.2f, 0.1f, 1.0f)));
+		RadiusWidth->SetLit(true);
 		Width->AddMesh(RadiusWidth);
 		SceneManager::GetInstance()->GetCurrentScene()->AddEntity(Width);
 	}

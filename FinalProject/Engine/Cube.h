@@ -25,6 +25,7 @@ public:
 
 	void BindCube();
 	void Rebind();
+	void SetLit(bool _bIsLit);
 
 	void Render(Utils::Transform Newtransform);
 	void Update();	

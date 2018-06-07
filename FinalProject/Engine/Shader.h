@@ -41,6 +41,7 @@ public:
 	static GLuint UIprogram;
 	static GLuint CubeMapProgram;
 	static GLuint ModelProgram;
+	static GLuint ModelProgramLit;
 	
 	static std::map<std::string, std::shared_ptr<ModelObject>> Models;
 	static std::map<const char *, GLuint> Textures;
@@ -60,7 +61,7 @@ public:
 		
 	static Text::cFont AddFont(std::string fontPath, int iPSize);
 
-	static GLuint CreateBuffer(const char * TextureSource, GLuint & Texture, bool bAA);
+	static GLuint CreateBuffer(const char * TextureSource, GLuint & Texture, bool bAA, bool bHasNormals = false);
 private:
 };
 
