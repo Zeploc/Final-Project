@@ -45,7 +45,7 @@ private:
 	void MoveHorizontally(bool bLeft);
 
 	void MoveVertical(bool bUp);
-	float RollTimer = 0.3f;
+	float RollTimer = 0.8f;
 	float DodgeCooldown;
 	float fHSpeed = 0;
 	float fVSpeed = 0;

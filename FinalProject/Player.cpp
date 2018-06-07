@@ -27,6 +27,7 @@
 #include "Engine\Time.h"
 #include "Engine\Sphere.h"
 #include "Engine\Model.h"
+#include "Engine\Cube.h"
 #include "Engine\CollisionBounds.h"
 
 // Local Includes //
@@ -37,8 +38,13 @@
 
 // Static Variables //
 
+
 // Types //
 #define GetSign(a) (a < 0 ? -1 : (a > 0 ? 1 : 0)) // If num is smaller than 0, ie negative, return -1, else return 1
+
+// Math Library //
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -143,11 +149,32 @@ void Player::Update()
 	//	CollisionBox.fHeight = 0.86f;
 	//	CollisionBox.v2Offset.y = -0.10f;
 	//}
+	glm::vec3 MouseWorldPosition = { 0,0,0 };
 
-	/*if (Input::GetInstance()->MouseState[MOUSE_LEFT] == Input::INPUT_HOLD || Input::GetInstance()->MouseState[MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
+	float fDotProductDirections = glm::dot(Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos), glm::vec3(0, 1, 0));
+	if (fDotProductDirections != 0) // Perpendicular
 	{
+	
+		float fDistance = -((glm::dot(Camera::GetInstance()->GetCameraPosition(), glm::vec3(0, 1, 0)) + 2.5f) /
+		(fDotProductDirections));
+		MouseWorldPosition = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * fDistance + Camera::GetInstance()->GetCameraPosition();
+	}
 
-	}*/
+	glm::vec3 VectorToMouseFromPlayer = MouseWorldPosition - this->transform.Position;
+	VectorToMouseFromPlayer = glm::normalize(VectorToMouseFromPlayer);
+	float fDir = glm::dot(glm::cross(VectorToMouseFromPlayer, glm::vec3(0, 0, -1)), { 0, 1, 0 });
+	float AngleToMouse = acos(glm::dot(VectorToMouseFromPlayer, glm::vec3(0, 0, -1)));
+	if (fDir > 0) AngleToMouse = M_PI + ((2 * M_PI) - AngleToMouse + M_PI);
+	this->transform.Rotation.y = (AngleToMouse / (M_PI * 2)) * 360;
+	 
+
+	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
+	{
+		std::shared_ptr<Entity> Bullet = std::make_shared<Entity>(Entity({ this->transform.Position, this->transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
+		std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,1,1,1}));
+		Bullet->AddMesh(BulletCube);
+		SceneManager::GetInstance()->GetCurrentScene()->AddEntity(Bullet);
+	}
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
 	{
@@ -176,28 +203,32 @@ void Player::Update()
 		fVSpeed = 0;
 	}
 	
+	
+
+
 	if (RollTimer > 0 && Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS && bHasDodged == true)
 	{
-		fHSpeed *= 20;
-		fVSpeed *= 20;
+		fHSpeed *= 35;
+		fVSpeed *= 35;
 		bHasDodged = false;
-		DodgeCooldown = 0.4;
+		DodgeCooldown = 1.0f;
 	}
 
-	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS && bHasDodged == false && DodgeCooldown < 0 )
+	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS && bHasDodged == false && DodgeCooldown < 0)
 	{
-		fHSpeed *= 10;
-		fVSpeed *= 10;
-		bHasDodged = true;         
+		fHSpeed *= 15;
+		fVSpeed *= 15;
+		bHasDodged = true;
+		RollTimer = 0.5f;
+		
 	}
 
+	
+	
+	RollTimer -= Time::dTimeDelta;
+	
 
-	if (bHasDodged == true)
-	{
-		RollTimer -= Time::dTimeDelta;
-	}
-
-	if (RollTimer < 0);
+	if (RollTimer < 0.0f)
 	{
 		bHasDodged = false; 
 	}
