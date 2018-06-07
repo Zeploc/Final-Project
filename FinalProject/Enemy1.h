@@ -23,6 +23,8 @@ public:
 	~Enemy1();
 	std::shared_ptr<Entity> Target;
 
+	void AddPathPoints();
+
 	void Update();
 
 private:

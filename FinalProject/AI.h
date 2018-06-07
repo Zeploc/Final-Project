@@ -46,5 +46,8 @@ public:
 private:
 	static glm::vec3 FindFutureLocation(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, float _fScaleFactor, float _fVelTarget);
 	static glm::vec3 FindNormal(glm::vec3 Point, glm::vec3 LineStart, glm::vec3 LineEnd);
+
+	static std::shared_ptr<Entity> TestPosition1;
+	static std::shared_ptr<Entity> TestPosition2;
 };
 

@@ -18,6 +18,9 @@
 // Engine Includes //
 #include "Shader.h"
 
+// Library Includes //
+#include <map>
+
 /************************************************************
 #--Description--#:  Constructor function
 #--Author--#: 		Alex Coultas
@@ -56,7 +59,16 @@ Model::~Model()
 ************************************************************/
 void Model::BindModel()
 {
+	for (auto& it : Shader::Models)
+	{
+		if (it.first == TextureSource)
+		{
+			pModelObject = it.second;
+			return;
+		}
+	}
 	pModelObject = std::make_shared<ModelObject>(TextureSource);
+	Shader::Models.insert(std::pair<std::string, std::shared_ptr<ModelObject>>(TextureSource, pModelObject));
 }
 
 /************************************************************

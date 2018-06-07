@@ -17,10 +17,18 @@
 
 // OpenGL includes //
 #include <glm\matrix.hpp>
+#include <glm\gtx\string_cast.hpp>
 
 // Engine Includes //
 #include "Engine\Time.h"
+#include "Engine\Sphere.h"
+#include "Engine\SceneManager.h"
+#include "Engine\Scene.h"
+// Library Includes //
+#include <iostream>
 
+std::shared_ptr<Entity> AI::TestPosition1 = nullptr;
+std::shared_ptr<Entity> AI::TestPosition2 = nullptr;
 
 AI::AI()
 {
@@ -115,20 +123,42 @@ glm::vec3 AI::WanderForce(std::shared_ptr<Entity> Source, glm::vec3& TargetRef, 
 
 glm::vec3 AI::pathFollowingForce(glm::vec3 Source, Path Currentpath, glm::vec3 CurrentVelocity, float fMass, float MaxSpeed)
 {
+	if (Currentpath.v3Points.size() == 0) return glm::vec3();
 	glm::vec3 VelocityDirection = glm::normalize(CurrentVelocity);
-	glm::vec3 PredictPosition = VelocityDirection * 25.0f;
+	glm::vec3 PredictPosition = VelocityDirection * Currentpath.fRadius;
 	PredictPosition += Source;
-
-	glm::vec3 PathDirection = glm::normalize(Currentpath.v3Points[1] - Currentpath.v3Points[0]);
+	
 	glm::vec3 NormalPosition = FindNormal(PredictPosition, Currentpath.v3Points[0], Currentpath.v3Points[1]);
-
-	float Distance = abs(glm::length(PredictPosition - NormalPosition));
-	if (Distance > Currentpath.fRadius)
+	float Distance = 9999999999.0f;
+	glm::vec3 PathDirection = glm::normalize(Currentpath.v3Points[0] - Currentpath.v3Points.back());
+	for (int i = 0; i < Currentpath.v3Points.size(); i++)
 	{
-		return SeekForce(Source, NormalPosition + PathDirection * 25.0f, fMass, CurrentVelocity, MaxSpeed);
-	}	
+		int SecondPos = i + 1;
+		if (SecondPos > Currentpath.v3Points.size() - 1) SecondPos = 0;
+		glm::vec3 StartPos = Currentpath.v3Points[i];
+		glm::vec3 EndPos = Currentpath.v3Points[SecondPos];
+		glm::vec3 CurrentNormalPosition = FindNormal(PredictPosition, StartPos, EndPos);
+		float fCurrentDistance = abs(glm::length(PredictPosition - CurrentNormalPosition));
+		float fDistanceFromPoint = abs(glm::length(Currentpath.v3Points[SecondPos] - Source));
+		if (fCurrentDistance <= Distance && fDistanceFromPoint > Currentpath.fRadius * 2)
+		{
+			Distance = fCurrentDistance;
+			NormalPosition = CurrentNormalPosition;
+			if (abs(glm::length(Currentpath.v3Points[0] - Source)) < Currentpath.fRadius * 2 && SecondPos != 0)
+				PathDirection = glm::normalize(Currentpath.v3Points[1] - Currentpath.v3Points[0]);
+			else
+				PathDirection = glm::normalize(EndPos - StartPos);
+		}
+	}
+	
+	return SeekForce(Source, NormalPosition + PathDirection * (Currentpath.fRadius * 2), fMass, CurrentVelocity, MaxSpeed);
+	
+	//if (Distance > Currentpath.fRadius)
+	//{	
+	//	return SeekForce(Source, NormalPosition + PathDirection * 1.0f, fMass, CurrentVelocity, MaxSpeed);
+	//
+	//}
 
-	return glm::vec3();
 }
 
 glm::vec3 AI::FindFutureLocation(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, float _fScaleFactor, float _fVelTarget)
@@ -142,5 +172,28 @@ glm::vec3 AI::FindNormal(glm::vec3 Point, glm::vec3 LineStart, glm::vec3 LineEnd
 	glm::vec3 PathDirection = glm::normalize(LineEnd - LineStart);
 	glm::vec3 StartToNormal = PathDirection * glm::dot(StartToPredict, PathDirection);
 	glm::vec3 NormalPosition = LineStart + StartToNormal;
+
+	glm::vec3 TopMost = LineStart.y > LineEnd.y ? LineStart : LineEnd;
+	glm::vec3 RightMost = LineStart.x > LineEnd.x ? LineStart : LineEnd;
+	glm::vec3 BottomMost = LineStart == TopMost ? LineEnd : LineStart;
+	glm::vec3 LeftMost = LineStart == RightMost ? LineEnd : LineStart;
+
+	if (NormalPosition.x < LeftMost.x)
+	{
+		return LeftMost;
+	}
+	else if (NormalPosition.x > RightMost.x)
+	{
+		return RightMost;
+	}
+	else if (NormalPosition.y < BottomMost.y)
+	{
+		return BottomMost;
+	}
+	else if(NormalPosition.y > TopMost.y)
+	{
+		return TopMost;
+	}
+
 	return NormalPosition;
 }
