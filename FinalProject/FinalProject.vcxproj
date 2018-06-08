@@ -152,6 +152,7 @@
     <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameSettings.cpp" />
+    <ClCompile Include="GroupEnemies.cpp" />
     <ClCompile Include="HostGameMenu.cpp" />
     <ClCompile Include="JoinGameMenu.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="Engine\Utils.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameSettings.h" />
+    <ClInclude Include="GroupEnemies.h" />
     <ClInclude Include="HostGameMenu.h" />
     <ClInclude Include="JoinGameMenu.h" />
     <ClInclude Include="Level.h" />

@@ -30,6 +30,6 @@ private:
 	glm::vec2 LastPos;
 	bool FirstMouse = true;
 
-	float cameraSpeed = 5.0f;
+	float cameraSpeed = 15.0f;
 };
 

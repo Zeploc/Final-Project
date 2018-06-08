@@ -27,6 +27,9 @@
 // Library Includes //
 #include <iostream>
 
+// Local Includes //
+#include "Enemy1.h"
+
 std::shared_ptr<Entity> AI::TestPosition1 = nullptr;
 std::shared_ptr<Entity> AI::TestPosition2 = nullptr;
 
@@ -161,9 +164,77 @@ glm::vec3 AI::pathFollowingForce(glm::vec3 Source, Path Currentpath, glm::vec3 C
 
 }
 
-glm::vec3 AI::FindFutureLocation(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, float _fScaleFactor, float _fVelTarget)
+glm::vec3 AI::Seperation(std::shared_ptr<Entity> Source, float fCloseness, std::vector<std::shared_ptr<Entity>> Avoidables, float MaxSpeed)
 {
-	return glm::vec3();
+	glm::vec3 AverageDirection = glm::vec3();
+	int iCount = 0;
+	for (auto& it : Avoidables)
+	{
+		if (it == Source) continue;
+		glm::vec3 LocationDifference = Source->transform.Position - it->transform.Position;
+		float fDistance = abs(glm::length(LocationDifference)); // Distance from current avoidable
+
+		if (fDistance > 0 && fDistance < fCloseness) // If distance is too close
+		{
+			glm::vec3 DirectionAwayFromCurrent = glm::normalize(LocationDifference);
+			AverageDirection += DirectionAwayFromCurrent;
+			iCount++;
+
+		}
+		else if (fDistance == 0)
+		{
+			// Random Direction
+			glm::vec2 RandomDirection = { rand() % 2000, rand() % 2000 };
+			RandomDirection *= glm::vec2(0.001, 0.001);
+			RandomDirection += glm::vec2(-1, -1);
+			return glm::vec3(RandomDirection.x, 0, RandomDirection.y);
+		}
+	}
+
+	if (iCount > 0)
+	{
+		float fDividend = 1.0f / (float)iCount;
+		AverageDirection = glm::normalize(AverageDirection * fDividend);
+	}
+	else // None in range
+		return AverageDirection;
+
+	glm::vec3 NewVelocity = AverageDirection * MaxSpeed;
+	
+	return NewVelocity;
+}
+
+glm::vec3 AI::Align(std::shared_ptr<Entity> Source, float fRadius, std::vector<std::shared_ptr<Entity>> Avoidables, float MaxSpeed)
+{
+	glm::vec3 AverageDirection = glm::vec3();
+	int iCount = 0;
+	for (auto& it : Avoidables)
+	{
+		if (it == Source) continue;
+		glm::vec3 LocationDifference = it->transform.Position - Source->transform.Position;
+		float fDistance = abs(glm::length(LocationDifference)); // Distance from current avoidable
+
+		if (fDistance < fRadius) // If within allign radius
+		{
+			glm::vec3 DirectionAwayFromCurrent = glm::normalize(LocationDifference);
+			if (glm::length(std::dynamic_pointer_cast<Enemy1>(it)->GetVelocity()) == 0) continue;
+			AverageDirection += glm::normalize(std::dynamic_pointer_cast<Enemy1>(it)->GetVelocity());
+			iCount++;
+
+		}
+	}
+
+	if (iCount > 0)
+	{
+		float fDividend = 1.0f / (float)iCount;
+		AverageDirection = glm::normalize(AverageDirection * fDividend);
+	}
+	else // None in range
+		return AverageDirection;
+
+	glm::vec3 NewVelocity = AverageDirection * MaxSpeed;
+
+	return NewVelocity;
 }
 
 glm::vec3 AI::FindNormal(glm::vec3 Point, glm::vec3 LineStart, glm::vec3 LineEnd)

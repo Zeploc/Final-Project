@@ -167,9 +167,7 @@ void Player::Update()
 	if (fDir > 0) AngleToMouse = M_PI + ((2 * M_PI) - AngleToMouse + M_PI);
 	this->transform.Rotation.y = (AngleToMouse / (M_PI * 2)) * 360;
 	 
-
-
-	
+		
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD || Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
 	{
 		if (BulletTimer <= 0)
