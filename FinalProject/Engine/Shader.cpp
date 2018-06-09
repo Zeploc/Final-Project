@@ -64,7 +64,7 @@ Shader::Shader()
 ************************************************************/
 Shader::~Shader()
 {
-
+	CleanUp();
 }
 
 void Shader::CleanUp()

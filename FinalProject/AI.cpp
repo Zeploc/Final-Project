@@ -133,7 +133,7 @@ glm::vec3 AI::WanderForce(std::shared_ptr<Entity> Source, glm::vec3& TargetRef, 
 glm::vec3 AI::pathFollowingForce(glm::vec3 Source, Path Currentpath, glm::vec3 CurrentVelocity, float fMass, float MaxSpeed)
 {
 	if (Currentpath.v3Points.size() == 0) return glm::vec3();
-	glm::vec3 VelocityDirection = glm::normalize(CurrentVelocity);
+	glm::vec3 VelocityDirection = glm::length(CurrentVelocity) == 0 ? CurrentVelocity : glm::normalize(CurrentVelocity); // If is zero vector, don't normalize
 	glm::vec3 PredictPosition = VelocityDirection * Currentpath.fRadius;
 	PredictPosition += Source;
 	

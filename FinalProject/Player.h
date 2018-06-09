@@ -58,7 +58,7 @@ private:
 	float DodgeCooldown;
 	float fHSpeed = 0;
 	float fVSpeed = 0;
-	float BulletSpeed = 0.01f;
+	float BulletSpeed = 30.0f;
 	std::vector<Bullet> Bullets;
 	
 	bool bHasDodged = false;

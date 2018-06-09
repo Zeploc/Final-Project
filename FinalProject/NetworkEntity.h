@@ -23,6 +23,7 @@ enum EMessageType : unsigned char
 	DATA,
 	KEEPALIVE,
 	BROADCAST,
+	CHAT,
 	CLIENTCONNECTED,
 	LOADLEVEL
 };
@@ -84,6 +85,7 @@ public:
 	//virtual void ReceiveData(char* _pcBufferToReceiveData) = 0;
 	virtual void Update() = 0;
 
+	virtual void ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message) = 0;
 
 	void SetOffline()
 	{

@@ -127,9 +127,9 @@ Level::Level(std::string sSceneName)
 	PersuitTarget = Target;
 
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5 + i * 0.3f, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 0,0,0 }));
+		std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5 + i * 0.3f, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 8,0,0 }));
 		EnemeyMesh->SetLit(true);
 		NewEnemy->AddMesh(EnemeyMesh);
 		EnemeyMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(1, 1, 1, NewEnemy);
@@ -209,7 +209,7 @@ void Level::Update()
 		PersuitTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * fDistance + Camera::GetInstance()->GetCameraPosition();
 	}
 	
-	if (Input::GetInstance()->KeyState['g'] == Input::INPUT_FIRST_PRESS)
+	if (Input::GetInstance()->KeyState['g'] == Input::INPUT_FIRST_PRESS && !UIManager::GetInstance()->GetUIMode())
 	{
 		if (CurrentController == EPlayer)
 		{
@@ -400,7 +400,6 @@ void Level::PlayRandomTrack()
 void Level::OnLoadScene()
 {
 	//PlayRandomTrack();
-	UIManager::GetInstance()->m_bDisplayChat = true;
 	UIManager::GetInstance()->SwitchUIMode(false);
 	for (auto& it : Enemies)
 	{

@@ -36,6 +36,8 @@ public:
 	std::string GetClientUserName() { return std::string(m_cUserName); };
 	void SetClientUserName(std::string _NewName) { strncpy_s(m_cUserName, _NewName.c_str(), sizeof(_NewName) - 1); };
 
+	void ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message);
+
 	void ChangeServer(sockaddr_in NewServer)
 	{
 		m_ServerSocketAddress = NewServer;

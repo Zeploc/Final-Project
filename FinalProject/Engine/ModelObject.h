@@ -41,6 +41,13 @@ public:
 		this->program = Shader::ModelProgram;
 		this->loadModel(path);
 	}
+	
+	~ModelObject()
+	{
+		meshes.clear();
+		textures_loaded.clear();
+	}
+
 
 	// Draws the model, and thus all its meshes
 	void Render(Utils::Transform MeshTransform)

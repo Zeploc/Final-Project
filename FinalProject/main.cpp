@@ -206,6 +206,7 @@ void Init()
 ************************************************************/
 void OnExit()
 {
+	Shader::CleanUp();
 	SceneManager::DestoryInstance();
 	Camera::DestoryInstance();
 	Input::DestoryInstance();
@@ -215,7 +216,6 @@ void OnExit()
 	UIManager::DestoryInstance();
 	NetworkManager::DestoryInstance();
 	AI::CleanUp();
-	Shader::CleanUp();
 	Text::Fonts.~vector();
 }
 

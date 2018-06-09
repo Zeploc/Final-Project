@@ -117,6 +117,7 @@ Menu::Menu(std::string sSceneName)
 	/*SoundManager::GetInstance()->AddChannel("BackgroundC");
 	SoundManager::GetInstance()->AddChannel("FXC");
 	PlayRandomTrack();*/
+	UIManager::GetInstance()->m_bDisplayChat = false;
 }
 
 /************************************************************

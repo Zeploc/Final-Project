@@ -31,6 +31,7 @@ std::shared_ptr<UIManager> UIManager::m_pUIManager;
 ************************************************************/
 UIManager::UIManager()
 {
+
 }
 
 
@@ -53,14 +54,21 @@ UIManager::~UIManager()
 void UIManager::Update()
 {
 	// Toggle Chat System
-	if (Input::GetInstance()->KeyState[(const int)'c'] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[13] == Input::INPUT_FIRST_PRESS)
+	if (((Input::GetInstance()->KeyState[(const int)'c'] == Input::INPUT_FIRST_PRESS && !m_ChatInstance.GetChatMaximsied())|| Input::GetInstance()->KeyState[13] == Input::INPUT_FIRST_PRESS) && m_bDisplayChat)
 	{
-		m_bDisplayChat = !m_bDisplayChat;
-		SwitchUIMode(m_bDisplayChat);
+		if (m_ChatInstance.GetChatMaximsied())
+		{
+			m_ChatInstance.SendChatMessage();
+		}
+		else
+		{
+			m_ChatInstance.SetChatMaximised(true);
+		}
+		SwitchUIMode(m_ChatInstance.GetChatMaximsied());
 	}
 	// Toggle Options Menu
 	if (Input::GetInstance()->KeyState[27] == Input::INPUT_FIRST_PRESS)
-	{
+	{		
 		// Switch Options Displayed
 		m_bDisplayPauseOptions = !m_bDisplayPauseOptions;
 		// Move pointer to center before resuming play
@@ -72,7 +80,7 @@ void UIManager::Update()
 	if (SceneManager::GetInstance()->GetCurrentScene()->SceneName == "MainMenu")
 	{
 		if (m_bDisplayPauseOptions) m_bDisplayPauseOptions = false;
-		if (m_bDisplayChat) m_bDisplayChat = false;
+		//if (m_bDisplayChat) m_bDisplayChat = false;
 		if (m_bUIMode == false)	SwitchUIMode(true);
 	}
 	// Show Tab Scores
