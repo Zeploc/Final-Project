@@ -52,7 +52,7 @@ Entity::Entity(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 ************************************************************/
 Entity::~Entity()
 {
-
+	EntityMesh = nullptr;
 }
 
 void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)

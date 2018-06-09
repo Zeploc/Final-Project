@@ -42,6 +42,12 @@ AI::~AI()
 {
 }
 
+void AI::CleanUp()
+{
+	TestPosition1 = nullptr;
+	TestPosition2 = nullptr;
+}
+
 glm::vec3 AI::SeekForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed)
 {
 	glm::vec3 LookAtDirection =  Target - Source;

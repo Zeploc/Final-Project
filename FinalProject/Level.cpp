@@ -182,6 +182,8 @@ Level::Level(std::string sSceneName)
 ************************************************************/
 Level::~Level()
 {
+	Collidables.clear();
+	Enemies.clear();
 	//delete TestModel;
 	//TestModel = nullptr;
 }
