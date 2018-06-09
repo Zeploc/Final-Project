@@ -127,13 +127,23 @@ Level::Level(std::string sSceneName)
 	PersuitTarget = Target;
 
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5 + i * 0.3f, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 0,0,0 }));
+	//	EnemeyMesh->SetLit(true);
+	//	NewEnemy->AddMesh(EnemeyMesh);
+	//	EnemeyMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(1, 1, 1, NewEnemy);
+	//	AddEnemy(NewEnemy);
+	//	//AddEntity(NewEnemy);
+	//}
 	for (int i = 0; i < 20; i++)
 	{
-		std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5 + i * 0.3f, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 0,0,0 }));
+		std::shared_ptr<Enemy2> NewEnemy = std::make_shared<Enemy2>(Enemy2({ glm::vec3(-5 + i * 0.3f, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 		EnemeyMesh->SetLit(true);
 		NewEnemy->AddMesh(EnemeyMesh);
 		EnemeyMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(1, 1, 1, NewEnemy);
 		AddEnemy(NewEnemy);
+		NewEnemy->SetTarget(PersuitTarget);
 		//AddEntity(NewEnemy);
 	}
 
@@ -402,7 +412,12 @@ void Level::OnLoadScene()
 	UIManager::GetInstance()->SwitchUIMode(false);
 	for (auto& it : Enemies)
 	{
-		std::dynamic_pointer_cast<Enemy1>(it)->AddPathPoints();
+		std::shared_ptr<Enemy1> IsEnemy1 = std::dynamic_pointer_cast<Enemy1>(it);
+		if (IsEnemy1)
+		{
+			IsEnemy1->AddPathPoints();
+		}
+		
 	}
 }
 /************************************************************

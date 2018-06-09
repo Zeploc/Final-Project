@@ -44,6 +44,7 @@ public:
 	static glm::vec3 pathFollowingForce(glm::vec3 Source, Path Currentpath, glm::vec3 CurrentVelocity, float fMass, float MaxSpeed);
 	static glm::vec3 Seperation(std::shared_ptr<Entity> Source, float fCloseness, std::vector<std::shared_ptr<Entity>> Avoidables, float MaxSpeed);
 	static glm::vec3 Align(std::shared_ptr<Entity> Source, float fRadius, std::vector<std::shared_ptr<Entity>> Avoidables, float MaxSpeed);
+	static glm::vec3 Cohesion(std::shared_ptr<Entity> Source, float fRadius, std::vector<std::shared_ptr<Entity>> Avoidables, float MaxSpeed);
 
 private:
 	static glm::vec3 FindNormal(glm::vec3 Point, glm::vec3 LineStart, glm::vec3 LineEnd);

@@ -29,6 +29,7 @@
 
 // Local Includes //
 #include "Enemy1.h"
+#include "Enemy2.h"
 
 std::shared_ptr<Entity> AI::TestPosition1 = nullptr;
 std::shared_ptr<Entity> AI::TestPosition2 = nullptr;
@@ -217,9 +218,21 @@ glm::vec3 AI::Align(std::shared_ptr<Entity> Source, float fRadius, std::vector<s
 		if (fDistance < fRadius) // If within allign radius
 		{
 			glm::vec3 DirectionAwayFromCurrent = glm::normalize(LocationDifference);
-			if (glm::length(std::dynamic_pointer_cast<Enemy1>(it)->GetVelocity()) == 0) continue;
-			AverageDirection += glm::normalize(std::dynamic_pointer_cast<Enemy1>(it)->GetVelocity());
+			std::shared_ptr<Enemy1> IsEnemy1 = std::dynamic_pointer_cast<Enemy1>(it);
+			std::shared_ptr<Enemy2> IsEnemy2 = std::dynamic_pointer_cast<Enemy2>(it);
+			if (IsEnemy1)
+			{
+				if (glm::length(IsEnemy1->GetVelocity()) == 0) continue;
+				AverageDirection += glm::normalize(IsEnemy1->GetVelocity());
+			}
+			if (IsEnemy2)
+			{
+				if (glm::length(IsEnemy2->GetVelocity()) == 0) continue;
+				AverageDirection += glm::normalize(IsEnemy2->GetVelocity());
+			}
+
 			iCount++;
+
 
 		}
 	}
@@ -235,6 +248,58 @@ glm::vec3 AI::Align(std::shared_ptr<Entity> Source, float fRadius, std::vector<s
 	glm::vec3 NewVelocity = AverageDirection * MaxSpeed;
 
 	return NewVelocity;
+}
+
+glm::vec3 AI::Cohesion(std::shared_ptr<Entity> Source, float fRadius, std::vector<std::shared_ptr<Entity>> Avoidables, float MaxSpeed)
+{
+	glm::vec3 AverageTransform = glm::vec3();
+	int iCount = 0;
+	for (auto& it : Avoidables)
+	{
+		if (it == Source) continue;
+		glm::vec3 LocationDifference = it->transform.Position - Source->transform.Position;
+		float fDistance = abs(glm::length(LocationDifference)); // Distance from current avoidable
+
+		if (fDistance < fRadius) // If within allign radius
+		{
+			glm::vec3 DirectionAwayFromCurrent = glm::normalize(LocationDifference);
+			if (glm::length((it)->transform.Position) == 0) continue;
+			AverageTransform += ((it)->transform.Position);
+			iCount++;
+
+		}
+	}
+
+	if (iCount > 0)
+	{
+		float fDividend = 1.0f / (float)iCount;
+		AverageTransform = (AverageTransform * fDividend);
+	}
+	else // None in range
+		return AverageTransform;
+
+	std::shared_ptr<Enemy1> IsEnemy1 = std::dynamic_pointer_cast<Enemy1>(Source);
+	std::shared_ptr<Enemy2> IsEnemy2 = std::dynamic_pointer_cast<Enemy2>(Source);
+	glm::vec3 Velocity = glm::vec3();
+
+	if (IsEnemy1)
+	{
+		Velocity = IsEnemy1->GetVelocity();
+	}
+	if (IsEnemy2)
+	{
+		Velocity = IsEnemy2->GetVelocity();
+	}
+	
+	return SeekForce(Source->transform.Position, AverageTransform,1,Velocity,MaxSpeed);
+}
+
+glm::vec3 AI::ObstacleAvoidance(std::shared_ptr<Entity> Source, float MAX_SEE_AHEAD, glm::vec3 CurrentVelocity)
+{
+	glm::vec3 Ahead = Source->transform.Position + glm::normalize(CurrentVelocity) * MAX_SEE_AHEAD;
+	glm::vec3 Ahead = Source->transform.Position + glm::normalize(CurrentVelocity) * MAX_SEE_AHEAD * 0.5f;
+
+
 }
 
 glm::vec3 AI::FindNormal(glm::vec3 Point, glm::vec3 LineStart, glm::vec3 LineEnd)

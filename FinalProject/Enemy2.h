@@ -25,6 +25,7 @@ public:
 	
 	void Update();
 	void SetTarget(std::shared_ptr<Entity> _Target);
+	glm::vec3 GetVelocity() { return m_v3CurrentVelocity; };
 private:
 
 	std::shared_ptr<Entity> Target;
