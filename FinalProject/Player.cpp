@@ -187,9 +187,36 @@ void Player::Update()
 
 	BulletTimer -= Time::dTimeDelta;
 
-	for (int i = 0; i < Bullets.size(); i++)
+
+
+	for (auto it = Bullets.begin(); it != Bullets.end(); it++)
 	{
-		Bullets[i].BulletEntity->transform.Position += Bullets[i].CurrentVelocity;
+		it->BulletEntity->transform.Position += it->CurrentVelocity;
+
+		it->Timer -= Time::dTimeDelta;
+
+		//if (it->Timer <= 0)
+		//{
+		//	if (Bullets.size() != 0)
+		//	{
+		//		unsigned int iEndPos = Bullets.size() - 1;
+		//		for (unsigned int i = 0; i <= iEndPos; i++)
+		//		{
+		//			if (iEndPos >= Bullets.size())
+		//			{
+		//				iEndPos = Bullets.size() - 1;
+		//				i--;
+		//			}
+		//			if (Bullets[iEndPos] != Bullets.back()) // if current last value is not equal to the back of the vector
+		//			{
+		//				iEndPos = Bullets.size() - 1;
+		//				//i--;
+		//			}
+		//		}
+		//	}
+		//	Bullets.erase(it);
+		//	 
+		//}
 	}
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
