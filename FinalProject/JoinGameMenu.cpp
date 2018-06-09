@@ -19,11 +19,12 @@
 #include "utils.h"
 #include "NetworkManager.h"
 #include "Client.h"
+#include "Menu.h"
+#include "UIManager.h"
 
 // Engine Includes //
 #include "Engine\SceneManager.h"
 #include "Engine\Scene.h"
-#include "Menu.h"
 
 // Local Functions
 void JoinSerer();
@@ -70,6 +71,7 @@ void JoinGameMenu::Init(std::shared_ptr<Scene> _Scene)
 	v_ScreenElements.push_back(PlayerName);
 
 	ServerListPos = { Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 400 };
+
 }
 
 void JoinGameMenu::HideElements()
@@ -82,6 +84,8 @@ void JoinGameMenu::ShowElements()
 {
 	for (auto it : v_ScreenElements)
 		it->SetActive(true);
+
+	UIManager::GetInstance()->m_bDisplayChat = false;
 }
 
 void JoinGameMenu::AddServers(std::vector<ServerInfo> Servers)

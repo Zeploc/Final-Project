@@ -64,7 +64,17 @@ Shader::Shader()
 ************************************************************/
 Shader::~Shader()
 {
+	CleanUp();
+}
 
+void Shader::CleanUp()
+{
+	for (auto& Model : Models)
+	{
+		Model.second = nullptr;
+	}
+	Models.clear();
+	Textures.clear();
 }
 
 //GLuint Shader::BindPyramidArray(float fWidth, float fHeight, float fDepth, glm::vec4 Colour)

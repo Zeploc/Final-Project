@@ -32,6 +32,7 @@
 
 // Local Includes //
 #include "Level.h"
+#include "UIManager.h"
 
 // This Includes //
 #include "Player.h"
@@ -82,7 +83,13 @@ Player::Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float
 #--Return--#: 		NA
 ************************************************************/
 Player::~Player()
-{
+{	
+	for (auto& it : Bullets)
+	{
+		SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(it.BulletEntity);
+		it.BulletEntity = nullptr;
+	}
+	Bullets.clear();
 }
 
 /************************************************************
@@ -94,7 +101,7 @@ Player::~Player()
 void Player::Update()
 {
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
-	if (!GotLevel || !bActive) return;
+	if (!GotLevel || !bActive || !UIManager::GetInstance()->m_bFPS) return;
 	
 	/*glm::vec3 LookAtDirection = Target - Source;*/
 	//if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
@@ -187,36 +194,31 @@ void Player::Update()
 
 	BulletTimer -= Time::dTimeDelta;
 
-
-
-	for (auto it = Bullets.begin(); it != Bullets.end(); it++)
+	bool bBackToStart = false;
+	auto iEndPos = Bullets.end();
+	for (auto it = Bullets.begin(); it != iEndPos; it++)
 	{
-		it->BulletEntity->transform.Position += it->CurrentVelocity;
-
+		if (bBackToStart)
+		{
+			it = Bullets.begin();
+			bBackToStart = false;
+		}
+		it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
 		it->Timer -= Time::dTimeDelta;
-
-		//if (it->Timer <= 0)
-		//{
-		//	if (Bullets.size() != 0)
-		//	{
-		//		unsigned int iEndPos = Bullets.size() - 1;
-		//		for (unsigned int i = 0; i <= iEndPos; i++)
-		//		{
-		//			if (iEndPos >= Bullets.size())
-		//			{
-		//				iEndPos = Bullets.size() - 1;
-		//				i--;
-		//			}
-		//			if (Bullets[iEndPos] != Bullets.back()) // if current last value is not equal to the back of the vector
-		//			{
-		//				iEndPos = Bullets.size() - 1;
-		//				//i--;
-		//			}
-		//		}
-		//	}
-		//	Bullets.erase(it);
-		//	 
-		//}
+		
+		if (it->Timer <= 0)
+		{
+			SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(it->BulletEntity);
+			it = Bullets.erase(it);
+			if (it == Bullets.begin())
+			{
+				bBackToStart = true;
+			}
+			else
+				it--;
+			if (Bullets.size() == 0) break;
+			iEndPos = Bullets.end();
+		}
 	}
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)

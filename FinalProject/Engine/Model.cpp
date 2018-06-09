@@ -51,6 +51,7 @@ Model::Model(glm::vec4 _Colour, const char *  ModelSource)
 ************************************************************/
 Model::~Model()
 {
+	pModelObject = nullptr;
 }
 
 /************************************************************

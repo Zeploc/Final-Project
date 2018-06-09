@@ -19,6 +19,7 @@
 #include "Menu.h"
 #include "NetworkManager.h"
 #include "Server.h"
+#include "UIManager.h"
 
 // Engine Includes //
 #include "Engine\SceneManager.h"
@@ -74,6 +75,7 @@ void HostGameMenu::Init(std::shared_ptr<Scene> _Scene)
 	v_ScreenElements.push_back(StartHostBtn);
 	v_ScreenElements.push_back(ServerName);
 	v_ScreenElements.push_back(PlayerName);
+
 }
 
 void HostGameMenu::HideElements()
@@ -86,6 +88,8 @@ void HostGameMenu::ShowElements()
 {
 	for (auto it : v_ScreenElements)
 		it->SetActive(true);
+
+	UIManager::GetInstance()->m_bDisplayChat = false;
 }
 
 ///************************************************************

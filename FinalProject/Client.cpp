@@ -25,6 +25,7 @@
 // Local Includes //
 #include "NetworkSystem.h"
 #include "utils.h"
+#include "UIManager.h"
 
 #include "Menu.h"
 
@@ -284,6 +285,26 @@ void Client::ProcessData(std::string _DataReceived)
 			SceneManager::GetInstance()->SwitchScene(_packetRecvd.MessageContent);
 			break;
 		}
+		case CHAT:
+		{
+		std::string Result = _packetRecvd.MessageContent;
+		std::string Username;
+		std::string Message;
+
+			for (int i = 0; i < Result.size(); i++)
+			{
+				if (Result[i] != ' ')
+				{
+					Username += Result[i];
+					continue;
+				}
+				Message = Result.substr(i + 1);
+				break;
+			}
+			UIManager::GetInstance()->m_ChatInstance.AddChatMessage({ Username, Message });
+			std::cout << "Chat Recieved: [" + Username + "]: " + Message << std::endl;
+			break;
+		}
 	}
 }
 
@@ -303,6 +324,20 @@ void Client::Update()
 		m_pWorkQueue->pop(temp);
 		ProcessData(temp);
 	}
+}
+
+void Client::ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message)
+{
+	std::string MessageToSend = _pcMessage;
+	if (_Message == CHAT)
+	{
+		std::string UserAndMessage(m_cUserName);
+		UserAndMessage += " " + _pcMessage;
+		MessageToSend = UserAndMessage;
+	}
+	TPacket _packet;
+	_packet.Serialize(_Message, const_cast<char *>(MessageToSend.c_str()));
+	SendData(_packet.PacketData);
 }
 
 bool Client::BroadcastForServers()

@@ -49,6 +49,7 @@
 #include "UIManager.h"
 #include "NetworkSystem.h"
 #include "NetworkManager.h"
+#include "AI.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
@@ -205,6 +206,7 @@ void Init()
 ************************************************************/
 void OnExit()
 {
+	Shader::CleanUp();
 	SceneManager::DestoryInstance();
 	Camera::DestoryInstance();
 	Input::DestoryInstance();
@@ -213,6 +215,7 @@ void OnExit()
 	LevelManager::DestoryInstance();
 	UIManager::DestoryInstance();
 	NetworkManager::DestoryInstance();
+	AI::CleanUp();
 	Text::Fonts.~vector();
 }
 

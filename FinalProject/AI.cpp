@@ -43,6 +43,12 @@ AI::~AI()
 {
 }
 
+void AI::CleanUp()
+{
+	TestPosition1 = nullptr;
+	TestPosition2 = nullptr;
+}
+
 glm::vec3 AI::SeekForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed)
 {
 	glm::vec3 LookAtDirection =  Target - Source;
@@ -128,7 +134,7 @@ glm::vec3 AI::WanderForce(std::shared_ptr<Entity> Source, glm::vec3& TargetRef, 
 glm::vec3 AI::pathFollowingForce(glm::vec3 Source, Path Currentpath, glm::vec3 CurrentVelocity, float fMass, float MaxSpeed)
 {
 	if (Currentpath.v3Points.size() == 0) return glm::vec3();
-	glm::vec3 VelocityDirection = glm::normalize(CurrentVelocity);
+	glm::vec3 VelocityDirection = glm::length(CurrentVelocity) == 0 ? CurrentVelocity : glm::normalize(CurrentVelocity); // If is zero vector, don't normalize
 	glm::vec3 PredictPosition = VelocityDirection * Currentpath.fRadius;
 	PredictPosition += Source;
 	
@@ -296,10 +302,10 @@ glm::vec3 AI::Cohesion(std::shared_ptr<Entity> Source, float fRadius, std::vecto
 
 glm::vec3 AI::ObstacleAvoidance(std::shared_ptr<Entity> Source, float MAX_SEE_AHEAD, glm::vec3 CurrentVelocity)
 {
-	glm::vec3 Ahead = Source->transform.Position + glm::normalize(CurrentVelocity) * MAX_SEE_AHEAD;
+	//glm::vec3 Ahead = Source->transform.Position + glm::normalize(CurrentVelocity) * MAX_SEE_AHEAD;
 	glm::vec3 Ahead = Source->transform.Position + glm::normalize(CurrentVelocity) * MAX_SEE_AHEAD * 0.5f;
 
-
+	return Ahead;
 }
 
 glm::vec3 AI::FindNormal(glm::vec3 Point, glm::vec3 LineStart, glm::vec3 LineEnd)

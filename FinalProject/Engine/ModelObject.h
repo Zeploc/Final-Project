@@ -41,6 +41,13 @@ public:
 		this->program = Shader::ModelProgram;
 		this->loadModel(path);
 	}
+	
+	~ModelObject()
+	{
+		meshes.clear();
+		textures_loaded.clear();
+	}
+
 
 	// Draws the model, and thus all its meshes
 	void Render(Utils::Transform MeshTransform)
@@ -207,7 +214,7 @@ private:
 		string filename = string(path);
 		filename = directory + '/' + filename;
 
-		cout << "texture filename: " << filename << endl;
+		cout << "Loading model with texture at filename: " << filename << endl;
 
 		GLuint textureID;
 		glGenTextures(1, &textureID);

@@ -24,6 +24,7 @@
 #include "NetworkSystem.h"
 #include "Server.h"
 #include "LevelManager.h"
+#include "UIManager.h"
 
 void StartServer();
 
@@ -56,6 +57,7 @@ void LobbyMenu::Init(std::shared_ptr<Scene> _Scene)
 	v_ScreenElements.push_back(LobbyText);
 	v_ScreenElements.push_back(PlayerName);
 	v_ScreenElements.push_back(StartServerBtn);
+
 }
 
 void LobbyMenu::HideElements()
@@ -68,6 +70,8 @@ void LobbyMenu::ShowElements()
 {
 	for (auto it : v_ScreenElements)
 		it->SetActive(true);
+
+	UIManager::GetInstance()->m_bDisplayChat = true;
 
 	if (!NetworkManager::GetInstance()->m_Network.IsServer()) // Current Instance is a client
 	{

@@ -35,6 +35,8 @@ public:
 	AI();
 	~AI();
 
+	static void CleanUp();
+
 	static glm::vec3 SeekForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed);
 	static glm::vec3 FleeForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed);
 	static glm::vec3 PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, glm::vec3 PreviousPosition, float ScaleFactor, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed);
@@ -45,7 +47,7 @@ public:
 	static glm::vec3 Seperation(std::shared_ptr<Entity> Source, float fCloseness, std::vector<std::shared_ptr<Entity>> Avoidables, float MaxSpeed);
 	static glm::vec3 Align(std::shared_ptr<Entity> Source, float fRadius, std::vector<std::shared_ptr<Entity>> Avoidables, float MaxSpeed);
 	static glm::vec3 Cohesion(std::shared_ptr<Entity> Source, float fRadius, std::vector<std::shared_ptr<Entity>> Avoidables, float MaxSpeed);
-
+	static glm::vec3 ObstacleAvoidance(std::shared_ptr<Entity> Source, float MAX_SEE_AHEAD, glm::vec3 CurrentVelocity);
 private:
 	static glm::vec3 FindNormal(glm::vec3 Point, glm::vec3 LineStart, glm::vec3 LineEnd);
 

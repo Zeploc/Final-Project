@@ -65,8 +65,8 @@ void Enemy1::Update()
 {
 	std::vector<std::shared_ptr<Entity>> Avoidables = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene())->Enemies;
 	m_v3CurrentVelocity += AI::pathFollowingForce(transform.Position, CurrentPath, m_v3CurrentVelocity, 10.0f, m_fSpeed);
-	m_v3CurrentVelocity += AI::Seperation(this->shared_from_this(), 1.0f, Avoidables, m_fSpeed);
-	//m_v3CurrentVelocity += AI::Align(this->shared_from_this(), 20.0f, Avoidables, m_fSpeed) * 0.1f;
+	m_v3CurrentVelocity += AI::Seperation(this->shared_from_this(), 1.0f, Avoidables, m_fSpeed) * 10.0f;
+	m_v3CurrentVelocity += AI::Align(this->shared_from_this(), 20.0f, Avoidables, m_fSpeed) * 0.1f;
 	
 	if (glm::length(m_v3CurrentVelocity) > m_fSpeed)
 	{

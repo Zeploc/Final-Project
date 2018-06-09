@@ -33,6 +33,8 @@ class Shader
 public:
 	Shader();
 	~Shader();
+	static void CleanUp();
+
 
 	static GLuint program;
 	static GLuint Textureprogram;

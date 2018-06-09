@@ -37,6 +37,7 @@ public:
 	bool m_bDisplayPauseOptions = false;
 
 	void SwitchUIMode(bool _bNewMode);
+	bool GetUIMode() { return m_bUIMode; };
 	bool m_bFPS = false;
 
 private:

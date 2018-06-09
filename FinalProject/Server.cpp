@@ -24,6 +24,7 @@
 #include "NetworkSystem.h"
 #include "utils.h"
 #include "Menu.h"
+#include "UIManager.h"
 
 // Engine Includes //
 #include "Engine\SceneManager.h"
@@ -198,16 +199,18 @@ void Server::ProcessData(std::string _DataReceived)
 			if (AddClient(_packetRecvd.MessageContent))
 			{
 				// Get string of all connected Users
-				std::string ServerConnectedNames;
+				//std::string ServerConnectedNames;
 				std::string SenderAddress = ToString(m_ClientAddress);
-				for (auto it = m_pConnectedClients->begin(); it != m_pConnectedClients->end(); ++it)
-				{
-					ServerConnectedNames += it->second.m_strName + " ";
-				}
+				//for (auto it = m_pConnectedClients->begin(); it != m_pConnectedClients->end(); ++it)
+				//{
+				//	ServerConnectedNames += it->second.m_strName + " ";
+				//}
+
 				// Welcomes connected client by sending handshake message
-				_packetToSend.Serialize(HANDSHAKE, const_cast<char*>(ServerConnectedNames.c_str()));
+				_packetToSend.Serialize(HANDSHAKE, const_cast<char*>("Accepted"));
 				SendData(_packetToSend.PacketData);
 
+				// Tell sender Servers name and ip
 				std::string _strToSend = std::string(m_cUserName) + " " + m_pServerSocket->GetSocketAddress();
 				_packetToSend.Serialize(CLIENTCONNECTED, const_cast<char*>(_strToSend.c_str()));
 				SendData(_packetToSend.PacketData);
@@ -219,13 +222,13 @@ void Server::ProcessData(std::string _DataReceived)
 					_packetToSend.Serialize(CLIENTCONNECTED, const_cast<char*>(_strToSend.c_str()));
 					SendData(_packetToSend.PacketData);
 				}
-							
+				
 				// Send the new client to all current clients
 				_strToSend = m_pConnectedClients->find(SenderAddress)->second.m_strName + " " + SenderAddress;
 				SendToAllClients(_strToSend, CLIENTCONNECTED, SenderAddress);
-
-				std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
-				MenuRef->LobbyScreen.ClientConnected(m_pConnectedClients->find(SenderAddress)->second.m_strName, SenderAddress);
+				
+				// Add new client to server's lobby
+				ServerPlayerRespondToMessage(_packetRecvd.MessageContent, CLIENTCONNECTED, SenderAddress);
 	
 			}
 			else
@@ -233,6 +236,14 @@ void Server::ProcessData(std::string _DataReceived)
 				_packetToSend.Serialize(HANDSHAKE, "Invalid");
 				SendData(_packetToSend.PacketData);
 			}
+			break;
+		}
+		case CHAT:
+		{
+			std::string SenderAddress = ToString(m_ClientAddress);
+			std::cout << _packetRecvd.MessageContent << std::endl;
+			SendToAllClients(_packetRecvd.MessageContent, CHAT);
+			ServerPlayerRespondToMessage(_packetRecvd.MessageContent, CHAT, SenderAddress);
 			break;
 		}
 	}
@@ -253,6 +264,21 @@ void Server::Update()
 		m_pWorkQueue->pop(temp);
 		ProcessData(temp);
 	}
+}
+
+void Server::ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message)
+{
+	std::string MessageToSend = _pcMessage;
+	if (_Message == CHAT)
+	{
+		std::string UserAndMessage(m_cUserName);
+		UserAndMessage += " " + _pcMessage;
+		MessageToSend = UserAndMessage;
+	}
+	std::string SenderAddress = ToString(m_ClientAddress);
+	std::cout << MessageToSend << std::endl;
+	SendToAllClients(MessageToSend, CHAT, SenderAddress);
+	ServerPlayerRespondToMessage(MessageToSend, CHAT, SenderAddress);
 }
 
 void Server::SendToAllClients(std::string _pcMessage, EMessageType _MessageType, std::string ExcludeAddress)
@@ -297,4 +323,49 @@ bool Server::AddClient(std::string _strClientName)
 	std::string _strAddress = ToString(m_ClientAddress);
 	m_pConnectedClients->insert(std::pair < std::string, TClientDetails >(_strAddress, _clientToAdd));
 	return true;
+}
+
+void Server::ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _Message, std::string SenderAddress)
+{
+	switch (_Message)
+	{
+	case HANDSHAKE:
+		break;
+	case DATA:
+		break;
+	case KEEPALIVE:
+		break;
+	case BROADCAST:
+		break;
+	case CHAT:
+	{
+		std::string Result = _pcMessage;
+		std::string Username;
+		std::string Message;
+
+		for (int i = 0; i < Result.size(); i++)
+		{
+			if (Result[i] != ' ')
+			{
+				Username += Result[i];
+				continue;
+			}
+			Message = Result.substr(i + 1);
+			break;
+		}
+		UIManager::GetInstance()->m_ChatInstance.AddChatMessage({ Username, Message });
+		std::cout << "Chat Recieved: [" + Username + "]: " + Message << std::endl;
+	}
+		break;
+	case CLIENTCONNECTED:
+	{
+		std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
+		MenuRef->LobbyScreen.ClientConnected(m_pConnectedClients->find(SenderAddress)->second.m_strName, SenderAddress);
+	}
+	break;
+	case LOADLEVEL:
+		break;
+	default:
+		break;
+	}
 }
