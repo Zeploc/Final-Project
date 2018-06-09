@@ -47,6 +47,7 @@ private:
 	{
 		std::shared_ptr<Entity> BulletEntity;
 		glm::vec3 CurrentVelocity;
+		float Timer = 8.0f;
 	};
 
 	void MoveHorizontally(bool bLeft);
@@ -57,7 +58,7 @@ private:
 	float DodgeCooldown;
 	float fHSpeed = 0;
 	float fVSpeed = 0;
-	float BulletSpeed = 1.0f;
+	float BulletSpeed = 0.01f;
 	std::vector<Bullet> Bullets;
 	
 	bool bHasDodged = false;

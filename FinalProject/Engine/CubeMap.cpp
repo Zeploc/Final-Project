@@ -197,6 +197,10 @@ void CubeMap::Render(Utils::Transform Newtransform)
 	glUniform1i(glGetUniformLocation(Shader::CubeMapProgram, "cubeSampler"), 0);
 
 	Camera::GetInstance()->SetMVP(Newtransform, program);
+	
+	glActiveTexture(GL_TEXTURE1);
+	glUniform1i(glGetUniformLocation(program, "skybox"), 1);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, 0);

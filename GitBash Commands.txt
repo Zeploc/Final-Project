@@ -1,4 +1,4 @@
-Locate to branch location (H:/Year 2/Final Project) (Press tab to auto complete)
+gitLocate to branch location (H:/Year 2/Final Project) (Press tab to auto complete)
 	cd "/h/Year 2/Final Project"
 	cd H:/Year 2/Final Project
 	
