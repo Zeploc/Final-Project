@@ -177,6 +177,7 @@ void Init()
 	Shader::CubeMapProgram = loader.CreateProgram("Resources/Shaders/CubeMapVertexShader.vs", "Resources/Shaders/CubeMapFragmentShader.fs");
 	Shader::ModelProgram = loader.CreateProgram("Resources/Shaders/ModelVertexShader.vs", "Resources/Shaders/ModelFragmentShader.fs");
 	Shader::ModelProgramLit = loader.CreateProgram("Resources/Shaders/ModelVertexShaderLit.vs", "Resources/Shaders/ModelFragmentShaderLit.fs");
+	Shader::ReflectionProgram = loader.CreateProgram("Resources/Shaders/ReflectionShader.vs", "Resources/Shaders/ReflectionShader.fs");
 	
 	glCullFace(GL_BACK); // Cull the Back faces
 	glFrontFace(GL_CW); // Front face is Clockwise order

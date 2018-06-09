@@ -44,6 +44,7 @@ public:
 	static GLuint CubeMapProgram;
 	static GLuint ModelProgram;
 	static GLuint ModelProgramLit;
+	static GLuint ReflectionProgram;
 	
 	static std::map<std::string, std::shared_ptr<ModelObject>> Models;
 	static std::map<const char *, GLuint> Textures;

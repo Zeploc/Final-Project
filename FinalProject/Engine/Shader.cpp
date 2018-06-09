@@ -39,6 +39,8 @@ GLuint Shader::LitTextureprogram;
 GLuint Shader::CubeMapProgram;
 GLuint Shader::ModelProgram;
 GLuint Shader::ModelProgramLit;
+GLuint Shader::ReflectionProgram;
+
 
 std::map<std::string, std::shared_ptr<ModelObject>> Shader::Models;
 std::map<const char *, GLuint> Shader::Textures;
