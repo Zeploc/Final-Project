@@ -57,7 +57,7 @@ void HostGameMenu::Init(std::shared_ptr<Scene> _Scene)
 	StartHostBtn->SetActive(false);
 	ServerName = std::make_shared<UIText>(UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 500.0f), 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Server", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
 	ServerName->SetActive(false);
-	PlayerName = std::make_shared<UITextField>(UITextField({ 100.0f, 200.0f }, Utils::CENTER_LEFT, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), 400, 50, { 0.8f, 0.8f, 0.8f, 1.0f }, "PlayerName", "Resources/Fonts/Roboto-Bold.ttf", 40, Utils::CENTER));
+	PlayerName = std::make_shared<UITextField>(UITextField({ 100.0f, 200.0f }, Utils::CENTER_LEFT, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), 400, 50, { 0.8f, 0.8f, 0.8f, 1.0f }, "PlayerName", "Resources/Fonts/Roboto-Bold.ttf", 40, Utils::CENTER_LEFT));
 	PlayerName->SetActive(false);
 
 	// Add elements to scene UI elements
