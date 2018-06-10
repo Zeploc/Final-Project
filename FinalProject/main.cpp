@@ -56,7 +56,6 @@
 
 // Static Function Prototypes //
 
-
 // Types //
 using namespace std;
 

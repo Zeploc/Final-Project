@@ -67,6 +67,9 @@
     <Filter Include="Game\Network\Menu">
       <UniqueIdentifier>{e73dc593-4eba-4ca1-921b-a3720bfcf550}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Pickups">
+      <UniqueIdentifier>{4c920fc5-eb58-44ec-971a-f066370df02a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -230,6 +233,12 @@
     </ClCompile>
     <ClCompile Include="GroupEnemies.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PickUpBase.cpp">
+      <Filter>Game\Pickups</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBoostPickUp.cpp">
+      <Filter>Game\Pickups</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -406,6 +415,12 @@
     </ClInclude>
     <ClInclude Include="GroupEnemies.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PickUpBase.h">
+      <Filter>Game\Pickups</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoostPickUp.h">
+      <Filter>Game\Pickups</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

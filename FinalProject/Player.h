@@ -28,6 +28,12 @@
 
 // Static Variables //
 
+enum POWERUPS
+{
+	NONE,
+	SPEEDBOOST
+};
+
 #pragma once
 class Player : public Entity
 {
@@ -38,33 +44,41 @@ public:
 
 	void Update();
 	glm::vec2 GetVelocity() { return glm::vec2(fHSpeed, fVSpeed); };
-	void ChangeMoveSpeed(float _fSpeed) { GameSettings::fMoveSpeed = _fSpeed; };
+	void ChangeMoveSpeed(float _fSpeed) { m_fCurrentPlayerSpeed = _fSpeed; };
 	void Reset();
 
-private:
+	void ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime);
 
+private:
+	// Bullets
 	struct Bullet
 	{
 		std::shared_ptr<Entity> BulletEntity;
 		glm::vec3 CurrentVelocity;
 		float Timer = 8.0f;
 	};
+	float BulletSpeed = 30.0f;
+	std::vector<Bullet> Bullets;
 
+	// Movement
 	void MoveHorizontally(bool bLeft);
-
 	void MoveVertical(bool bUp);
 	float RollTimer = 0.8f;
 	float BulletTimer = 0.12f;
 	float DodgeCooldown;
 	float fHSpeed = 0;
 	float fVSpeed = 0;
-	float BulletSpeed = 30.0f;
-	std::vector<Bullet> Bullets;
-	
+	float m_fCurrentPlayerSpeed = GameSettings::fMoveSpeed;
 	bool bHasDodged = false;
 	bool bJump = false;
 
+	// Score and Health
 	float m_fHealth = 100;
 	int m_iScore = 0;
+
+	//Power Ups
+	void PowerUpComplete();
+	POWERUPS CurrentPowerUp = NONE;
+	float m_fPowerUpTimer = 0.0f;
 };
 

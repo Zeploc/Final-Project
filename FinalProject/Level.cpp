@@ -42,6 +42,7 @@
 #include "Enemy1.h"
 #include "Enemy2.h"
 #include "Enemy3.h"
+#include "SpeedBoostPickUp.h"
 
 // This Includes //
 #include "Level.h"
@@ -70,7 +71,7 @@ Level::Level(std::string sSceneName)
 	// Add cube map first so transpancy works
 	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
 	AddEntity(Player);
-	Player->EntityMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(0.5f, 1.0f, 0.5f, Player);
+	Player->EntityMesh->AddCollisionBounds(0.6f, 1.0f, 0.6f, Player);
 	EPlayer = Player;
 	EPlayer->SetActive(true);
 
@@ -80,6 +81,20 @@ Level::Level(std::string sSceneName)
 	ESpectator->SetActive(false);
 
 	CurrentController = Player;
+
+	std::shared_ptr<SpeedBoostPickUp> NewPickup = std::make_shared<SpeedBoostPickUp>(SpeedBoostPickUp(Utils::Transform{ { 7.5f, -2.0f, 10.0f }, { 45, 45, 45 }, {1, 1, 1} }, Utils::CENTER, EPlayer));
+	std::shared_ptr<Cube> NewPickupMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 0.4, 0.1, 0.6, 1.0f }));
+	NewPickup->AddMesh(NewPickupMesh);
+	NewPickupMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, NewPickup);
+	NewPickupMesh->SetLit(true);
+	AddEntity(NewPickup);
+
+	std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 15.0f, -2.5f, 18.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Cube> CubeCollisionMesh = std::make_shared<Cube>(Cube(2.0f, 2.0f, 2.0f, { 0.1, 0.3, 0.7, 1.0f }));
+	CubeCollision->AddMesh(CubeCollisionMesh);
+	CubeCollisionMesh->AddCollisionBounds(2.0f, 2.0f, 2.0f, CubeCollision);
+	CubeCollisionMesh->SetLit(true);
+	AddCollidable(CubeCollision);
 
 	FPSCounterText = std::make_shared<UIText>(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 30.0f, Camera::GetInstance()->SCR_HEIGHT - 20.0f), 0.0f, glm::vec4(0.6, 0.6, 0.6, 1.0), "FPS:", "Resources/Fonts/Roboto-Condensed.ttf", 20, Utils::TOP_RIGHT);
 	//std::shared_ptr<UIImage> ScoreBack(new UIImage(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 20.0f, 18.0f), Utils::TOP_RIGHT, 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0), 160, 50));
@@ -120,7 +135,7 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(0.5f, 2.0f, 0.5f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
 	TargetMesh->SetLit(true);
 	Target->AddMesh(TargetMesh);
-	TargetMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(0.5f, 2.0f, 0.5f, Target);
+	TargetMesh->AddCollisionBounds(0.5f, 2.0f, 0.5f, Target);
 	//TargetMesh->LightProperties.v3LightColour = {0.8f, 0.1f, 0.1f};
 	//AddEntity(Target);
 	AddCollidable(Target);
@@ -142,7 +157,7 @@ Level::Level(std::string sSceneName)
 		std::shared_ptr<Enemy2> NewEnemy = std::make_shared<Enemy2>(Enemy2({ glm::vec3(-5 + i * 0.3f, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 		EnemeyMesh->SetLit(true);
 		NewEnemy->AddMesh(EnemeyMesh);
-		EnemeyMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(1, 1, 1, NewEnemy);
+		EnemeyMesh->AddCollisionBounds(1, 1, 1, NewEnemy);
 		AddEnemy(NewEnemy);
 		NewEnemy->SetTarget(PersuitTarget);
 		//AddEntity(NewEnemy);

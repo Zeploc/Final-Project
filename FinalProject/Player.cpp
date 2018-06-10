@@ -366,6 +366,16 @@ void Player::Update()
 	Translate(glm::vec3(fHSpeed, 0, fVSpeed));
 	//GotLevel->DebugText->sText = std::to_string(fVSpeed);
 
+	if (CurrentPowerUp != NONE)
+	{
+		m_fPowerUpTimer -= Time::dTimeDelta;
+		if (m_fPowerUpTimer <= 0)
+		{
+			m_fPowerUpTimer = 0;
+			PowerUpComplete();
+			CurrentPowerUp = NONE;
+		}
+	}
 }
 
 /************************************************************
@@ -380,6 +390,34 @@ void Player::Reset()
 	fHSpeed = 0;
 	fVSpeed = 0;
 	transform.Position = GotLevel->SpawnPos;
+}
+
+void Player::ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime)
+{
+	m_fPowerUpTimer = _fPowerUpTime;
+	CurrentPowerUp = _PowerUp;
+	switch (_PowerUp)
+	{
+	case NONE:
+		break;
+	case SPEEDBOOST:
+		m_fCurrentPlayerSpeed = GameSettings::fMoveSpeed * 2;
+		break;
+	default:
+		break;
+	}
+}
+
+void Player::PowerUpComplete()
+{
+	switch (CurrentPowerUp)
+	{
+	case SPEEDBOOST:
+		m_fCurrentPlayerSpeed = GameSettings::fMoveSpeed;
+		break;
+	default:
+		break;
+	}
 }
 
 /************************************************************
@@ -399,24 +437,24 @@ void Player::MoveHorizontally(bool bLeft)
 		if (GotLevel->Collidables.size() == 0)
 		{
 			if (bLeft)
-				fHSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+				fHSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			else
-				fHSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+				fHSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			return;
 		}
 		for (auto it : GotLevel->Collidables)
 		{
-			if (EntityMesh->MeshCollisionBounds->CheckCollision(it, glm::vec3(GameSettings::fMoveSpeed * Time::dTimeDelta * Direction, 0, 0)))
+			if (EntityMesh->GetCollisionBounds()->CheckCollision(it, glm::vec3(m_fCurrentPlayerSpeed * Time::dTimeDelta * Direction, 0, 0)))
 			{
-					fHSpeed = Direction * abs(EntityMesh->MeshCollisionBounds->GetDistance(it).x);
+					fHSpeed = Direction * abs(EntityMesh->GetCollisionBounds()->GetDistance(it).x);
 					break;
 			}
 			else
 			{
 				if (bLeft)
-					fHSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+					fHSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 				else
-					fHSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+					fHSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			}
 		}
 	}
@@ -433,26 +471,27 @@ void Player::MoveVertical(bool bUp)
 		if (GotLevel->Collidables.size() == 0)
 		{
 			if (bUp)
-				fVSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+				fVSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			else
-				fVSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+				fVSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			return;
 		}
 		for (auto it : GotLevel->Collidables)
 		{
 
-			if (EntityMesh->MeshCollisionBounds->CheckCollision(it, glm::vec3(0, 0, GameSettings::fMoveSpeed * Time::dTimeDelta * Direction)))
+			if (EntityMesh->GetCollisionBounds()->CheckCollision(it, glm::vec3(0, 0, m_fCurrentPlayerSpeed * Time::dTimeDelta * Direction)))
 			{
-				fVSpeed = Direction * abs(EntityMesh->MeshCollisionBounds->GetDistance(it).z);
+				fVSpeed = Direction * abs(EntityMesh->GetCollisionBounds()->GetDistance(it).z);
 				break;
 			}
 			else
 			{
 				if (bUp)
-					fVSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+					fVSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 				else
-					fVSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+					fVSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			}
 		}
 	}
 }
+

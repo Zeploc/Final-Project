@@ -46,6 +46,11 @@ public:
 	virtual void Rebind() {}; // Will replace if texture exists
 	virtual void SetLit(bool _bIsLit) { bIsLit = _bIsLit; };
 
+	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, std::shared_ptr<Entity> _EntityRef);
+	std::shared_ptr<CollisionBounds> GetCollisionBounds() {
+		return MeshCollisionBounds;
+	};
+
 	Utils::ESHAPE m_eShape;
 	float m_fWidth;
 	float m_fHeight;
@@ -58,10 +63,10 @@ public:
 	glm::vec4 UVCoords;
 	bool bHasTexture = false;
 	int m_iIndicies;
-	std::shared_ptr<CollisionBounds> MeshCollisionBounds;
 	LightInfo LightProperties;
 	//std::shared_ptr<Entity> EntityRef;
 protected:
+	std::shared_ptr<CollisionBounds> MeshCollisionBounds;
 	bool bIsLit = false;
 };
 

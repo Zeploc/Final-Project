@@ -76,3 +76,8 @@ void Mesh::Render(Utils::Transform Newtransform)
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+void Mesh::AddCollisionBounds(float fHeight, float fWidth, float fDepth, std::shared_ptr<Entity> _EntityRef)
+{
+	MeshCollisionBounds = std::make_shared<CollisionBounds>(fHeight, fWidth, fDepth, _EntityRef);
+}
