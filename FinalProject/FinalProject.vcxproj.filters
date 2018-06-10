@@ -242,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="MessageBox.cpp">
       <Filter>Source Files</Filter>
+	</ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Game\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -427,6 +430,9 @@
     </ClInclude>
     <ClInclude Include="MessageBox.h">
       <Filter>Header Files</Filter>
+	</ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Game\Enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

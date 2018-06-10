@@ -137,6 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Chat.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Engine\CollisionBounds.cpp" />
@@ -196,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="Chat.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Engine\CollisionBounds.h" />

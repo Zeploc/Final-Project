@@ -31,8 +31,6 @@ Enemy2::Enemy2(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 {
 }
 
-
-
 Enemy2::~Enemy2()
 {
 }
