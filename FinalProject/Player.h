@@ -38,6 +38,15 @@ enum POWERUPS
 class Player : public Entity
 {
 public:
+	struct Bullet
+	{
+		std::shared_ptr<Entity> BulletEntity;
+		glm::vec3 CurrentVelocity;
+		float Timer = 8.0f;
+	};
+
+	std::vector<Bullet> Bullets;
+
 	Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float _fDepth, Utils::EANCHOR _Anchor, glm::vec4 _Colour);
 	Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float _fDepth, Utils::EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, glm::vec4 UVCoords);
 	~Player();
@@ -51,14 +60,9 @@ public:
 
 private:
 	// Bullets
-	struct Bullet
-	{
-		std::shared_ptr<Entity> BulletEntity;
-		glm::vec3 CurrentVelocity;
-		float Timer = 8.0f;
-	};
+	
 	float BulletSpeed = 30.0f;
-	std::vector<Bullet> Bullets;
+	
 
 	// Movement
 	void MoveHorizontally(bool bLeft);

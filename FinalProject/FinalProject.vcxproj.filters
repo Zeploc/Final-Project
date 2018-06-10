@@ -240,6 +240,9 @@
     <ClCompile Include="SpeedBoostPickUp.cpp">
       <Filter>Game\Pickups</Filter>
     </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Game\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -421,6 +424,9 @@
     </ClInclude>
     <ClInclude Include="SpeedBoostPickUp.h">
       <Filter>Game\Pickups</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Game\Enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -33,6 +33,9 @@
 // Local Includes //
 #include "Level.h"
 #include "UIManager.h"
+#include "Level.h"
+#include "Boss.h"
+
 
 // This Includes //
 #include "Player.h"
@@ -59,7 +62,8 @@ Player::Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float
 	//std::shared_ptr<Sphere> NewMesh = std::make_shared<Sphere>(_fWidth, _fHeight, _fDepth, _Colour);
 	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/char01.obj");
 	AddMesh(NewModelMesh);
-	EntityMesh->SetLit(true);	
+	EntityMesh->SetLit(true);
+
 }
 
 /************************************************************
@@ -182,6 +186,7 @@ void Player::Update()
 			Bullet NewBullet;
 			std::shared_ptr<Entity> Bullet = std::make_shared<Entity>(Entity({ this->transform.Position, this->transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
 			std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
+			BulletCube->AddCollisionBounds(0.3f, 0.3f, 0.3f, Bullet);
 			Bullet->AddMesh(BulletCube);
 			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(Bullet);
 			glm::vec3 BulletDirection = glm::normalize(VectorToMouseFromPlayer);
@@ -220,6 +225,39 @@ void Player::Update()
 			iEndPos = Bullets.end();
 		}
 	}
+	std::shared_ptr<Level> LevelRef = dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
+	for (auto& Bulletit : Bullets)
+	{
+		for (auto& it : LevelRef->Enemies)
+		{
+			
+			if (Bulletit.BulletEntity->EntityMesh->GetCollisionBounds()->isColliding(it))
+			{
+				std::shared_ptr<Boss> IsBoss = std::dynamic_pointer_cast<Boss>(it);
+				if (IsBoss)
+				{
+					IsBoss->OnBulletCollision();
+					if (IsBoss->BossHealth <= 0)
+					{
+						it->SetVisible(false);
+						it->SetActive(false);
+						Bulletit.BulletEntity->SetActive(false);
+						Bulletit.BulletEntity->SetVisible(false);
+					}
+				}
+				else
+				{
+					// Temp bullet kill
+					it->SetVisible(false);
+					it->SetActive(false);
+					Bulletit.BulletEntity->SetActive(false);
+					Bulletit.BulletEntity->SetVisible(false);
+				}
+			}
+		}
+		
+	}
+	
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
 	{

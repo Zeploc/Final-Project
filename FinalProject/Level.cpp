@@ -43,6 +43,7 @@
 #include "Enemy2.h"
 #include "Enemy3.h"
 #include "SpeedBoostPickUp.h"
+#include "Boss.h"
 
 // This Includes //
 #include "Level.h"
@@ -88,6 +89,13 @@ Level::Level(std::string sSceneName)
 	NewPickupMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, NewPickup);
 	NewPickupMesh->SetLit(true);
 	AddEntity(NewPickup);
+
+	std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -2.0f, -10.0f },{ 45, 45, 45 },{ 1, 1, 1 } }, Utils::CENTER));
+	std::shared_ptr<Cube> BossMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 1.0, 0.00, 0.0, 1.0f }));
+	BossObject->AddMesh(BossMesh);
+	BossMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, BossObject);
+	BossMesh->SetLit(true);
+	AddEnemy(BossObject);
 
 	std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 15.0f, -2.5f, 18.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Cube> CubeCollisionMesh = std::make_shared<Cube>(Cube(2.0f, 2.0f, 2.0f, { 0.1, 0.3, 0.7, 1.0f }));
