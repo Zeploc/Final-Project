@@ -28,3 +28,4 @@ float GameSettings::fMoveSpeed = 3.8f;
 float GameSettings::fGravity = 0.62f;
 float GameSettings::fJumpSize = 2.0f;
 float GameSettings::fTerminalVelocity = 16.0f;
+float GameSettings::fVolumeLevel = 1.0f;

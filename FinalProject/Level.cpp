@@ -405,16 +405,15 @@ void Level::RespawnEnemies()
 ************************************************************/
 void Level::PlayRandomTrack()
 {
-	return;
 	SoundManager::GetInstance()->StopAudio("BackgroundC");
 	const char* MusicOptions[] = { "Resources/Sound/Ludum Dare 28 - Track 1.wav",
 		"Resources/Sound/Ludum Dare 28 - Track 3.wav", "Resources/Sound/Ludum Dare 30 - Track 6.wav",
 		"Resources/Sound/Ludum Dare 30 - Track 7.wav", "Resources/Sound/Ludum Dare 38 - Track 10.wav" };
-	int iRandTrack = rand() % 5;
+	int iRandTrack = 3;//rand() % 5;
 	std::cout << "Playing " << MusicOptions[iRandTrack] << " | Number " << iRandTrack << std::endl;
 	SoundManager::GetInstance()->AddAudio(MusicOptions[iRandTrack], true, "GameBackgroundTrack " + std::to_string(iRandTrack));
 	SoundManager::GetInstance()->PlayAudio("GameBackgroundTrack " + std::to_string(iRandTrack), "BackgroundC");
-	SoundManager::GetInstance()->SetChannelVolume("BackgroundC", 0.3f);
+	SoundManager::GetInstance()->SetChannelVolume("BackgroundC", GameSettings::fVolumeLevel / 20.0f);
 }
 
 /************************************************************

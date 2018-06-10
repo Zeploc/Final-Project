@@ -21,6 +21,7 @@
 
 // Engine Includes //
 #include "Input.h"
+#include "UIButton.h"
 
 // Static Variables //
 Input* Input::m_pInput = nullptr;
@@ -210,6 +211,7 @@ void Input::Update()
 		}
 	}
 	bKBHit = false;
+	UIButton::bButtonPressedThisFrame = false;
 }
 
 /************************************************************

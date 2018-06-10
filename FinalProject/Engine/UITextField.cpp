@@ -50,7 +50,6 @@ UITextField::UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRo
 
 }
 
-
 /************************************************************
 #--Description--#:  Destructor function
 #--Author--#: 		Alex Coultas
@@ -65,6 +64,12 @@ void UITextField::SetActive(bool _bIsActive)
 {
 	FieldText.SetActive(_bIsActive);
 	BackImage.SetActive(_bIsActive);
+}
+
+void UITextField::ResetField()
+{
+	FieldText.sText = sHintText;
+	FieldText.Colour.a = 0.5f;
 }
 
 /************************************************************
@@ -106,6 +111,7 @@ void UITextField::Update()
 	}
 	if (bIsFocussed && (Input::GetInstance()->bKBHit || Input::GetInstance()->KeyState[Input::GetInstance()->cLastKey] == Input::INPUT_HOLD))
 	{		
+		//FieldText.Colour.a = 1.0f;
 		std::string NewText = FieldText.sText;
 		char cNext = Input::GetInstance()->cLastKey;
 		if (cNext == '\b' && dSpamDelay > fSpamTime)
@@ -146,7 +152,7 @@ void UITextField::SetFocussed(bool bNewFocus)
 {
 	bIsFocussed = bNewFocus;
 	bHintTextActive = true;
-	if (!bIsFocussed) FieldText.sText = sHintText;
+	//if (!bIsFocussed) FieldText.sText = sHintText;
 	//if (!bIsFocussed) bHintTextActive = true;
 
 }

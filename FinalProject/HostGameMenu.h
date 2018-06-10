@@ -35,13 +35,13 @@ public:
 	void SetValues();
 
 	int GetCurrentPlayersCounter() { return (int)PlayersCountSlider->GetValue(); };
-	std::string GetServerName() { return ServerName->sText; };
+	std::string GetServerName() { return ServerName->FieldText.sText; };
 	std::string GetPlayerName() { return PlayerName->FieldText.sText; };
 
 	std::vector<std::shared_ptr<UIElement>> v_ScreenElements;
 private:
 	std::shared_ptr<UISlider> PlayersCountSlider;
-	std::shared_ptr<UIText> ServerName;
+	std::shared_ptr<UITextField> ServerName;
 	std::shared_ptr<UITextField> PlayerName;
 };
 

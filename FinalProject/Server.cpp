@@ -207,7 +207,7 @@ void Server::ProcessData(std::string _DataReceived)
 				//}
 
 				// Welcomes connected client by sending handshake message
-				_packetToSend.Serialize(HANDSHAKE, const_cast<char*>("Accepted"));
+				_packetToSend.Serialize(HANDSHAKE, const_cast<char*>(CurrentServerProperties._ServerName.c_str()));
 				SendData(_packetToSend.PacketData);
 
 				// Tell sender Servers name and ip
@@ -312,6 +312,11 @@ bool Server::AddClient(std::string _strClientName)
 		{
 			return false;
 		}
+	}
+	// Check if name is same as server
+	if (_strClientName == m_cUserName)
+	{
+		return false;
 	}
 	//Add the client to the map.
 	TClientDetails _clientToAdd;

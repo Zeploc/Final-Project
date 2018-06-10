@@ -33,7 +33,6 @@ HostGameMenu::HostGameMenu()
 {
 }
 
-
 HostGameMenu::~HostGameMenu()
 {
 }
@@ -46,27 +45,33 @@ void HostGameMenu::Init(std::shared_ptr<Scene> _Scene)
 	std::shared_ptr<UIButton> HostGameBackBtn(new UIButton(glm::vec2(0, Camera::GetInstance()->SCR_HEIGHT), Utils::BOTTOM_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 80, MenuScreenBtn));
 	HostGameBackBtn->AddText("Back", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	HostGameBackBtn->SetActive(false);
-	PlayersCountSlider = std::make_shared<UISlider>(UISlider({ Camera::GetInstance()->SCR_WIDTH / 2, 300.0f }, 0, { 0.2f, 0.2f, 0.2f, 1.0f }, { 0.6f, 0.6f, 0.6f, 1.0f }, 300, 20, 40, 10, Utils::CENTER, "Players Count:"));
+	PlayersCountSlider = std::make_shared<UISlider>(UISlider({ 250.0f, 300.0f }, 0, { 0.2f, 0.2f, 0.2f, 1.0f }, { 0.6f, 0.6f, 0.6f, 1.0f }, 300, 20, 40, 10, Utils::CENTER, "Players Count:"));
 	PlayersCountSlider->SetMinimumPosition(2.0f);
 	PlayersCountSlider->SetMaximumPosition(4.0f);
 	PlayersCountSlider->SetLockSize(1.0f);
 	PlayersCountSlider->SetStartPosition(2.0f);
 	PlayersCountSlider->SetActive(false);
-	std::shared_ptr<UIButton> StartHostBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 120), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 420, 60, StartHostBtn));
+	std::shared_ptr<UIButton> StartHostBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 180), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 420, 60, StartHostBtn));
 	StartHostBtn->AddText("Start Host", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	StartHostBtn->SetActive(false);
-	ServerName = std::make_shared<UIText>(UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 500.0f), 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Server", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
+	ServerName = std::make_shared<UITextField>(UITextField(glm::vec2(100.0f, 400.0f), Utils::CENTER_LEFT, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), 400, 50, { 0.8f, 0.8f, 0.8f, 1.0f }, "Server", "Resources/Fonts/Roboto-Bold.ttf", 40, Utils::CENTER_LEFT));
 	ServerName->SetActive(false);
-	PlayerName = std::make_shared<UITextField>(UITextField({ 100.0f, 200.0f }, Utils::CENTER_LEFT, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), 400, 50, { 0.8f, 0.8f, 0.8f, 1.0f }, "PlayerName", "Resources/Fonts/Roboto-Bold.ttf", 40, Utils::CENTER_LEFT));
+	std::shared_ptr<UIText> ServerNameTxt = std::make_shared<UIText>(UIText({ 100.0f, 350.0f }, 0, { 0.7f, 0.7f, 0.7f, 1.0f }, "Server Name:", "Resources/Fonts/Roboto-Medium.ttf", 34, Utils::CENTER_LEFT));
+	ServerNameTxt->SetActive(false);
+	PlayerName = std::make_shared<UITextField>(UITextField({ 800.0f, 300.0f }, Utils::CENTER_LEFT, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), 400, 50, { 0.8f, 0.8f, 0.8f, 1.0f }, "PlayerName", "Resources/Fonts/Roboto-Bold.ttf", 40, Utils::CENTER_LEFT));
 	PlayerName->SetActive(false);
+	std::shared_ptr<UIText> PlayerNameTxt = std::make_shared<UIText>(UIText({ 800.0f, 250.0f }, 0, { 0.7f, 0.7f, 0.7f, 1.0f }, "Player Name:", "Resources/Fonts/Roboto-Medium.ttf", 34, Utils::CENTER_LEFT));
+	PlayerNameTxt->SetActive(false);
 
 	// Add elements to scene UI elements
 	_Scene->AddUITextElement(HostText);
 	_Scene->AddUIElement(HostGameBackBtn);
 	_Scene->AddUIElement(PlayersCountSlider);
 	_Scene->AddUIElement(StartHostBtn);
-	_Scene->AddUITextElement(ServerName);
+	_Scene->AddUIElement(ServerName);
 	_Scene->AddUIElement(PlayerName);
+	_Scene->AddUITextElement(ServerNameTxt);
+	_Scene->AddUITextElement(PlayerNameTxt);
 
 	// Add elements to vector list
 	v_ScreenElements.push_back(HostText);
@@ -75,6 +80,8 @@ void HostGameMenu::Init(std::shared_ptr<Scene> _Scene)
 	v_ScreenElements.push_back(StartHostBtn);
 	v_ScreenElements.push_back(ServerName);
 	v_ScreenElements.push_back(PlayerName);
+	v_ScreenElements.push_back(ServerNameTxt);
+	v_ScreenElements.push_back(PlayerNameTxt);
 
 }
 
@@ -118,5 +125,6 @@ void StartHostBtn()
 	//MenuRef->PlayerName->sText = MenuRef->ServerPlayerName->sText;
 	MenuRef->LobbyScreen.ClientConnected(MenuRef->HostGameScreen.GetPlayerName(), ServerRef->CurrentServerAddress());
 	MenuRef->LobbyScreen.SetPlayerNameText(MenuRef->HostGameScreen.GetPlayerName());
+	MenuRef->LobbyScreen.SetServerNameText(MenuRef->HostGameScreen.GetServerName());
 	MenuRef->ToggleMenuSection(LOBBY);
 }
