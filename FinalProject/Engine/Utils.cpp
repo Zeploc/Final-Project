@@ -29,7 +29,7 @@
 #include "Utils.h"
 
 // Static Variables //
-
+int Utils::iEntityNumber = 0;
 
 /************************************************************
 #--Description--#:  Gets position from anchor and current position
@@ -81,7 +81,7 @@ glm::vec3 Utils::GetAncoredPosition2D(glm::vec2 position, glm::vec2 Dimensions, 
 #--Parameters--#:	Element position, dimensions and current anchor
 #--Return--#: 		Returns vector 3 of new position
 ************************************************************/
-glm::vec3 Utils::GetAncoredPosition(glm::vec3 position, glm::vec2 Dimensions, EANCHOR _AnchorType)
+glm::vec3 Utils::GetAncoredPosition(glm::vec3 position, glm::vec3 Dimensions, EANCHOR _AnchorType)
 {
 	glm::vec3 NewPos;
 	switch (_AnchorType)
@@ -177,10 +177,9 @@ bool Utils::isColliding2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entit
 	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->transform.Scale.y);
 	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->transform.Scale.x);
 	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->transform.Scale.y);
-
-
-	glm::vec3 Entity1Pos = GetAncoredPosition(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * (glm::vec2)Entity1->transform.Scale, Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition(Entity2->transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * (glm::vec2)Entity2->transform.Scale, Entity2->EntityAnchor);
+	
+	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * (glm::vec2)Entity1->transform.Scale, Entity1->EntityAnchor);
+	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * (glm::vec2)Entity2->transform.Scale, Entity2->EntityAnchor);
 
 	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 > Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2
 		&& Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x - HalfWidth1 < Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x + HalfWidth2
@@ -205,8 +204,8 @@ bool Utils::CheckCollision2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<En
 	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->transform.Scale.x);
 	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->transform.Scale.y);
 
-	glm::vec3 Entity1Pos = GetAncoredPosition(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * (glm::vec2)Entity1->transform.Scale, Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition(Entity2->transform.Position + glm::vec3(Entity2Mesh->CollisionBox.v2Offset, 0), glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * (glm::vec2)Entity2->transform.Scale, Entity2->EntityAnchor);
+	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * (glm::vec2)Entity1->transform.Scale, Entity1->EntityAnchor);
+	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->transform.Position + glm::vec3(Entity2Mesh->CollisionBox.v2Offset, 0), glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * (glm::vec2)Entity2->transform.Scale, Entity2->EntityAnchor);
 
 	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 + Movement.x > Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2
 		&& Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x - HalfWidth1 + Movement.x < Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x + HalfWidth2
@@ -232,8 +231,8 @@ glm::vec2 Utils::GetDistance2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<
 	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->transform.Scale.x);
 	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->transform.Scale.y);
 	
-	glm::vec3 Entity1Pos = GetAncoredPosition(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * (glm::vec2)Entity1->transform.Scale, Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition(Entity2->transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * (glm::vec2)Entity2->transform.Scale, Entity2->EntityAnchor);
+	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * (glm::vec2)Entity1->transform.Scale, Entity1->EntityAnchor);
+	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * (glm::vec2)Entity2->transform.Scale, Entity2->EntityAnchor);
 
 	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 <= Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2)
 	{
@@ -271,8 +270,8 @@ glm::vec2 Utils::GetDifference2D(std::shared_ptr<Entity> Entity1, std::shared_pt
 	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->transform.Scale.x);
 	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->transform.Scale.y);
 
-	glm::vec3 Entity1Pos = GetAncoredPosition(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * (glm::vec2)Entity1->transform.Scale, Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition(Entity2->transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * (glm::vec2)Entity2->transform.Scale, Entity2->EntityAnchor);
+	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * (glm::vec2)Entity1->transform.Scale, Entity1->EntityAnchor);
+	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * (glm::vec2)Entity2->transform.Scale, Entity2->EntityAnchor);
 
 	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 < Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2)
 	{
@@ -292,4 +291,10 @@ glm::vec2 Utils::GetDifference2D(std::shared_ptr<Entity> Entity1, std::shared_pt
 		fDistance.y = (Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y - HalfHeight1) - (Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y + HalfHeight2);
 	}
 	return fDistance;
+}
+
+int Utils::AddEntityID()
+{
+	iEntityNumber++;
+	return iEntityNumber;
 }

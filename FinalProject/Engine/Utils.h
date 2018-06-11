@@ -85,7 +85,7 @@ public:
 		MODEL
 	};
 
-	static glm::vec3 GetAncoredPosition(glm::vec3 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
+	static glm::vec3 GetAncoredPosition(glm::vec3 position, glm::vec3 Dimensions, EANCHOR _AnchorType);
 	static glm::vec3 GetAncoredPosition2D(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 	static glm::vec3 GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 
@@ -100,5 +100,10 @@ public:
 	//static glm::vec2 FindTextDimenions(std::string text);
 
 	static glm::vec2 GetDifference2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
+
+	static int AddEntityID();
+
+private:
+	static int iEntityNumber;
 };
 

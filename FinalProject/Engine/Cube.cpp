@@ -38,11 +38,11 @@ Cube::Cube(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 	m_eShape = Utils::CUBE;
 	if (bHasTexture)
 	{
-		program = Shader::Textureprogram;
+		program = Shader::Programs["Textureprogram"];
 	}
 	else
 	{
-		program = Shader::program;
+		program = Shader::Programs["program"];
 	}
 }
 
@@ -66,11 +66,11 @@ Cube::Cube(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, const c
 	m_eShape = Utils::CUBE;
 	if (bHasTexture)
 	{
-		program = Shader::Textureprogram;
+		program = Shader::Programs["Textureprogram"];
 	}
 	else
 	{
-		program = Shader::program;
+		program = Shader::Programs["program"];
 	}
 }
 
@@ -211,17 +211,17 @@ void Cube::SetLit(bool _bIsLit)
 	Mesh::SetLit(_bIsLit);
 	if (bIsLit)
 	{
-		program = Shader::LitTextureprogram;
+		program = Shader::Programs["LitTextureprogram"];
 	}
 	else
 	{
 		if (bHasTexture)
 		{
-			program = Shader::Textureprogram;
+			program = Shader::Programs["Textureprogram"];
 		}
 		else
 		{
-			program = Shader::program;
+			program = Shader::Programs["program"];
 		}
 	}
 }

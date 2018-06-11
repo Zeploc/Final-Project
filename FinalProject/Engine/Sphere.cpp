@@ -42,22 +42,22 @@ Sphere::Sphere(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 	{
 		if (bIsLit)
 		{
-			program = Shader::LitTextureprogram;
+			program = Shader::Programs["LitTextureprogram"];
 		}
 		else
 		{
-			program = Shader::Textureprogram;
+			program = Shader::Programs["Textureprogram"];
 		}
 	}
 	else
 	{
 		if (bIsLit)
 		{
-			program = Shader::LitTextureprogram;
+			program = Shader::Programs["LitTextureprogram"];
 		}
 		else
 		{
-			program = Shader::program;
+			program = Shader::Programs["program"];
 		}
 	}
 }
@@ -81,11 +81,11 @@ Sphere::Sphere(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, con
 	m_eShape = Utils::SPHERE;
 	if (bHasTexture)
 	{
-		program = Shader::Textureprogram;
+		program = Shader::Programs["Textureprogram"];
 	}
 	else
 	{
-		program = Shader::program;
+		program = Shader::Programs["program"];
 	}
 }
 
@@ -230,17 +230,17 @@ void Sphere::SetLit(bool _bIsLit)
 	Mesh::SetLit(_bIsLit);
 	if (bIsLit)
 	{
-		program = Shader::LitTextureprogram;
+		program = Shader::Programs["LitTextureprogram"];
 	}
 	else
 	{
 		if (bHasTexture)
 		{
-			program = Shader::Textureprogram;
+			program = Shader::Programs["Textureprogram"];
 		}
 		else
 		{
-			program = Shader::program;
+			program = Shader::Programs["program"];
 		}
 	}	
 }

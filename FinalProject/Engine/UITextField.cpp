@@ -81,7 +81,7 @@ void UITextField::ResetField()
 void UITextField::DrawUIElement()
 {
 	if (!bActive) return;
-	glUseProgram(Shader::TextUIprogram);
+	glUseProgram(Shader::Programs["TextUIprogram"]);
 	BackImage.DrawUIElement();
 	FieldText.DrawUIElement();
 }

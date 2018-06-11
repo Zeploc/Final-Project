@@ -70,7 +70,7 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<CubeMap> WorldCubeMapMesh = std::make_shared<CubeMap>(CubeMap(1000.0f, 1000.0f, 1000.0f, TextureSources));
 	WorldCubeMap->AddMesh(WorldCubeMapMesh);
 	AddEntity(WorldCubeMap);
-	SpawnPos = glm::vec3(17, -2.5f, 20);
+	SpawnPos = glm::vec3(17, 1.0f, 20);
 	// Add cube map first so transpancy works
 	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
 	AddEntity(Player);
@@ -103,7 +103,7 @@ Level::Level(std::string sSceneName)
 	AddEnemy(BossObject);
 	BossRef = BossObject;
 
-	std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 15.0f, -2.5f, 18.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 17.0f, -2.5f, 20.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Cube> CubeCollisionMesh = std::make_shared<Cube>(Cube(2.0f, 2.0f, 2.0f, { 0.1, 0.3, 0.7, 1.0f }));
 	CubeCollision->AddMesh(CubeCollisionMesh);
 	CubeCollisionMesh->AddCollisionBounds(2.0f, 2.0f, 2.0f, CubeCollision);
@@ -123,7 +123,7 @@ Level::Level(std::string sSceneName)
 	//TexturedPyramid->AddMesh(TexturedPyramidMesh);
 	//AddEntity(TexturedPyramid);
 		
-	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(0, -2.5, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 	//std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(0.5f, 2.0f, 0.5f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
 	std::shared_ptr<Plane> TargetMesh = std::make_shared<Plane>(Plane(1.0f, 1.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, "Resources/Textures/MouseTarget.png"));
 	TargetMesh->SetLit(true);
@@ -158,7 +158,7 @@ Level::Level(std::string sSceneName)
 
 	//Enemy1Ref = NewEnemy;
 
-	std::shared_ptr<Entity> NewTarget = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Entity> NewTarget = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::CENTER));
 	std::shared_ptr<Sphere> NewTargetMesh = std::make_shared<Sphere>(0.5f, 1.0f, 0.5f, glm::vec4(1.0f, 0.2f, 0.5f, 1.0f));
 	NewTargetMesh->SetLit(true);
 	NewTarget->AddMesh(NewTargetMesh);
@@ -202,9 +202,10 @@ void Level::Update()
 	}
 	else
 	{
-		float fDistance = -((glm::dot(Camera::GetInstance()->GetCameraPosition(), glm::vec3(0, 1, 0)) + 2.5f) /
+		float fDistance = -((glm::dot(Camera::GetInstance()->GetCameraPosition(), glm::vec3(0, 1, 0)) + 3.0f) /
 			(fDotProductDirections));
 		MouseAimTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * fDistance + Camera::GetInstance()->GetCameraPosition();
+		MouseAimTarget->transform.Position.y += 0.1f;
 	}
 	
 	if (CurrentController == EPlayer)
@@ -304,12 +305,13 @@ void Level::DestroyCollidable(std::shared_ptr<Entity> _Entity)
 
 void Level::AddHexPlatform(std::string _ModelPath, glm::vec3 _v3Postion, glm::vec3 Rotation)
 {
-	std::shared_ptr<Entity> ModelEnt = std::make_shared<Entity>(Entity({ _v3Postion, Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Entity> ModelEnt = std::make_shared<Entity>(Entity({ _v3Postion, Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::CENTER));
 	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(Model({ 1.0f, 1.0f, 1.0f, 1.0f }, _ModelPath.c_str()));
 	ModelEnt->AddMesh(NewModelMesh);
 	NewModelMesh->SetLit(true);
 	NewModelMesh->LightProperties.fAmbientStrength = 0.7f;
-	AddEntity(ModelEnt);
+	NewModelMesh->AddCollisionBounds(10, 4, 10, ModelEnt);
+	AddCollidable(ModelEnt);
 }
 
 /************************************************************
@@ -369,7 +371,7 @@ void Level::PlayRandomTrack()
 ************************************************************/
 void Level::OnLoadScene()
 {
-	//PlayRandomTrack();
+	PlayRandomTrack();
 	UIManager::GetInstance()->SwitchUIMode(false);
 	UIManager::GetInstance()->m_bDisplayHUD = true;
 	for (auto& it : Enemies)

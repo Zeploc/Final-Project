@@ -25,6 +25,7 @@
 #include "Engine\SoundManager.h"
 #include "Engine\Cursor.h"
 #include "Engine\Input.h"
+#include "Engine\LogManager.h"
 
 // Local Includes //
 #include "GameSettings.h"
@@ -191,10 +192,10 @@ void Menu::PlayRandomTrack()
 		"Resources/Sound/Ludum Dare 30 - Track 1.wav", "Resources/Sound/Ludum Dare 32 - Track 2.wav",
 		"Resources/Sound/Ludum Dare 38 - Track 3.wav" };
 	int iRandTrack = 2;// rand() % 5;
-	std::cout << "Playing " << MusicOptions[iRandTrack] << " | Number " << iRandTrack << std::endl;
 	SoundManager::GetInstance()->AddAudio(MusicOptions[iRandTrack], true, "BackgroundTrack " + std::to_string(iRandTrack));
 	SoundManager::GetInstance()->PlayAudio("BackgroundTrack " + std::to_string(iRandTrack), "BackgroundC");
 	SoundManager::GetInstance()->SetChannelVolume("BackgroundC", GameSettings::fVolumeLevel / 20.0f);
+	LogManager::GetInstance()->DisplayLogMessage("Playing " + std::string(MusicOptions[iRandTrack]) + " | Number " + std::to_string(iRandTrack));
 }
 
 /************************************************************
@@ -264,7 +265,7 @@ void Menu::ToggleMenuSection(MENUSECTION _NewSection)
 ************************************************************/
 void StartGameBtn()
 {
-	std::cout << "Start Game (Switch to Level)\n";
+	LogManager::GetInstance()->DisplayLogMessage("Start Game (Switch to Level)");
 	SoundManager::GetInstance()->StopAudio("BackgroundC");
 	SceneManager::GetInstance()->SwitchScene("Level " + std::to_string(LevelManager::GetInstance()->CurrentLevel()));
 	LevelManager::GetInstance()->GetCurrentActiveLevel()->PlayRandomTrack();

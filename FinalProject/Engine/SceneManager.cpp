@@ -19,6 +19,7 @@
 
 // Engine Includes //
 #include "Scene.h"
+#include "LogManager.h"
 
 // Local Includes //
 
@@ -116,12 +117,13 @@ void SceneManager::SwitchScene(std::string SceneName)
 	{
 		if (Scenes[i]->SceneName == SceneName)
 		{
+			LogManager::GetInstance()->DisplayLogMessage("Switching to Scene \"" + SceneName + "\"");
 			CurrentScene = i;
 			Scenes[i]->OnLoadScene();
 			return;
 		}
 	}
-	std::cout << "Could not find scene " << SceneName << std::endl;
+	LogManager::GetInstance()->DisplayLogMessage("Could not find scene " + SceneName);
 }
 
 /************************************************************

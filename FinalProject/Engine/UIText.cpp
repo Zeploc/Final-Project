@@ -79,6 +79,6 @@ void UIText::DrawUIElement()
 {
 	if (!bActive || sText == "")
 		return;
-	glUseProgram(Shader::TextUIprogram);
+	glUseProgram(Shader::Programs["TextUIprogram"]);
 	Text::Render(sText, sFont, iPSize, position, Colour, Anchor);
 }

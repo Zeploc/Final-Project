@@ -60,10 +60,13 @@ public:
 	Utils::EANCHOR EntityAnchor;
 	std::shared_ptr<Mesh> EntityMesh;
 
+	int GetEntityValue() { return iEntityID; };
+
 protected:
 	bool bActive = true;
 	bool bVisible = true;
 
+	int iEntityID;
 };
 
 #endif
