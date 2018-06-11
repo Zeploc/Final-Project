@@ -56,6 +56,10 @@ public:
 	void ChangeMoveSpeed(float _fSpeed) { m_fCurrentPlayerSpeed = _fSpeed; };
 	void Reset();
 
+	void SetHealth(float _fNewHealth);
+	void ApplyHealth(float _fmodify);
+	void AddScore(int _iAddScore);
+
 	void ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime);
 
 private:

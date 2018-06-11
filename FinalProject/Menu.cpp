@@ -169,6 +169,7 @@ void Menu::Update()
 void Menu::OnLoadScene()
 {
 	UIManager::GetInstance()->m_bDisplayChat = false;
+	UIManager::GetInstance()->m_bDisplayHUD = false;
 	UIManager::GetInstance()->SwitchUIMode(true);
 	LobbyScreen.Init(this->shared_from_this());
 	JoinGameScreen.Init(this->shared_from_this());

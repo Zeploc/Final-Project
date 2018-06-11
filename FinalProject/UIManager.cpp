@@ -100,6 +100,7 @@ void UIManager::Update()
 	// Update system instances
 	m_ChatInstance.Update();
 	m_ScoreTabInstance.Update();
+	m_HUDInstance.Update();
 	if (m_bDisplayPauseOptions) m_OptionsScreenInstance.Update();
 	if (m_bDisplayMessageBox) m_MessageBoxInstance.Update();
 }
@@ -117,6 +118,7 @@ void UIManager::Render()
 	if (m_bDisplayTabScores) m_ScoreTabInstance.Render();
 	if (m_bDisplayPauseOptions) m_OptionsScreenInstance.Render();
 	if (m_bDisplayMessageBox) m_MessageBoxInstance.Render();
+	if (m_bDisplayHUD) m_HUDInstance.Render();
 }
 
 void UIManager::ShowMessageBox(std::string _Message)
