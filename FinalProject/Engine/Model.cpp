@@ -114,7 +114,7 @@ void Model::Render(Utils::Transform Newtransform)
 		glUseProgram(program);
 		Lighting::PassLightingToShader(program, LightProperties, Newtransform);
 	}
-	//glUniform4fv(glGetUniformLocation(program, "fragcolor"), 4, glm::value_ptr(Colour));
+	glUniform4fv(glGetUniformLocation(program, "fragcolor"), 1, glm::value_ptr(Colour));
 	pModelObject->Render(Newtransform);
 }
 
