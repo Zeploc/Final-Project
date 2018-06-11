@@ -55,7 +55,7 @@ public:
 	glm::vec2 GetVelocity() { return glm::vec2(fHSpeed, fVSpeed); };
 	void ChangeMoveSpeed(float _fSpeed) { m_fCurrentPlayerSpeed = _fSpeed; };
 	void Reset();
-
+	void HurtPlayer(float Damage);
 	void ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime);
 
 private:

@@ -430,6 +430,11 @@ void Player::Reset()
 	transform.Position = GotLevel->SpawnPos;
 }
 
+void Player::HurtPlayer()
+{
+
+}
+
 void Player::ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime)
 {
 	m_fPowerUpTimer = _fPowerUpTime;
@@ -533,3 +538,7 @@ void Player::MoveVertical(bool bUp)
 	}
 }
 
+void Player::HurtPlayer(float Damage)
+{
+	//Add Life Code
+}

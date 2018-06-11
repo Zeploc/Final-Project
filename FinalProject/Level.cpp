@@ -90,7 +90,7 @@ Level::Level(std::string sSceneName)
 	NewPickupMesh->SetLit(true);
 	AddEntity(NewPickup);
 
-	std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -1.0f, -10.0f },{ 0, 0, 0 },{ 0.5f, 0.5f, 0.5f } }, Utils::CENTER));
+	std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -1.0f, -10.0f },{ 0, 0, 0 },{ 0.5f, 0.5f, 0.5f } }, Utils::CENTER,EPlayer));
 	std::shared_ptr<Model> SkullMesh = std::make_shared<Model>(Model({ 0.7f, 0.1f, 0.1f, 1.0f }, "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/skull.obj"));
 	BossObject->AddMesh(SkullMesh);
 	SkullMesh->AddCollisionBounds(3.0f, 5.0f, 3.0f, BossObject);
