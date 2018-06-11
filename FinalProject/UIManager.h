@@ -18,6 +18,7 @@
 #include "ScoreTab.h"
 #include "OptionsScreen.h"
 #include "MessageBox.h"
+#include "HUD.h"
 
 // Library Includes //
 #include <memory>
@@ -30,6 +31,7 @@ public:
 	ScoreTab m_ScoreTabInstance;
 	OptionsScreen m_OptionsScreenInstance;
 	UIMessageBox m_MessageBoxInstance;
+	HUD m_HUDInstance;
 
 	void Update();
 	void Render();
@@ -40,6 +42,7 @@ public:
 	bool m_bDisplayTabScores = false;
 	bool m_bDisplayPauseOptions = false;
 	bool m_bDisplayMessageBox = false;
+	bool m_bDisplayHUD = false;
 
 	void SwitchUIMode(bool _bNewMode);
 	bool GetUIMode() { return m_bUIMode; };
