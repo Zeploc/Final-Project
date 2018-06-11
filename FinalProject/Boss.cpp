@@ -22,7 +22,7 @@
 
 
 
-Boss::Boss(Utils::Transform _Transform, Utils::EANCHOR _Anchor, std::shared_ptr<Entity> _CollidingEntity)
+Boss::Boss(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 	: Entity(_Transform, _Anchor)
 {
 	BossState = WANDERSTATE;
@@ -43,7 +43,7 @@ void Boss::Update()
 	Entity::Update();
 	std::shared_ptr<Level> LevelRef = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 
-	if (EntityMesh->GetCollisionBounds()->isColliding(CollidingEntity))
+	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer))
 	{
 		LevelRef->EPlayer->HurtPlayer(25);
 	}

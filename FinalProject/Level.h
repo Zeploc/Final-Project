@@ -81,9 +81,12 @@ public:
 	//Model* TestModel;
 
 private:
-	float fCameraSpeed = 5.0f;
 
 	int iScore = 0;
 	int iCoinsCollected = 0;
+
+	glm::vec3 camVel = glm::vec3();
+
+	void CameraMovement();
 };
 

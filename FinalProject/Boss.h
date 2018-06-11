@@ -11,7 +11,7 @@ class Boss : public Entity
 
 {
 public:
-	Boss(Utils::Transform _Transform, Utils::EANCHOR _Anchor, std::shared_ptr<Entity> _CollidingEntity);
+	Boss(Utils::Transform _Transform, Utils::EANCHOR _Anchor);
 	~Boss();
 	void Update();
 	void OnBulletCollision();

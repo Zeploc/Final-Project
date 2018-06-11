@@ -246,6 +246,9 @@
     <ClCompile Include="MessageBox.cpp">
       <Filter>Game\Game UI</Filter>
     </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Game\Game UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -432,6 +435,9 @@
       <Filter>Game\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="MessageBox.h">
+      <Filter>Game\Game UI</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
       <Filter>Game\Game UI</Filter>
     </ClInclude>
   </ItemGroup>

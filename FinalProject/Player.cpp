@@ -63,7 +63,7 @@ Player::Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float
 	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/char01.obj");
 	AddMesh(NewModelMesh);
 	EntityMesh->SetLit(true);
-
+	SetHealth(100);
 }
 
 /************************************************************
@@ -78,6 +78,7 @@ Player::Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float
 	std::shared_ptr<Sphere> NewMesh = std::make_shared<Sphere>(_fWidth, _fHeight, _fDepth, _Colour, TextureSource, UVCoords);
 	AddMesh(NewMesh);
 	EntityMesh->SetLit(true);
+	SetHealth(100);
 }
 
 /************************************************************
@@ -229,29 +230,30 @@ void Player::Update()
 	for (auto& Bulletit : Bullets)
 	{
 		for (auto& it : LevelRef->Enemies)
-		{
-			
+		{			
 			if (Bulletit.BulletEntity->EntityMesh->GetCollisionBounds()->isColliding(it))
 			{
 				std::shared_ptr<Boss> IsBoss = std::dynamic_pointer_cast<Boss>(it);
 				if (IsBoss)
 				{
 					IsBoss->OnBulletCollision();
-					if (IsBoss->BossHealth <= 0)
+					if (IsBoss->BossHealth <= 0 && IsBoss->IsActive())
 					{
 						it->SetVisible(false);
 						it->SetActive(false);
 						Bulletit.BulletEntity->SetActive(false);
 						Bulletit.BulletEntity->SetVisible(false);
+						AddScore(50);					
 					}
 				}
-				else
+				else if (it->IsActive())
 				{
 					// Temp bullet kill
 					it->SetVisible(false);
 					it->SetActive(false);
 					Bulletit.BulletEntity->SetActive(false);
 					Bulletit.BulletEntity->SetVisible(false);
+					AddScore(10);
 				}
 			}
 		}
@@ -430,8 +432,24 @@ void Player::Reset()
 	transform.Position = GotLevel->SpawnPos;
 }
 
-void Player::HurtPlayer()
+
+
+void Player::SetHealth(float _fNewHealth)
 {
+	m_fHealth = _fNewHealth;
+	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
+}
+
+void Player::ApplyHealth(float _fmodify)
+{
+	m_fHealth += _fmodify;
+	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
+}
+
+void Player::AddScore(int _iAddScore)
+{
+	m_iScore += _iAddScore;
+	UIManager::GetInstance()->m_HUDInstance.SetScore(m_iScore);
 
 }
 
@@ -540,5 +558,5 @@ void Player::MoveVertical(bool bUp)
 
 void Player::HurtPlayer(float Damage)
 {
-	//Add Life Code
+	ApplyHealth(-Damage);
 }
