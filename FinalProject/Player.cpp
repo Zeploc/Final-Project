@@ -306,7 +306,13 @@ void Player::Update()
 		
 	}
 
-	
+	if (m_fHealth <= 0)
+	{
+		this->shared_from_this()->SetActive(false);
+		this->shared_from_this()->SetVisible(false);
+	}
+
+
 	
 	RollTimer -= Time::dTimeDelta;
 	
