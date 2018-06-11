@@ -108,6 +108,7 @@ void Model::SetLit(bool _bIsLit)
 ************************************************************/
 void Model::Render(Utils::Transform Newtransform)
 {
+	glFrontFace(GL_CCW);
 	if (bIsLit)
 	{
 		glUseProgram(program);

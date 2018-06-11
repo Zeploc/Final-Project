@@ -1,7 +1,6 @@
 #pragma once
-#include "c:\Users\Jonty\Source\Repos\Final-Project\FinalProject\Engine\Entity.h"
-class Boss :
-	public Entity
+#include "Engine\Entity.h"
+class Boss : public Entity
 {
 public:
 	Boss(Utils::Transform _Transform, Utils::EANCHOR _Anchor);
@@ -14,7 +13,10 @@ private:
 	float OccillationSpeed = 300;
 	float BobbingSpeed = 5;
 	
+	glm::vec3 TargetRef;
+	float fNextDecisionTime = 0.0f;
 
-
+	glm::vec3 CurrentVelocity;
+	float fMaxSpeed;
 };
 

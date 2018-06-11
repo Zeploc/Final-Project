@@ -263,6 +263,7 @@ void Sphere::Render(Utils::Transform Newtransform)
 	{
 		glUseProgram(program);
 	}
+	glFrontFace(GL_CW);
 	/*if (bHasTexture)
 	{		
 

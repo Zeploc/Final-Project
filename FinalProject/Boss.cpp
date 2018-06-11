@@ -25,6 +25,9 @@ Boss::Boss(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 	: Entity(_Transform, _Anchor)
 {
 	m_fOscillatingHeight = _Transform.Position.y;
+	CurrentVelocity = { 0, 0, 10 };
+	fMaxSpeed = glm::length(CurrentVelocity);
+	TargetRef = { 0, 0, 0 };
 }
 
 
@@ -41,8 +44,11 @@ void Boss::Update()
 	if (!EntityMesh->GetCollisionBounds()) // No collision Bounds added
 		return;
 
-	Rotate({ 0, 10.0f * Time::dTimeDelta, 0 });
-	transform.Position.y = m_fOscillatingHeight + sin(Time::dCurrentTime / 200) * 20.0f * Time::dTimeDelta;
+	//Rotate({ 0, 10.0f * Time::dTimeDelta, 0 });
+	//transform.Position.y = m_fOscillatingHeight + sin(Time::dCurrentTime / 200) * 20.0f * Time::dTimeDelta;
+
+	CurrentVelocity += AI::WanderForce(this->shared_from_this(), TargetRef, { 0, 30 }, { 0, 10 }, fNextDecisionTime, 100, CurrentVelocity, fMaxSpeed);
+	transform.Position += CurrentVelocity * (float)Time::dTimeDelta;
 }
 
 void Boss::OnBulletCollision()

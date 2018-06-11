@@ -18,6 +18,7 @@
 
 // Engine Includes //
 #include "Engine\SceneManager.h"
+#include "Engine\Plane.h"
 
 // Local Includes //
 #include "Menu.h"
@@ -111,7 +112,8 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 				}
 			}
 
-			_Scene->SetPlayerPosition({ 0, -2.5f, 0 });
+			_Scene->SetPlayerPosition({ 0, -2.5f, 0 });			
+			_Scene->AddEntity(_Scene->MouseAimTarget);
 
 			break;
 		}
