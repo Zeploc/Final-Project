@@ -1,5 +1,5 @@
 #pragma once
-#include "c:\Users\Jonty\Source\Repos\Final-Project\FinalProject\Engine\Entity.h"
+#include "Engine\Entity.h"
 class Boss :
 	public Entity
 {
