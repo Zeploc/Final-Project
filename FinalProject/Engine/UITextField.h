@@ -28,6 +28,7 @@ public:
 	~UITextField();
 
 	void SetActive(bool _bIsActive);
+	void ResetField();
 	
 	void DrawUIElement();
 	void Update();
@@ -45,5 +46,6 @@ private:
 
 	double dSpamDelay = 0.0f;
 	float fSpamTime = 0.1f;
+
 };
 

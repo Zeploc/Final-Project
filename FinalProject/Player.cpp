@@ -176,7 +176,7 @@ void Player::Update()
 	float fDir = glm::dot(glm::cross(VectorToMouseFromPlayer, glm::vec3(0, 0, -1)), { 0, 1, 0 });
 	float AngleToMouse = acos(glm::dot(VectorToMouseFromPlayer, glm::vec3(0, 0, -1)));
 	if (fDir > 0) AngleToMouse = M_PI + ((2 * M_PI) - AngleToMouse + M_PI);
-	this->transform.Rotation.y = (AngleToMouse / (M_PI * 2)) * 360;
+	this->transform.Rotation.y = (AngleToMouse / (M_PI * 2)) * 360 + 180;
 	 
 		
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD || Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)

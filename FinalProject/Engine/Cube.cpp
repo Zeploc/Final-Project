@@ -235,6 +235,7 @@ void Cube::SetLit(bool _bIsLit)
 void Cube::Render(Utils::Transform Newtransform)
 {
 	glUseProgram(program);
+	glFrontFace(GL_CW);
 	glUniform1i(glGetUniformLocation(program, "bIsTex"), bHasTexture);
 	Lighting::PassLightingToShader(program, LightProperties, Newtransform);
 	if (bHasTexture)

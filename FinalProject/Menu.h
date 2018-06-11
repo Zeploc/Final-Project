@@ -74,6 +74,7 @@ private:
 	//std::vector<std::shared_ptr<UIElement>> v_LobbyElements;
 	MENUSECTION m_CurrentSection = MAIN;
 	std::shared_ptr<UIImage> m_Arrow;
+	std::shared_ptr<UISlider> m_VolumeSlider;
 
 };
 

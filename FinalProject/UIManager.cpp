@@ -101,6 +101,7 @@ void UIManager::Update()
 	m_ChatInstance.Update();
 	m_ScoreTabInstance.Update();
 	if (m_bDisplayPauseOptions) m_OptionsScreenInstance.Update();
+	if (m_bDisplayMessageBox) m_MessageBoxInstance.Update();
 }
 
 /************************************************************
@@ -115,6 +116,13 @@ void UIManager::Render()
 	if (m_bDisplayChat) m_ChatInstance.Render();
 	if (m_bDisplayTabScores) m_ScoreTabInstance.Render();
 	if (m_bDisplayPauseOptions) m_OptionsScreenInstance.Render();
+	if (m_bDisplayMessageBox) m_MessageBoxInstance.Render();
+}
+
+void UIManager::ShowMessageBox(std::string _Message)
+{
+	m_bDisplayMessageBox = true;
+	m_MessageBoxInstance.SetMessageText(_Message);
 }
 
 void UIManager::SwitchUIMode(bool _bNewMode)

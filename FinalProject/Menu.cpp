@@ -96,17 +96,26 @@ Menu::Menu(std::string sSceneName)
 	//ButtonPositions[2] = QuitBtn->GetPosition() - glm::vec2((float)QuitBtn->ImageComponent.GetWidth() / 2.0f, 0.0f);
 	
 	// Add Options Elements
-	std::shared_ptr<UIText> OptionsText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 400.0f), 0, glm::vec4(0.8, 0.8, 0.8, 1.0), "OPTIONS STUFF", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
+	std::shared_ptr<UIText> OptionsText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 - 200.0f), 0, glm::vec4(0.2, 0.2, 0.2, 1.0), "OPTIONS:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
 	OptionsText->SetActive(false);
 	std::shared_ptr<UIButton> BackBtn(new UIButton(glm::vec2(0, Camera::GetInstance()->SCR_HEIGHT), Utils::BOTTOM_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 80, MenuScreenBtn));
 	BackBtn->AddText("Back", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	BackBtn->SetActive(false);
+	m_VolumeSlider = std::make_shared<UISlider>(UISlider({ Camera::GetInstance()->SCR_WIDTH / 2,Camera::GetInstance()->SCR_HEIGHT / 2 }, 0, { 0.2f, 0.2f, 0.2f, 1.0f }, { 0.6f, 0.6f, 0.6f, 1.0f }, 300, 20, 40, 10, Utils::CENTER, "Main Volume:"));
+	m_VolumeSlider->SetMinimumPosition(0.0f);
+	m_VolumeSlider->SetMaximumPosition(10.0f);
+	m_VolumeSlider->SetLockSize(0.5f);
+	m_VolumeSlider->SetStartPosition(GameSettings::fVolumeLevel);
+	m_VolumeSlider->SetActive(false);
+
 	// Add elements to scene UI elements
 	AddUITextElement(OptionsText);
 	AddUIElement(BackBtn);
+	AddUIElement(m_VolumeSlider);
 	// Add elements to vector list
 	v_OptionsElements.push_back(OptionsText);
 	v_OptionsElements.push_back(BackBtn);
+	v_OptionsElements.push_back(m_VolumeSlider);
 	
 	// Add cursor
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
@@ -139,6 +148,16 @@ Menu::~Menu()
 void Menu::Update()
 {
 	Scene::Update();	
+
+	if (m_CurrentSection == OPTIONS)
+	{
+		float CurrentVolumeSlider = m_VolumeSlider->GetValue();
+		if (CurrentVolumeSlider != GameSettings::fVolumeLevel)
+		{
+			SoundManager::GetInstance()->SetChannelVolume("BackgroundC", CurrentVolumeSlider / 20.0f);
+		}
+	}
+	
 }
 
 /************************************************************
@@ -155,8 +174,8 @@ void Menu::OnLoadScene()
 	JoinGameScreen.Init(this->shared_from_this());
 	HostGameScreen.Init(this->shared_from_this());
 	//Camera::GetInstance()->m_bFPS = false;
-	//SoundManager::GetInstance()->StopAudio("BackgroundC");
-	//PlayRandomTrack();
+	SoundManager::GetInstance()->StopAudio("BackgroundC");
+	PlayRandomTrack();
 }
 
 /************************************************************
@@ -167,15 +186,14 @@ void Menu::OnLoadScene()
 ************************************************************/
 void Menu::PlayRandomTrack()
 {
-	return;
 	const char* MusicOptions[] = { "Resources/Sound/Story of Maple.mp3", "Resources/Sound/Ludum Dare 28 - Track 4.wav",
 		"Resources/Sound/Ludum Dare 30 - Track 1.wav", "Resources/Sound/Ludum Dare 32 - Track 2.wav",
 		"Resources/Sound/Ludum Dare 38 - Track 3.wav" };
-	int iRandTrack = rand() % 5;
+	int iRandTrack = 2;// rand() % 5;
 	std::cout << "Playing " << MusicOptions[iRandTrack] << " | Number " << iRandTrack << std::endl;
 	SoundManager::GetInstance()->AddAudio(MusicOptions[iRandTrack], true, "BackgroundTrack " + std::to_string(iRandTrack));
 	SoundManager::GetInstance()->PlayAudio("BackgroundTrack " + std::to_string(iRandTrack), "BackgroundC");
-	SoundManager::GetInstance()->SetChannelVolume("BackgroundC", 0.3f);
+	SoundManager::GetInstance()->SetChannelVolume("BackgroundC", GameSettings::fVolumeLevel / 20.0f);
 }
 
 /************************************************************

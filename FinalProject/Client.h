@@ -44,6 +44,7 @@ public:
 	};
 
 	bool BroadcastForServers();
+	void FullSearchForServers();
 private:
 	void ReceiveBroadcastMessages(char* _pcBufferToReceiveData);
 

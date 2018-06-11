@@ -243,6 +243,9 @@
     <ClCompile Include="Boss.cpp">
       <Filter>Game\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="MessageBox.cpp">
+      <Filter>Game\Game UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -427,6 +430,9 @@
     </ClInclude>
     <ClInclude Include="Boss.h">
       <Filter>Game\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageBox.h">
+      <Filter>Game\Game UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

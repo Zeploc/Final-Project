@@ -90,12 +90,13 @@ Level::Level(std::string sSceneName)
 	NewPickupMesh->SetLit(true);
 	AddEntity(NewPickup);
 
-	std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -2.0f, -10.0f },{ 45, 45, 45 },{ 1, 1, 1 } }, Utils::CENTER));
-	std::shared_ptr<Cube> BossMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 1.0, 0.00, 0.0, 1.0f }));
-	BossObject->AddMesh(BossMesh);
-	BossMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, BossObject);
-	BossMesh->SetLit(true);
+	std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -1.0f, -10.0f },{ 0, 0, 0 },{ 0.5f, 0.5f, 0.5f } }, Utils::CENTER));
+	std::shared_ptr<Model> SkullMesh = std::make_shared<Model>(Model({ 0.7f, 0.1f, 0.1f, 1.0f }, "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/skull.obj"));
+	BossObject->AddMesh(SkullMesh);
+	SkullMesh->AddCollisionBounds(3.0f, 5.0f, 3.0f, BossObject);
+	SkullMesh->SetLit(true);
 	AddEnemy(BossObject);
+	BossRef = BossObject;
 
 	std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 15.0f, -2.5f, 18.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Cube> CubeCollisionMesh = std::make_shared<Cube>(Cube(2.0f, 2.0f, 2.0f, { 0.1, 0.3, 0.7, 1.0f }));
@@ -139,15 +140,16 @@ Level::Level(std::string sSceneName)
 	//TexturedLitSphereMesh->SetLit(true);
 	//AddEntity(TexturedLitSphere);
 
-	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-	std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(0.5f, 2.0f, 0.5f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
+	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	//std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(0.5f, 2.0f, 0.5f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
+	std::shared_ptr<Plane> TargetMesh = std::make_shared<Plane>(Plane(1.0f, 1.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, "Resources/Textures/MouseTarget.png"));
 	TargetMesh->SetLit(true);
 	Target->AddMesh(TargetMesh);
-	TargetMesh->AddCollisionBounds(0.5f, 2.0f, 0.5f, Target);
+	//TargetMesh->AddCollisionBounds(0.5f, 2.0f, 0.5f, Target);
 	//TargetMesh->LightProperties.v3LightColour = {0.8f, 0.1f, 0.1f};
 	//AddEntity(Target);
-	AddCollidable(Target);
-	PersuitTarget = Target;
+	//AddCollidable(Target);
+	MouseAimTarget = Target;
 
 	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 
@@ -156,7 +158,7 @@ Level::Level(std::string sSceneName)
 	//	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5 + i * 0.3f, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 0,0,0 }));
 	//	EnemeyMesh->SetLit(true);
 	//	NewEnemy->AddMesh(EnemeyMesh);
-	//	EnemeyMesh->MeshCollisionBounds = std::make_shared<CollisionBounds>(1, 1, 1, NewEnemy);
+	//	EnemeyMesh->AddCollisionBounds(1, 1, 1, NewEnemy);
 	//	AddEnemy(NewEnemy);
 	//	//AddEntity(NewEnemy);
 	//}
@@ -167,7 +169,7 @@ Level::Level(std::string sSceneName)
 		NewEnemy->AddMesh(EnemeyMesh);
 		EnemeyMesh->AddCollisionBounds(1, 1, 1, NewEnemy);
 		AddEnemy(NewEnemy);
-		NewEnemy->SetTarget(PersuitTarget);
+		NewEnemy->SetTarget(MouseAimTarget);
 		//AddEntity(NewEnemy);
 	}
 
@@ -230,19 +232,39 @@ Level::~Level()
 ************************************************************/
 void Level::Update()
 {
+	MouseAimTarget->transform.Rotation.z += 10.0f * Time::dTimeDelta;
 	float fDotProductDirections = glm::dot(Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos), glm::vec3(0, 1, 0));
 	if (fDotProductDirections == 0) // Perpendicular
 	{
 		std::cout << "Perpendicular to plane\n";
-		PersuitTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * 15.0f + Camera::GetInstance()->GetCameraPosition();
+		MouseAimTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * 15.0f + Camera::GetInstance()->GetCameraPosition();
 	}
 	else
 	{
 		float fDistance = -((glm::dot(Camera::GetInstance()->GetCameraPosition(), glm::vec3(0, 1, 0)) + 2.5f) /
 			(fDotProductDirections));
-		PersuitTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * fDistance + Camera::GetInstance()->GetCameraPosition();
+		MouseAimTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * fDistance + Camera::GetInstance()->GetCameraPosition();
 	}
 	
+	if (CurrentController == EPlayer)
+	{
+		//Camera::GetInstance()->SetCameraForwardVector({ 0, -1, -1 });
+		//Camera::GetInstance()->SetCameraPos({ 17, 15, 30 });
+		float fCamHeight = 15;
+		float fBackDistance = 15;
+		
+		glm::vec3 Difference = BossRef->transform.Position - EPlayer->transform.Position;
+		float fDistance = glm::length(Difference);
+		glm::vec3 Direction = fDistance != 0 ? glm::normalize(Difference) : Difference;
+
+		glm::vec3 CenterPosition = EPlayer->transform.Position + Direction * (fDistance / 2);
+
+		glm::vec3 NewCameraPostion = CenterPosition;
+		NewCameraPostion.y += fCamHeight;
+		NewCameraPostion.z += fBackDistance;
+		Camera::GetInstance()->SetCameraPos(NewCameraPostion);
+	}
+
 	if (Input::GetInstance()->KeyState['g'] == Input::INPUT_FIRST_PRESS && !UIManager::GetInstance()->GetUIMode())
 	{
 		if (CurrentController == EPlayer)
@@ -413,16 +435,15 @@ void Level::RespawnEnemies()
 ************************************************************/
 void Level::PlayRandomTrack()
 {
-	return;
 	SoundManager::GetInstance()->StopAudio("BackgroundC");
 	const char* MusicOptions[] = { "Resources/Sound/Ludum Dare 28 - Track 1.wav",
 		"Resources/Sound/Ludum Dare 28 - Track 3.wav", "Resources/Sound/Ludum Dare 30 - Track 6.wav",
 		"Resources/Sound/Ludum Dare 30 - Track 7.wav", "Resources/Sound/Ludum Dare 38 - Track 10.wav" };
-	int iRandTrack = rand() % 5;
+	int iRandTrack = 3;//rand() % 5;
 	std::cout << "Playing " << MusicOptions[iRandTrack] << " | Number " << iRandTrack << std::endl;
 	SoundManager::GetInstance()->AddAudio(MusicOptions[iRandTrack], true, "GameBackgroundTrack " + std::to_string(iRandTrack));
 	SoundManager::GetInstance()->PlayAudio("GameBackgroundTrack " + std::to_string(iRandTrack), "BackgroundC");
-	SoundManager::GetInstance()->SetChannelVolume("BackgroundC", 0.3f);
+	SoundManager::GetInstance()->SetChannelVolume("BackgroundC", GameSettings::fVolumeLevel / 20.0f);
 }
 
 /************************************************************

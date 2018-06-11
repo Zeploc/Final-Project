@@ -61,7 +61,8 @@ public:
 	std::shared_ptr<Entity> TempTarget;
 	std::shared_ptr<Entity> TargetRef;
 	std::shared_ptr<Entity> Enemy1Ref;
-	std::shared_ptr<Entity> PersuitTarget;
+	std::shared_ptr<Entity> MouseAimTarget;
+	std::shared_ptr<Entity> BossRef;
 
 	std::vector<std::shared_ptr<Entity>> Collidables;
 	std::vector<std::shared_ptr<Entity>> Enemies;

@@ -105,6 +105,7 @@ void Chat::SetChatMaximised(bool _bIsMaximied)
 void Chat::SendChatMessage()
 {
 	NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->ServerSendToAllPlayers(m_pTypingField->FieldText.sText, CHAT);
+	m_pTypingField->ResetField();
 	SetChatMaximised(false);
 }
 
@@ -123,6 +124,10 @@ void Chat::AddChatMessage(ChatMessage NewMessage)
 
 void Chat::RepositionChat()
 {
+	while ((ChatText.size()) * 25 > m_pChatBackImage->GetHeight())
+	{
+		ChatText.erase(ChatText.begin());
+	}
 	glm::vec2 NewPosition = m_pTypingField->GetPosition();
 	NewPosition.x -= m_pTypingField->BackImage.GetWidth() / 2;
 	NewPosition.y -= (ChatText.size() + 1) * 25;

@@ -39,5 +39,6 @@ public:
 	static float fGravity;
 	static float fJumpSize;
 	static float fTerminalVelocity;
+	static float fVolumeLevel;
 };
 

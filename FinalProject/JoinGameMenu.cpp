@@ -90,6 +90,11 @@ void JoinGameMenu::ShowElements()
 
 void JoinGameMenu::AddServers(std::vector<ServerInfo> Servers)
 {
+	if (Servers.size() == 0)
+	{
+		UIManager::GetInstance()->ShowMessageBox("No Servers Found!");
+		return;
+	}
 	for (int i = 0; i < Servers.size(); i++)
 	{
 		glm::vec2 NewPos = ServerListPos;
@@ -147,5 +152,5 @@ void SearchForServersBtn()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 	MenuRef->JoinGameScreen.ClearServerList();
-	std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)->BroadcastForServers();
+	std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)->FullSearchForServers();
 }

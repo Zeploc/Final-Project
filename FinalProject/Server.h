@@ -51,7 +51,9 @@ public:
 
 	void ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message);
 	void SendToAllClients(std::string _pcMessage, EMessageType _Message, std::string ExcludeAddress = "");
-
+	int ConnectedClientsCount() {
+		return m_pConnectedClients->size();
+	};
 
 private:
 	bool AddClient(std::string _strClientName);

@@ -17,6 +17,7 @@
 #include "Chat.h"
 #include "ScoreTab.h"
 #include "OptionsScreen.h"
+#include "MessageBox.h"
 
 // Library Includes //
 #include <memory>
@@ -28,13 +29,17 @@ public:
 	Chat m_ChatInstance;
 	ScoreTab m_ScoreTabInstance;
 	OptionsScreen m_OptionsScreenInstance;
+	UIMessageBox m_MessageBoxInstance;
 
 	void Update();
 	void Render();
 
+	void ShowMessageBox(std::string _Message);
+
 	bool m_bDisplayChat = false;
 	bool m_bDisplayTabScores = false;
 	bool m_bDisplayPauseOptions = false;
+	bool m_bDisplayMessageBox = false;
 
 	void SwitchUIMode(bool _bNewMode);
 	bool GetUIMode() { return m_bUIMode; };
