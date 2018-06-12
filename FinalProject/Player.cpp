@@ -179,10 +179,16 @@ void Player::Update()
 			iEndPos = Bullets.end();
 		}
 	}
+	bBackToStart = false;
 	std::shared_ptr<Level> LevelRef = dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
-	auto Bulletit = Bullets.end();
-	for (auto Bulletit = Bullets.begin(); Bulletit != Bulletit; ++Bulletit)
+	auto BulletEnd = Bullets.end();
+	for (auto Bulletit = Bullets.begin(); Bulletit != BulletEnd; ++Bulletit)
 	{
+		if (bBackToStart)
+		{
+			Bulletit = Bullets.begin();
+			bBackToStart = false;
+		}
 		for (auto& it : LevelRef->Enemies)
 		{			
 			if (Bulletit->BulletEntity->EntityMesh->GetCollisionBounds()->isColliding(it))
@@ -199,8 +205,15 @@ void Player::Update()
 						//Bulletit.BulletEntity->SetVisible(false);
 						LevelRef->DestroyCollidable(Bulletit->BulletEntity);
 						Bulletit = Bullets.erase(Bulletit);
-						Bulletit = Bullets.end();
-						AddScore(50);					
+						BulletEnd = Bullets.end();
+						AddScore(50);
+						if (Bulletit == Bullets.begin())
+						{
+							bBackToStart = true;
+						}
+						else
+							Bulletit--;
+						if (Bullets.size() == 0) break;
 					}
 				}
 				else if (it->IsActive())
@@ -212,8 +225,15 @@ void Player::Update()
 					//Bulletit.BulletEntity->SetVisible(false);
 					LevelRef->DestroyCollidable(Bulletit->BulletEntity);
 					Bulletit = Bullets.erase(Bulletit);
-					Bulletit = Bullets.end();
+					BulletEnd = Bullets.end();
 					AddScore(10);
+					if (Bulletit == Bullets.begin())
+					{
+						bBackToStart = true;
+					}
+					else
+						Bulletit--;
+					if (Bullets.size() == 0) break;
 				}
 			}
 		}

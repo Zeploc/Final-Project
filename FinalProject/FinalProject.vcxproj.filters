@@ -249,6 +249,9 @@
     <ClCompile Include="Engine\LogManager.cpp">
       <Filter>Engine\System</Filter>
     </ClCompile>
+    <ClCompile Include="EnemySeek.cpp">
+      <Filter>Game\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -439,6 +442,9 @@
     </ClInclude>
     <ClInclude Include="Engine\LogManager.h">
       <Filter>Engine\System</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySeek.h">
+      <Filter>Game\Enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

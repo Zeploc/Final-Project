@@ -41,7 +41,7 @@ public:
 	static glm::vec3 FleeForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed);
 	static glm::vec3 PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, glm::vec3 PreviousPosition, float ScaleFactor, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed);
 	static glm::vec3 EvadeForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, glm::vec3 PreviousPosition, float ScaleFactor, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed);
-	static glm::vec3 SeekWithArrival(std::shared_ptr<Entity> Source, glm::vec3 Target, float _fSlowingRange, float _fMaxSpeed);
+	static glm::vec3 SeekWithArrival(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float _fSlowingRange, float _fMaxSpeed);
 	static glm::vec3 WanderForce(std::shared_ptr<Entity> Source, glm::vec3& TargetRef, glm::vec2 XRange, glm::vec2 ZRange, float& _fNextDecisionTime, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed);
 	static glm::vec3 pathFollowingForce(glm::vec3 Source, Path Currentpath, glm::vec3 CurrentVelocity, float fMass, float MaxSpeed);
 	static glm::vec3 Seperation(std::shared_ptr<Entity> Source, float fCloseness, std::vector<std::shared_ptr<Entity>> Avoidables, float MaxSpeed);

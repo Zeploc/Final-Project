@@ -33,7 +33,7 @@ private:
 
 private:
 
-	float m_fSpeed = 10;
+	float m_fSpeed = 5;
 
 	glm::vec3 m_v3CurrentVelocity = { 0, 0, 0 };
 
