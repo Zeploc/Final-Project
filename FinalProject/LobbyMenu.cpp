@@ -62,6 +62,8 @@ void LobbyMenu::ShowElements()
 {
 	for (auto it : v_ScreenElements)
 		it->SetActive(true);
+
+	//Check if Server, if not, set start server button to inactive
 }
 
 void LobbyMenu::ClientConnected(std::string _UserName, std::string Address)
