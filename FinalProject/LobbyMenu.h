@@ -18,6 +18,8 @@
 // Engine Includes //
 #include "Engine\Scene.h"
 
+class UIButton;
+
 #pragma once
 class LobbyMenu
 {
@@ -36,11 +38,15 @@ public:
 	std::string GetPlayerName() { return PlayerName->sText; };
 
 	void SetPlayerNameText(std::string _PlayerName) { PlayerName->sText = _PlayerName; };
+	void SetServerNameText(std::string _ServerName) { ServerName->sText = _ServerName; };
 
 	std::vector<std::shared_ptr<UIElement>> v_ScreenElements;
 private:
 	std::shared_ptr<UIText> CurrentServerName;
 	std::shared_ptr<UIText> PlayerName;
+	std::shared_ptr<UIText> ErrorText;
+	std::shared_ptr<UIButton> StartServerBtn;
+	std::shared_ptr<UIText> ServerName;
 
 	std::vector<std::shared_ptr<UIElement>> v_PlayersConnected;
 };

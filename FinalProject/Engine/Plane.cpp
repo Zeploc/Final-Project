@@ -238,6 +238,7 @@ void Plane::Render(Utils::Transform Newtransform)
 		glUseProgram(program);
 		glDisable(GL_BLEND);
 	}
+	glFrontFace(GL_CW);
 	Mesh::Render(Newtransform);
 }
 

@@ -49,12 +49,12 @@
 #include "UIManager.h"
 #include "NetworkSystem.h"
 #include "NetworkManager.h"
+#include "AI.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
 
 // Static Function Prototypes //
-
 
 // Types //
 using namespace std;
@@ -174,7 +174,9 @@ void Init()
 	Shader::TextUIprogram = loader.CreateProgram("Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs");
 	Shader::UIprogram = loader.CreateProgram("Resources/Shaders/UI.vs", "Resources/Shaders/UI.fs");
 	Shader::CubeMapProgram = loader.CreateProgram("Resources/Shaders/CubeMapVertexShader.vs", "Resources/Shaders/CubeMapFragmentShader.fs");
-	Shader::ModelProgram = loader.CreateProgram("Resources/Shaders/VertexShaderModel.vs", "Resources/Shaders/FragmentShaderModel.fs");
+	Shader::ModelProgram = loader.CreateProgram("Resources/Shaders/ModelVertexShader.vs", "Resources/Shaders/ModelFragmentShader.fs");
+	Shader::ModelProgramLit = loader.CreateProgram("Resources/Shaders/ModelVertexShaderLit.vs", "Resources/Shaders/ModelFragmentShaderLit.fs");
+	Shader::ReflectionProgram = loader.CreateProgram("Resources/Shaders/ReflectionShader.vs", "Resources/Shaders/ReflectionShader.fs");
 	
 	glCullFace(GL_BACK); // Cull the Back faces
 	glFrontFace(GL_CW); // Front face is Clockwise order
@@ -203,6 +205,7 @@ void Init()
 ************************************************************/
 void OnExit()
 {
+	Shader::CleanUp();
 	SceneManager::DestoryInstance();
 	Camera::DestoryInstance();
 	Input::DestoryInstance();
@@ -211,6 +214,7 @@ void OnExit()
 	LevelManager::DestoryInstance();
 	UIManager::DestoryInstance();
 	NetworkManager::DestoryInstance();
+	AI::CleanUp();
 	Text::Fonts.~vector();
 }
 

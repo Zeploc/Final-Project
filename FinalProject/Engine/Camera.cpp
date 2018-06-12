@@ -109,8 +109,8 @@ glm::vec3 Camera::ScreenToWorldDirection(glm::vec2 _ScreenPosition)
 	ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0f, 0.0f);
 
 	glm::vec3 ray_wor = glm::inverse(view) * ray_eye;
-	ray_wor = glm::normalize(ray_wor);
 
+	ray_wor = glm::normalize(ray_wor);
 	return ray_wor;
 }
 

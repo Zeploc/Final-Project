@@ -19,7 +19,10 @@
 #include "Engine/Camera.h"
 #include "Engine/Input.h"
 #include "Engine/Time.h"
+
+// Local Includes //
 #include "UIManager.h"
+#include "GameSettings.h"
 
 // OpenGL Library Includes //
 #include <glm\gtc\type_ptr.hpp>

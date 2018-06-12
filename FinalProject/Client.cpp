@@ -25,6 +25,7 @@
 // Local Includes //
 #include "NetworkSystem.h"
 #include "utils.h"
+#include "UIManager.h"
 
 #include "Menu.h"
 
@@ -107,37 +108,7 @@ void Client::Initialise()
 	//Set the client's online status to true
 	m_bOnline = true;
 
-	m_bDoBroadcast = true;
-	m_pClientSocket->EnableBroadcast();
-	BroadcastForServers();
-	if (m_vecServerAddr.size() == 0)
-	{
-		std::cout << "No Servers Found " << std::endl;
-	}
-	else {
-		//Give a list of servers for the user to choose from :
-		for (unsigned int i = 0; i < m_vecServerAddr.size(); i++)
-		{
-			std::cout << std::endl << "[" << i << "]" << " SERVER : found at " << ToString(m_vecServerAddr[i]._IPAddress) << std::endl;
-		}
-
-		//// CHECK IF INPUT IS HIGHER THAN SIZE
-		//std::cout << "Choose a server number to connect to :";
-		//gets_s(_cServerChosen);
-		//while (atoi(_cServerChosen) < 0 || atoi(_cServerChosen) >= m_vecServerAddr.size())
-		//{
-		//	std::cout << "Invalid option, Choose a server number to connect to :";
-		//	gets_s(_cServerChosen);
-		//}
-		//_uiServerIndex = atoi(_cServerChosen);
-		//m_ServerSocketAddress.sin_family = AF_INET;
-		//m_ServerSocketAddress.sin_port = m_vecServerAddr[_uiServerIndex].sin_port;
-		//m_ServerSocketAddress.sin_addr.S_un.S_addr = m_vecServerAddr[_uiServerIndex].sin_addr.S_un.S_addr;
-		//std::string _strServerAddress = ToString(m_vecServerAddr[_uiServerIndex]);
-		//std::cout << "Attempting to connect to server at " << _strServerAddress << std::endl;
-	}
-	m_bDoBroadcast = false;
-	m_pClientSocket->DisableBroadcast();
+	FullSearchForServers();
 	m_ReceiveThread = std::thread(&Client::ReceiveData, this);
 }
 
@@ -243,18 +214,13 @@ void Client::ProcessData(std::string _DataReceived)
 			std::string Result = _packetRecvd.MessageContent;
 			if (Result == "Invalid")
 			{
-				TPacket _packet;
-				std::string userName(m_cUserName);
-				userName += "1";
-				std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
-				MenuRef->LobbyScreen.SetPlayerNameText(userName);
-				_packet.Serialize(HANDSHAKE, const_cast<char *>(userName.c_str()));
-				SendData(_packet.PacketData);
+				UIManager::GetInstance()->ShowMessageBox("Name Taken! Pick a different one");
 				// User name taken Display
 				break;
 			}
 
 			std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
+			MenuRef->LobbyScreen.SetServerNameText(Result);
 			MenuRef->ToggleMenuSection(LOBBY);
 			break;
 		}
@@ -279,6 +245,31 @@ void Client::ProcessData(std::string _DataReceived)
 			MenuRef->LobbyScreen.ClientConnected(Username, Address);
 			break;
 		}
+		case LOADLEVEL:
+		{
+			SceneManager::GetInstance()->SwitchScene(_packetRecvd.MessageContent);
+			break;
+		}
+		case CHAT:
+		{
+		std::string Result = _packetRecvd.MessageContent;
+		std::string Username;
+		std::string Message;
+
+			for (int i = 0; i < Result.size(); i++)
+			{
+				if (Result[i] != ' ')
+				{
+					Username += Result[i];
+					continue;
+				}
+				Message = Result.substr(i + 1);
+				break;
+			}
+			UIManager::GetInstance()->m_ChatInstance.AddChatMessage({ Username, Message });
+			std::cout << "Chat Recieved: [" + Username + "]: " + Message << std::endl;
+			break;
+		}
 	}
 }
 
@@ -298,6 +289,20 @@ void Client::Update()
 		m_pWorkQueue->pop(temp);
 		ProcessData(temp);
 	}
+}
+
+void Client::ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message)
+{
+	std::string MessageToSend = _pcMessage;
+	if (_Message == CHAT)
+	{
+		std::string UserAndMessage(m_cUserName);
+		UserAndMessage += " " + _pcMessage;
+		MessageToSend = UserAndMessage;
+	}
+	TPacket _packet;
+	_packet.Serialize(_Message, const_cast<char *>(MessageToSend.c_str()));
+	SendData(_packet.PacketData);
 }
 
 bool Client::BroadcastForServers()
@@ -324,6 +329,26 @@ bool Client::BroadcastForServers()
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 	MenuRef->JoinGameScreen.AddServers(m_vecServerAddr);
 	return true;
+}
+
+void Client::FullSearchForServers()
+{
+	m_bDoBroadcast = true;
+	m_pClientSocket->EnableBroadcast();
+	BroadcastForServers();
+	if (m_vecServerAddr.size() == 0)
+	{
+		std::cout << "No Servers Found " << std::endl;
+	}
+	else {
+		//Give a list of servers for the user to choose from :
+		for (unsigned int i = 0; i < m_vecServerAddr.size(); i++)
+		{
+			std::cout << std::endl << "[" << i << "]" << " SERVER : found at " << ToString(m_vecServerAddr[i]._IPAddress) << std::endl;
+		}
+	}
+	m_bDoBroadcast = false;
+	m_pClientSocket->DisableBroadcast();
 }
 
 void Client::ReceiveBroadcastMessages(char * _pcBufferToReceiveData)

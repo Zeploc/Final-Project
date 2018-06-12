@@ -33,8 +33,10 @@ class LevelManager
 public:
 
 	void NextLevel();
+	void SwitchToCurrentLevel();
 	int CurrentLevel() { return iCurrentLevelID; };
-	std::shared_ptr<Level> GetCurrentLevel();
+	std::shared_ptr<Level> GetCurrentActiveLevel();
+	std::string GetCurrentLevelName() { return "Level " + std::to_string(iCurrentLevelID); };
 	int GetHighscore(int _iLevel);
 	void CheckHighscore();
 

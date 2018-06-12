@@ -49,7 +49,7 @@ Scene::Scene(std::string sSceneName)
 ************************************************************/
 Scene::~Scene()
 {
-
+	DeleteScene();
 }
 
 /************************************************************
@@ -268,7 +268,7 @@ void Scene::Update()
 	{
 		if (it) it->Update();
 	}*/
-	UIButton::bButtonPressedThisFrame = false;
+	//UIButton::bButtonPressedThisFrame = false;
 }
 
 /************************************************************

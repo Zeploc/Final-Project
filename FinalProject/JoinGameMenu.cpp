@@ -19,11 +19,12 @@
 #include "utils.h"
 #include "NetworkManager.h"
 #include "Client.h"
+#include "Menu.h"
+#include "UIManager.h"
 
 // Engine Includes //
 #include "Engine\SceneManager.h"
 #include "Engine\Scene.h"
-#include "Menu.h"
 
 // Local Functions
 void JoinSerer();
@@ -54,7 +55,7 @@ void JoinGameMenu::Init(std::shared_ptr<Scene> _Scene)
 	std::shared_ptr<UIButton> SendBroadcastBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 120), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 420, 60, SearchForServersBtn));
 	SendBroadcastBtn->AddText("Refresh", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	SendBroadcastBtn->SetActive(false);
-	PlayerName = std::make_shared<UITextField>(UITextField({ 100.0f, 200.0f }, Utils::CENTER_LEFT, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), 400, 50, { 0.8f, 0.8f, 0.8f, 1.0f }, "PlayerName", "Resources/Fonts/Roboto-Bold.ttf", 40, Utils::CENTER));
+	PlayerName = std::make_shared<UITextField>(UITextField({ 100.0f, 200.0f }, Utils::CENTER_LEFT, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), 400, 50, { 0.8f, 0.8f, 0.8f, 1.0f }, "PlayerName", "Resources/Fonts/Roboto-Bold.ttf", 40, Utils::CENTER_LEFT));
 	PlayerName->SetActive(false);
 
 	// Add elements to scene UI elements
@@ -70,6 +71,7 @@ void JoinGameMenu::Init(std::shared_ptr<Scene> _Scene)
 	v_ScreenElements.push_back(PlayerName);
 
 	ServerListPos = { Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 400 };
+
 }
 
 void JoinGameMenu::HideElements()
@@ -82,10 +84,17 @@ void JoinGameMenu::ShowElements()
 {
 	for (auto it : v_ScreenElements)
 		it->SetActive(true);
+
+	UIManager::GetInstance()->m_bDisplayChat = false;
 }
 
 void JoinGameMenu::AddServers(std::vector<ServerInfo> Servers)
 {
+	if (Servers.size() == 0)
+	{
+		UIManager::GetInstance()->ShowMessageBox("No Servers Found!");
+		return;
+	}
 	for (int i = 0; i < Servers.size(); i++)
 	{
 		glm::vec2 NewPos = ServerListPos;
@@ -143,5 +152,5 @@ void SearchForServersBtn()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 	MenuRef->JoinGameScreen.ClearServerList();
-	std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)->BroadcastForServers();
+	std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)->FullSearchForServers();
 }

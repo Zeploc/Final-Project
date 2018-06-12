@@ -19,13 +19,31 @@
 #include "Engine\SceneManager.h"
 #include "Engine\UIButton.h"
 
+// Local Includes //
+#include "NetworkManager.h"
+#include "NetworkSystem.h"
+#include "Server.h"
+#include "LevelManager.h"
+#include "UIManager.h"
+
 void StartServer();
 
+/************************************************************
+#--Description--#:  Constructor function
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	Takes contructor values
+#--Return--#: 		NA
+************************************************************/
 LobbyMenu::LobbyMenu()
 {
 }
 
-
+/************************************************************
+#--Description--#:  Destructor function
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	NA
+#--Return--#: 		NA
+************************************************************/
 LobbyMenu::~LobbyMenu()
 {
 }
@@ -35,21 +53,26 @@ void LobbyMenu::Init(std::shared_ptr<Scene> _Scene)
 	// Add Lobby Elements
 	std::shared_ptr<UIText> LobbyText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Game Lobby:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
 	LobbyText->SetActive(false);
-	PlayerName = std::make_shared<UIText>(UIText({ 100.0f, 500.0f }, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Player", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER_LEFT));
+	PlayerName = std::make_shared<UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH - 100.0f, 300.0f }, 0, glm::vec4(0.6f, 0.6f, 0.6f, 1.0f), "Player", "Resources/Fonts/Roboto-Bold.ttf", 50, Utils::CENTER_RIGHT));
 	PlayerName->SetActive(false);
-	std::shared_ptr<UIButton> StartServerBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 80, Camera::GetInstance()->SCR_HEIGHT - 50), Utils::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 70, StartServer));
+	StartServerBtn = std::make_shared<UIButton>(UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 80, Camera::GetInstance()->SCR_HEIGHT - 50), Utils::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 70, StartServer));
 	StartServerBtn->AddText("Start Server", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	StartServerBtn->SetActive(false);
+	ServerName = std::make_shared<UIText>(UIText({ 150.0f, 200.0f }, 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Server name", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER_LEFT));
+	ServerName->SetActive(false);
 
 	// Add elements to scene UI elements
 	_Scene->AddUITextElement(LobbyText);
 	_Scene->AddUITextElement(PlayerName);
+	_Scene->AddUITextElement(ServerName);
 	_Scene->AddUIElement(StartServerBtn);
 
 	// Add elements to vector list
 	v_ScreenElements.push_back(LobbyText);
 	v_ScreenElements.push_back(PlayerName);
 	v_ScreenElements.push_back(StartServerBtn);
+	v_ScreenElements.push_back(ServerName);
+
 }
 
 void LobbyMenu::HideElements()
@@ -63,7 +86,16 @@ void LobbyMenu::ShowElements()
 	for (auto it : v_ScreenElements)
 		it->SetActive(true);
 
+
 	//Check if Server, if not, set start server button to inactive
+
+	UIManager::GetInstance()->m_bDisplayChat = true;
+
+	if (!NetworkManager::GetInstance()->m_Network.IsServer()) // Current Instance is a client
+	{
+		// Set start Server button hidden/Inactive
+		StartServerBtn->SetActive(false);
+	}
 }
 
 void LobbyMenu::ClientConnected(std::string _UserName, std::string Address)
@@ -77,5 +109,15 @@ void LobbyMenu::ClientConnected(std::string _UserName, std::string Address)
 
 void StartServer()
 {
-
+	if (!NetworkManager::GetInstance()->m_Network.IsServer()) return; // Client trying to start Server
+	std::shared_ptr<Server> ServerPointer = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+	if (ServerPointer->ConnectedClientsCount() < 2)
+	{
+		UIManager::GetInstance()->ShowMessageBox("Not enough players to start server!");
+		return;
+	}
+	// check if has 2 or more players
+	std::string LevelName = LevelManager::GetInstance()->GetCurrentLevelName();
+	ServerPointer->SendToAllClients(LevelName, LOADLEVEL); // Tell All CLients to Load Level
+	SceneManager::GetInstance()->SwitchScene(LevelName);
 }

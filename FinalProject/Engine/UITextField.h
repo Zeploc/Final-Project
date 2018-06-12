@@ -28,17 +28,24 @@ public:
 	~UITextField();
 
 	void SetActive(bool _bIsActive);
+	void ResetField();
 	
 	void DrawUIElement();
 	void Update();
+	void SetFocussed(bool bNewFocus);
+	bool GetFocussed() { return bIsFocussed; };
 
 	UIText FieldText;
 	UIImage BackImage;
 
+	std::string sHintText;
+
 private:
 	bool bIsFocussed = false;
+	bool bHintTextActive = true;
 
 	double dSpamDelay = 0.0f;
 	float fSpamTime = 0.1f;
+
 };
 

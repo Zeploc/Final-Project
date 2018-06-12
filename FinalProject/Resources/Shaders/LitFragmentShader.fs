@@ -15,9 +15,9 @@ uniform vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
 uniform vec3 lightPos;// = vec3(-5.0f, 5.0f, 0.5f);
 
 // Specular
-uniform float lightSpecStr = 1.0f; // = 1.0f;
-uniform vec3 camPos = vec3(1.0f, 1.0f, 3.0f); // = glm::vec3(1.0f, 1.0f, 3.0f);
-uniform float shininess = 32.0f; // = 32.0f;
+uniform float lightSpecStr = 1.0f;
+uniform vec3 camPos = vec3(1.0f, 1.0f, 3.0f);
+uniform float shininess = 32.0f;
 
 
 void main(void)

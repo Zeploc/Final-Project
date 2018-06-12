@@ -23,7 +23,9 @@ enum EMessageType : unsigned char
 	DATA,
 	KEEPALIVE,
 	BROADCAST,
-	CLIENTCONNECTED
+	CHAT,
+	CLIENTCONNECTED,
+	LOADLEVEL
 };
 
 struct TPacket
@@ -83,6 +85,7 @@ public:
 	//virtual void ReceiveData(char* _pcBufferToReceiveData) = 0;
 	virtual void Update() = 0;
 
+	virtual void ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message) = 0;
 
 	void SetOffline()
 	{

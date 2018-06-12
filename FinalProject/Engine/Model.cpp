@@ -17,6 +17,11 @@
 
 // Engine Includes //
 #include "Shader.h"
+#include "Lighting.h"
+
+// Library Includes //
+#include <map>
+#include <glm\gtc\type_ptr.hpp>
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -46,6 +51,7 @@ Model::Model(glm::vec4 _Colour, const char *  ModelSource)
 ************************************************************/
 Model::~Model()
 {
+	pModelObject = nullptr;
 }
 
 /************************************************************
@@ -56,7 +62,16 @@ Model::~Model()
 ************************************************************/
 void Model::BindModel()
 {
+	for (auto& it : Shader::Models)
+	{
+		if (it.first == TextureSource)
+		{
+			pModelObject = it.second;
+			return;
+		}
+	}
 	pModelObject = std::make_shared<ModelObject>(TextureSource);
+	Shader::Models.insert(std::pair<std::string, std::shared_ptr<ModelObject>>(TextureSource, pModelObject));
 }
 
 /************************************************************
@@ -70,6 +85,21 @@ void Model::Rebind()
 	BindModel();
 }
 
+void Model::SetLit(bool _bIsLit)
+{
+	Mesh::SetLit(_bIsLit);
+	if (bIsLit)
+	{
+		program = Shader::ModelProgramLit;
+		pModelObject->program = program;
+	}
+	else
+	{
+		program = Shader::ModelProgram;
+		pModelObject->program = program;
+	}
+}
+
 /************************************************************
 #--Description--#:	Render Current Mesh to the screen
 #--Author--#: 		Alex Coultas
@@ -78,7 +108,13 @@ void Model::Rebind()
 ************************************************************/
 void Model::Render(Utils::Transform Newtransform)
 {
-	//glUniform4fv(glGetUniformLocation(program, "fragcolor"), 4, glm::value_ptr(Colour));
+	glFrontFace(GL_CCW);
+	if (bIsLit)
+	{
+		glUseProgram(program);
+		Lighting::PassLightingToShader(program, LightProperties, Newtransform);
+	}
+	glUniform4fv(glGetUniformLocation(program, "fragcolor"), 1, glm::value_ptr(Colour));
 	pModelObject->Render(Newtransform);
 }
 

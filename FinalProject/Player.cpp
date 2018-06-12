@@ -32,6 +32,10 @@
 
 // Local Includes //
 #include "Level.h"
+#include "UIManager.h"
+#include "Level.h"
+#include "Boss.h"
+
 
 // This Includes //
 #include "Player.h"
@@ -58,7 +62,8 @@ Player::Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float
 	//std::shared_ptr<Sphere> NewMesh = std::make_shared<Sphere>(_fWidth, _fHeight, _fDepth, _Colour);
 	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/char01.obj");
 	AddMesh(NewModelMesh);
-	EntityMesh->SetLit(true);	
+	EntityMesh->SetLit(true);
+
 }
 
 /************************************************************
@@ -82,7 +87,13 @@ Player::Player(Utils::Transform _Transform, float _fWidth, float _fHeight, float
 #--Return--#: 		NA
 ************************************************************/
 Player::~Player()
-{
+{	
+	for (auto& it : Bullets)
+	{
+		SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(it.BulletEntity);
+		it.BulletEntity = nullptr;
+	}
+	Bullets.clear();
 }
 
 /************************************************************
@@ -94,7 +105,7 @@ Player::~Player()
 void Player::Update()
 {
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
-	if (!GotLevel || !bActive) return;
+	if (!GotLevel || !bActive || !UIManager::GetInstance()->m_bFPS) return;
 	
 	/*glm::vec3 LookAtDirection = Target - Source;*/
 	//if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
@@ -165,11 +176,9 @@ void Player::Update()
 	float fDir = glm::dot(glm::cross(VectorToMouseFromPlayer, glm::vec3(0, 0, -1)), { 0, 1, 0 });
 	float AngleToMouse = acos(glm::dot(VectorToMouseFromPlayer, glm::vec3(0, 0, -1)));
 	if (fDir > 0) AngleToMouse = M_PI + ((2 * M_PI) - AngleToMouse + M_PI);
-	this->transform.Rotation.y = (AngleToMouse / (M_PI * 2)) * 360;
+	this->transform.Rotation.y = (AngleToMouse / (M_PI * 2)) * 360 + 180;
 	 
-
-
-	
+		
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD || Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
 	{
 		if (BulletTimer <= 0)
@@ -177,6 +186,7 @@ void Player::Update()
 			Bullet NewBullet;
 			std::shared_ptr<Entity> Bullet = std::make_shared<Entity>(Entity({ this->transform.Position, this->transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
 			std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
+			BulletCube->AddCollisionBounds(0.3f, 0.3f, 0.3f, Bullet);
 			Bullet->AddMesh(BulletCube);
 			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(Bullet);
 			glm::vec3 BulletDirection = glm::normalize(VectorToMouseFromPlayer);
@@ -189,10 +199,65 @@ void Player::Update()
 
 	BulletTimer -= Time::dTimeDelta;
 
-	for (int i = 0; i < Bullets.size(); i++)
+	bool bBackToStart = false;
+	auto iEndPos = Bullets.end();
+	for (auto it = Bullets.begin(); it != iEndPos; it++)
 	{
-		Bullets[i].BulletEntity->transform.Position += Bullets[i].CurrentVelocity;
+		if (bBackToStart)
+		{
+			it = Bullets.begin();
+			bBackToStart = false;
+		}
+		it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
+		it->Timer -= Time::dTimeDelta;
+		
+		if (it->Timer <= 0)
+		{
+			SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(it->BulletEntity);
+			it = Bullets.erase(it);
+			if (it == Bullets.begin())
+			{
+				bBackToStart = true;
+			}
+			else
+				it--;
+			if (Bullets.size() == 0) break;
+			iEndPos = Bullets.end();
+		}
 	}
+	std::shared_ptr<Level> LevelRef = dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
+	for (auto& Bulletit : Bullets)
+	{
+		for (auto& it : LevelRef->Enemies)
+		{
+			
+			if (Bulletit.BulletEntity->EntityMesh->GetCollisionBounds()->isColliding(it))
+			{
+				std::shared_ptr<Boss> IsBoss = std::dynamic_pointer_cast<Boss>(it);
+				if (IsBoss)
+				{
+					IsBoss->OnBulletCollision();
+					if (IsBoss->BossHealth <= 0)
+					{
+						it->SetVisible(false);
+						it->SetActive(false);
+						Bulletit.BulletEntity->SetActive(false);
+						Bulletit.BulletEntity->SetVisible(false);
+					}
+				}
+				else
+				{
+					// Temp bullet kill
+					it->SetVisible(false);
+					it->SetActive(false);
+					Bulletit.BulletEntity->SetActive(false);
+					Bulletit.BulletEntity->SetVisible(false);
+				}
+			}
+		}
+		
+	}
+	
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
 	{
@@ -241,7 +306,13 @@ void Player::Update()
 		
 	}
 
-	
+	if (m_fHealth <= 0)
+	{
+		this->shared_from_this()->SetActive(false);
+		this->shared_from_this()->SetVisible(false);
+	}
+
+
 	
 	RollTimer -= Time::dTimeDelta;
 	
@@ -339,6 +410,16 @@ void Player::Update()
 	Translate(glm::vec3(fHSpeed, 0, fVSpeed));
 	//GotLevel->DebugText->sText = std::to_string(fVSpeed);
 
+	if (CurrentPowerUp != NONE)
+	{
+		m_fPowerUpTimer -= Time::dTimeDelta;
+		if (m_fPowerUpTimer <= 0)
+		{
+			m_fPowerUpTimer = 0;
+			PowerUpComplete();
+			CurrentPowerUp = NONE;
+		}
+	}
 }
 
 /************************************************************
@@ -353,6 +434,34 @@ void Player::Reset()
 	fHSpeed = 0;
 	fVSpeed = 0;
 	transform.Position = GotLevel->SpawnPos;
+}
+
+void Player::ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime)
+{
+	m_fPowerUpTimer = _fPowerUpTime;
+	CurrentPowerUp = _PowerUp;
+	switch (_PowerUp)
+	{
+	case NONE:
+		break;
+	case SPEEDBOOST:
+		m_fCurrentPlayerSpeed = GameSettings::fMoveSpeed * 2;
+		break;
+	default:
+		break;
+	}
+}
+
+void Player::PowerUpComplete()
+{
+	switch (CurrentPowerUp)
+	{
+	case SPEEDBOOST:
+		m_fCurrentPlayerSpeed = GameSettings::fMoveSpeed;
+		break;
+	default:
+		break;
+	}
 }
 
 /************************************************************
@@ -372,24 +481,24 @@ void Player::MoveHorizontally(bool bLeft)
 		if (GotLevel->Collidables.size() == 0)
 		{
 			if (bLeft)
-				fHSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+				fHSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			else
-				fHSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+				fHSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			return;
 		}
 		for (auto it : GotLevel->Collidables)
 		{
-			if (EntityMesh->MeshCollisionBounds->CheckCollision(it, glm::vec3(GameSettings::fMoveSpeed * Time::dTimeDelta * Direction, 0, 0)))
+			if (EntityMesh->GetCollisionBounds()->CheckCollision(it, glm::vec3(m_fCurrentPlayerSpeed * Time::dTimeDelta * Direction, 0, 0)))
 			{
-					fHSpeed = Direction * abs(EntityMesh->MeshCollisionBounds->GetDistance(it).x);
+					fHSpeed = Direction * abs(EntityMesh->GetCollisionBounds()->GetDistance(it).x);
 					break;
 			}
 			else
 			{
 				if (bLeft)
-					fHSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+					fHSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 				else
-					fHSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+					fHSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			}
 		}
 	}
@@ -406,26 +515,27 @@ void Player::MoveVertical(bool bUp)
 		if (GotLevel->Collidables.size() == 0)
 		{
 			if (bUp)
-				fVSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+				fVSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			else
-				fVSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+				fVSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			return;
 		}
 		for (auto it : GotLevel->Collidables)
 		{
 
-			if (EntityMesh->MeshCollisionBounds->CheckCollision(it, glm::vec3(0, 0, GameSettings::fMoveSpeed * Time::dTimeDelta * Direction)))
+			if (EntityMesh->GetCollisionBounds()->CheckCollision(it, glm::vec3(0, 0, m_fCurrentPlayerSpeed * Time::dTimeDelta * Direction)))
 			{
-				fVSpeed = Direction * abs(EntityMesh->MeshCollisionBounds->GetDistance(it).z);
+				fVSpeed = Direction * abs(EntityMesh->GetCollisionBounds()->GetDistance(it).z);
 				break;
 			}
 			else
 			{
 				if (bUp)
-					fVSpeed = -GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+					fVSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 				else
-					fVSpeed = GameSettings::fMoveSpeed * (float)Time::dTimeDelta;
+					fVSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			}
 		}
 	}
 }
+

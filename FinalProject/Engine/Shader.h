@@ -14,6 +14,8 @@
 
 // Library Includes //
 #include <string>
+#include <map>
+#include <memory>
 
 // OpenGL Library Includes //
 #include <glew.h>
@@ -23,12 +25,16 @@
 // Engine Includes //
 #include "Text.h"
 
+class ModelObject;
+
 #pragma once
 class Shader
 {
 public:
 	Shader();
 	~Shader();
+	static void CleanUp();
+
 
 	static GLuint program;
 	static GLuint Textureprogram;
@@ -37,6 +43,11 @@ public:
 	static GLuint UIprogram;
 	static GLuint CubeMapProgram;
 	static GLuint ModelProgram;
+	static GLuint ModelProgramLit;
+	static GLuint ReflectionProgram;
+	
+	static std::map<std::string, std::shared_ptr<ModelObject>> Models;
+	static std::map<const char *, GLuint> Textures;
 	
 	/*static GLuint BindPyramidArray(float fWidth, float fHeight, float fDepth, glm::vec4 Colour);
 	static GLuint BindPyramidArray(float fWidth, float fHeight, float fDepth, glm::vec4 Colour, const char *  TextureSource, GLuint& Texture, glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1));
@@ -53,7 +64,7 @@ public:
 		
 	static Text::cFont AddFont(std::string fontPath, int iPSize);
 
-	static GLuint CreateBuffer(const char * TextureSource, GLuint & Texture, bool bAA);
+	static GLuint CreateBuffer(const char * TextureSource, GLuint & Texture, bool bAA, bool bHasNormals = false);
 private:
 };
 

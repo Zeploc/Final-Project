@@ -32,7 +32,7 @@
 ************************************************************/
 UITextField::UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int iWidth, int iHeight, glm::vec4 _TextColour, std::string _DefaultValue, std::string _FontPath, int _iPSize, Utils::EANCHOR TextAnchor)
 	: UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _Colour), BackImage(_Position, _anchor, _fRotation, _Colour, iWidth, iHeight),
-	FieldText(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _TextColour, _DefaultValue, _FontPath, _iPSize, TextAnchor)
+	FieldText(_Position, _fRotation, _TextColour, _DefaultValue, _FontPath, _iPSize, TextAnchor), sHintText(_DefaultValue)
 {
 
 }
@@ -50,7 +50,6 @@ UITextField::UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRo
 
 }
 
-
 /************************************************************
 #--Description--#:  Destructor function
 #--Author--#: 		Alex Coultas
@@ -65,6 +64,12 @@ void UITextField::SetActive(bool _bIsActive)
 {
 	FieldText.SetActive(_bIsActive);
 	BackImage.SetActive(_bIsActive);
+}
+
+void UITextField::ResetField()
+{
+	FieldText.sText = sHintText;
+	FieldText.Colour.a = 0.5f;
 }
 
 /************************************************************
@@ -95,15 +100,18 @@ void UITextField::Update()
 	{
 		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == (Input::InputState::INPUT_HOLD | Input::InputState::INPUT_FIRST_PRESS))
 		{
-			bIsFocussed = true;
+			SetFocussed(true);
+			BackImage.Colour = { Colour.r/ 2, Colour.g / 2, Colour.b / 2, Colour.a };
 		}
 	}
 	else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == (Input::InputState::INPUT_HOLD | Input::InputState::INPUT_FIRST_PRESS))
 	{
-		bIsFocussed = false;
+		SetFocussed(false);
+		BackImage.Colour = { Colour.r, Colour.g, Colour.b, Colour.a };
 	}
 	if (bIsFocussed && (Input::GetInstance()->bKBHit || Input::GetInstance()->KeyState[Input::GetInstance()->cLastKey] == Input::INPUT_HOLD))
-	{
+	{		
+		//FieldText.Colour.a = 1.0f;
 		std::string NewText = FieldText.sText;
 		char cNext = Input::GetInstance()->cLastKey;
 		if (cNext == '\b' && dSpamDelay > fSpamTime)
@@ -118,8 +126,18 @@ void UITextField::Update()
 		}
 		else if (Input::GetInstance()->KeyState[Input::GetInstance()->cLastKey] != Input::INPUT_HOLD)
 		{
-			NewText += cNext;
+			if (bHintTextActive)
+			{
+				FieldText.sText = "";
+				NewText = FieldText.sText;
+				bHintTextActive = false;
+			}
+			if (!(int(cNext) < 32 || int(cNext) > 126))
+			{
+				NewText += cNext;
+			}
 		}
+		
 		FieldText.sText = NewText;
 	}
 
@@ -128,4 +146,13 @@ void UITextField::Update()
 	dSpamDelay += Time::dTimeDelta;
 	//if (fSpamDelay > fSpamTime)
 	//	fSpamDelay = 0;
+}
+
+void UITextField::SetFocussed(bool bNewFocus)
+{
+	bIsFocussed = bNewFocus;
+	bHintTextActive = true;
+	//if (!bIsFocussed) FieldText.sText = sHintText;
+	//if (!bIsFocussed) bHintTextActive = true;
+
 }

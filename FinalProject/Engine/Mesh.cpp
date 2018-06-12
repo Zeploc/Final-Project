@@ -69,10 +69,15 @@ void Mesh::Render(Utils::Transform Newtransform)
 		glBindTexture(GL_TEXTURE_2D, texture);
 	
 	}
-	glFrontFace(GL_CW);
+	glEnable(GL_CULL_FACE);
 	Camera::GetInstance()->SetMVP(Newtransform, program);
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Mesh::AddCollisionBounds(float fHeight, float fWidth, float fDepth, std::shared_ptr<Entity> _EntityRef)
+{
+	MeshCollisionBounds = std::make_shared<CollisionBounds>(fHeight, fWidth, fDepth, _EntityRef);
 }
