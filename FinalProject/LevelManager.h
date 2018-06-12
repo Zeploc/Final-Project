@@ -39,6 +39,7 @@ public:
 	std::string GetCurrentLevelName() { return "Level " + std::to_string(iCurrentLevelID); };
 	int GetHighscore(int _iLevel);
 	void CheckHighscore();
+	void EnemySpawner();
 
 	void Init();
 

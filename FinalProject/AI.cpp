@@ -67,7 +67,7 @@ glm::vec3 AI::SeekForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::ve
 
 glm::vec3 AI::FleeForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed)
 {
-	glm::vec3 LookAtDirection = Target - Source;
+	glm::vec3 LookAtDirection = Target - Source; 
 	if (glm::length(LookAtDirection) != 0) // In case vector is zero vector (Can't normalise zero vector)
 	{
 		LookAtDirection = glm::vec3(glm::normalize(LookAtDirection));

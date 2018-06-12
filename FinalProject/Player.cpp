@@ -281,7 +281,14 @@ void Player::Update()
 		bHasDodged = true;
 		RollTimer = 0.5f;		
 	}
-		
+
+	if (m_fHealth <= 0)
+	{
+		this->shared_from_this()->SetActive(false);
+		this->shared_from_this()->SetVisible(false);
+	}
+
+
 	RollTimer -= Time::dTimeDelta;
 	
 
