@@ -27,6 +27,7 @@ using namespace std;
 #include "ModelMesh.h"
 #include "Camera.h"
 #include "Shader.h"
+#include "LogManager.h"
 
 class ModelObject
 {
@@ -38,7 +39,7 @@ public:
 	// Constructor, expects a filepath to a 3D model.
 	ModelObject(std::string path)
 	{
-		this->program = Shader::ModelProgram;
+		this->program = Shader::Programs["ModelProgram"];
 		this->loadModel(path);
 	}
 	
@@ -214,7 +215,7 @@ private:
 		string filename = string(path);
 		filename = directory + '/' + filename;
 
-		cout << "Loading model with texture at filename: " << filename << endl;
+		LogManager::GetInstance()->DisplayLogMessage("Loading model with texture at filename: " + filename);
 
 		GLuint textureID;
 		glGenTextures(1, &textureID);

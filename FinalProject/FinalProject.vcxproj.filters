@@ -231,9 +231,6 @@
     <ClCompile Include="Spectator.cpp">
       <Filter>Game\Player</Filter>
     </ClCompile>
-    <ClCompile Include="GroupEnemies.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PickUpBase.cpp">
       <Filter>Game\Pickups</Filter>
     </ClCompile>
@@ -248,6 +245,12 @@
     </ClCompile>
     <ClCompile Include="HUD.cpp">
       <Filter>Game\Game UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\LogManager.cpp">
+      <Filter>Engine\System</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySeek.cpp">
+      <Filter>Game\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -422,9 +425,6 @@
     <ClInclude Include="Spectator.h">
       <Filter>Game\Player</Filter>
     </ClInclude>
-    <ClInclude Include="GroupEnemies.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PickUpBase.h">
       <Filter>Game\Pickups</Filter>
     </ClInclude>
@@ -439,6 +439,12 @@
     </ClInclude>
     <ClInclude Include="HUD.h">
       <Filter>Game\Game UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\LogManager.h">
+      <Filter>Engine\System</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySeek.h">
+      <Filter>Game\Enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

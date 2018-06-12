@@ -23,6 +23,7 @@
 
 // Engine Includes //
 #include "ModelObject.h"
+#include "LogManager.h"
 
 // Local Includes //
 
@@ -31,19 +32,20 @@
 
 
 // Static Variables //
-GLuint Shader::program;
-GLuint Shader::Textureprogram;
-GLuint Shader::TextUIprogram;
-GLuint Shader::UIprogram;
-GLuint Shader::LitTextureprogram;
-GLuint Shader::CubeMapProgram;
-GLuint Shader::ModelProgram;
-GLuint Shader::ModelProgramLit;
-GLuint Shader::ReflectionProgram;
+//GLuint Shader::program;
+//GLuint Shader::Textureprogram;
+//GLuint Shader::TextUIprogram;
+//GLuint Shader::UIprogram;
+//GLuint Shader::LitTextureprogram;
+//GLuint Shader::CubeMapProgram;
+//GLuint Shader::ModelProgram;
+//GLuint Shader::ModelProgramLit;
+//GLuint Shader::ReflectionProgram;
 
 
 std::map<std::string, std::shared_ptr<ModelObject>> Shader::Models;
 std::map<const char *, GLuint> Shader::Textures;
+std::map<std::string, GLuint> Shader::Programs;
 
 
 /************************************************************
@@ -75,6 +77,13 @@ void Shader::CleanUp()
 	}
 	Models.clear();
 	Textures.clear();
+}
+
+void Shader::AddProgram(std::string VertexShaderPath, std::string FragmentShaderPath, std::string ShaderName)
+{
+	ShaderLoader loader;
+	Programs.insert(std::pair<std::string, GLuint>(ShaderName, loader.CreateProgram(VertexShaderPath.c_str(), FragmentShaderPath.c_str())));
+	LogManager::GetInstance()->DisplayLogMessage("Loading Shader \"" + ShaderName + "\"");
 }
 
 //GLuint Shader::BindPyramidArray(float fWidth, float fHeight, float fDepth, glm::vec4 Colour)
@@ -721,7 +730,7 @@ GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool b
 
 
 			Textures.insert(std::pair<const char*, GLuint>(TextureSource, texture));
-			std::cout << "Adding Texture, \"" << TextureSource << "\", Total Texture Count : " << Textures.size() << std::endl;
+			LogManager::GetInstance()->DisplayLogMessage("Adding Texture, \"" + std::string(TextureSource) + "\", Total Texture Count : " + std::to_string(Textures.size()));
 			Texture = texture;
 		}
 		else

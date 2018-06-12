@@ -72,9 +72,9 @@ void Text::Render(std::string Text, std::string Font, int iSize, glm::vec2 Posit
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// Activate corresponding render state
 	//glUseProgram(Shader::Textprogram);
-	glUniform3f(glGetUniformLocation(Shader::TextUIprogram, "textColor"), colour.x, colour.y, colour.z);
+	glUniform3f(glGetUniformLocation(Shader::Programs["TextUIprogram"], "textColor"), colour.x, colour.y, colour.z);
 	glm::mat4 proj = glm::ortho(0.0f, (GLfloat)Camera::GetInstance()->SCR_WIDTH, 0.0f, (GLfloat)Camera::GetInstance()->SCR_HEIGHT);
-	glUniformMatrix4fv(glGetUniformLocation(Shader::TextUIprogram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
+	glUniformMatrix4fv(glGetUniformLocation(Shader::Programs["TextUIprogram"], "proj"), 1, GL_FALSE, glm::value_ptr(proj));
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(TextFont.VAO);
 

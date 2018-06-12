@@ -47,7 +47,7 @@ CubeMap::CubeMap(float fWidth, float fHeight, float fDepth, char *  _TextureSour
 	bHasTexture = false;
 	m_eShape = Utils::CUBE;
 	BindCubeMap();
-	program = Shader::CubeMapProgram;
+	program = Shader::Programs["CubeMapProgram"];
 }
 
 
@@ -194,7 +194,7 @@ void CubeMap::Render(Utils::Transform Newtransform)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
-	glUniform1i(glGetUniformLocation(Shader::CubeMapProgram, "cubeSampler"), 0);
+	glUniform1i(glGetUniformLocation(Shader::Programs["CubeMapProgram"], "cubeSampler"), 0);
 
 	Camera::GetInstance()->SetMVP(Newtransform, program);
 	

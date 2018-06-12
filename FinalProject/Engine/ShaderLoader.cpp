@@ -36,7 +36,7 @@ ShaderLoader::~ShaderLoader(void){}
 #--Parameters--#: 	Takes shader path
 #--Return--#: 		Returns text file contents as string
 ************************************************************/
-std::string ShaderLoader::ReadShader(char *filename)
+std::string ShaderLoader::ReadShader(const char *filename)
 {
 	std::string shaderCode;
 	std::ifstream file(filename, std::ios::in);
@@ -61,7 +61,7 @@ std::string ShaderLoader::ReadShader(char *filename)
 #--Return--#: 		Returns the shader gluint
 ************************************************************/
 GLuint ShaderLoader::CreateShader(GLenum shaderType, std::string
-	source, char* shaderName)
+	source, const char* shaderName)
 {
 
 	int compile_result = 0;
@@ -94,8 +94,8 @@ GLuint ShaderLoader::CreateShader(GLenum shaderType, std::string
 #--Parameters--#: 	takes in shader paths
 #--Return--#: 		Returns the program gluint
 ************************************************************/
-GLuint ShaderLoader::CreateProgram(char* vertexShaderFilename,
-	char* fragmentShaderFilename)
+GLuint ShaderLoader::CreateProgram(const char* vertexShaderFilename,
+	const char* fragmentShaderFilename)
 {
 
 	//read the shader files and save the code

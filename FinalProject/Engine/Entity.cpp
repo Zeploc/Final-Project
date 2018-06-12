@@ -30,7 +30,8 @@
 #include "Plane.h"
 #include "Pyramid.h"
 #include "Sphere.h"
-
+#include "CollisionBounds.h"
+#include "LogManager.h"
 
 //************************************************************
 //#--Description--#:	Constructor function with base position
@@ -41,7 +42,8 @@
 Entity::Entity(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 	: transform(_Transform), EntityAnchor(_Anchor)
 {
-
+	iEntityID = Utils::AddEntityID();
+	LogManager::GetInstance()->DisplayLogMessage("New Entity created with ID #" + std::to_string(iEntityID));
 }
 
 /************************************************************
@@ -91,7 +93,10 @@ void Entity::DrawEntity()
 {
 	if (!EntityMesh || !bVisible) return;
 	Utils::Transform AnchoredTransform = transform;
-	AnchoredTransform.Position = Utils::GetAncoredPosition(transform.Position, glm::vec2(EntityMesh->m_fWidth * transform.Scale.x, EntityMesh->m_fHeight * transform.Scale.y), EntityAnchor);
+	if (EntityMesh->GetCollisionBounds())
+		AnchoredTransform.Position = Utils::GetAncoredPosition(transform.Position, EntityMesh->GetCollisionBounds()->GetDimensions(), EntityAnchor);
+	else
+		AnchoredTransform.Position = Utils::GetAncoredPosition(transform.Position, glm::vec3(EntityMesh->m_fWidth, EntityMesh->m_fHeight, EntityMesh->m_fDepth), EntityAnchor);
 	EntityMesh->Render(AnchoredTransform);
 }
 
@@ -115,14 +120,13 @@ void Entity::Update()
 ************************************************************/
 void Entity::OnDestroy()
 {
-	
+	LogManager::GetInstance()->DisplayLogMessage("Entity with ID #" + std::to_string(iEntityID) + " destroyed!");
 }
 
 void Entity::SetActive(bool _bIsActive)
 {
 	bActive = _bIsActive;
 }
-
 
 void Entity::SetVisible(bool _bIsVisible)
 {

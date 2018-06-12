@@ -43,6 +43,7 @@
 #include "Enemy1.h"
 #include "Enemy2.h"
 #include "Enemy3.h"
+#include "EnemySeek.h"
 #include "SpeedBoostPickUp.h"
 #include "Boss.h"
 
@@ -70,7 +71,7 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<CubeMap> WorldCubeMapMesh = std::make_shared<CubeMap>(CubeMap(1000.0f, 1000.0f, 1000.0f, TextureSources));
 	WorldCubeMap->AddMesh(WorldCubeMapMesh);
 	AddEntity(WorldCubeMap);
-	SpawnPos = glm::vec3(17, -2.5f, 20);
+	SpawnPos = glm::vec3(17, 1.0f, 20);
 	// Add cube map first so transpancy works
 	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
 	AddEntity(Player);
@@ -103,7 +104,7 @@ Level::Level(std::string sSceneName)
 	AddEnemy(BossObject);
 	BossRef = BossObject;
 
-	std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 15.0f, -2.5f, 18.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 17.0f, -2.5f, 20.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Cube> CubeCollisionMesh = std::make_shared<Cube>(Cube(2.0f, 2.0f, 2.0f, { 0.1, 0.3, 0.7, 1.0f }));
 	CubeCollision->AddMesh(CubeCollisionMesh);
 	CubeCollisionMesh->AddCollisionBounds(2.0f, 2.0f, 2.0f, CubeCollision);
@@ -123,7 +124,7 @@ Level::Level(std::string sSceneName)
 	//TexturedPyramid->AddMesh(TexturedPyramidMesh);
 	//AddEntity(TexturedPyramid);
 		
-	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Entity> Target = std::make_shared<Entity>(Entity({ glm::vec3(0, -2.5, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 	//std::shared_ptr<Sphere> TargetMesh = std::make_shared<Sphere>(0.5f, 2.0f, 0.5f, glm::vec4(1.0f, 0.5f, 0.1f, 1.0f));
 	std::shared_ptr<Plane> TargetMesh = std::make_shared<Plane>(Plane(1.0f, 1.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, "Resources/Textures/MouseTarget.png"));
 	TargetMesh->SetLit(true);
@@ -134,37 +135,53 @@ Level::Level(std::string sSceneName)
 	//AddCollidable(Target);
 	MouseAimTarget = Target;
 
-	std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	std::shared_ptr<Cube> CrowdPathFollowingEnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 
-	//for (int i = 0; i < 20; i++)
-	//{
-	//	std::shared_ptr<Enemy1> NewEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 0,0,0 }));
-	//	EnemeyMesh->SetLit(true);
-	//	NewEnemy->AddMesh(EnemeyMesh);
-	//	EnemeyMesh->AddCollisionBounds(1, 1, 1, NewEnemy);
-	//	AddEnemy(NewEnemy);
-	//	//AddEntity(NewEnemy);
-	//}
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		std::shared_ptr<Enemy2> NewEnemy = std::make_shared<Enemy2>(Enemy2({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-		EnemeyMesh->SetLit(true);
-		NewEnemy->AddMesh(EnemeyMesh);
-		EnemeyMesh->AddCollisionBounds(1, 1, 1, NewEnemy);
-		AddEnemy(NewEnemy);
-		NewEnemy->SetTarget(BossRef);
+		std::shared_ptr<Enemy1> CrowdPathFollowingEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 5,0,0 }));
+		CrowdPathFollowingEnemeyMesh->SetLit(true);
+		CrowdPathFollowingEnemy->AddMesh(CrowdPathFollowingEnemeyMesh);
+		CrowdPathFollowingEnemeyMesh->AddCollisionBounds(1, 1, 1, CrowdPathFollowingEnemy);
+		AddEnemy(CrowdPathFollowingEnemy);
+		//AddEntity(NewEnemy);
+	}
+	std::shared_ptr<Cube> FlockingEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.9f, 0.3f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	for (int i = 0; i < 8; i++)
+	{
+		std::shared_ptr<Enemy2> FlockingEnemy = std::make_shared<Enemy2>(Enemy2({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+		FlockingEnemyMesh->SetLit(true);
+		FlockingEnemy->AddMesh(FlockingEnemyMesh);
+		FlockingEnemyMesh->AddCollisionBounds(1, 1, 1, FlockingEnemy);
+		AddEnemy(FlockingEnemy);
+		FlockingEnemy->SetTarget(EPlayer);
 		//AddEntity(NewEnemy);
 	}
 
 	//Enemy1Ref = NewEnemy;
 
-	std::shared_ptr<Entity> NewTarget = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Entity> NewTarget = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::CENTER));
 	std::shared_ptr<Sphere> NewTargetMesh = std::make_shared<Sphere>(0.5f, 1.0f, 0.5f, glm::vec4(1.0f, 0.2f, 0.5f, 1.0f));
 	NewTargetMesh->SetLit(true);
 	NewTarget->AddMesh(NewTargetMesh);
 	//AddEntity(NewTarget);
 	//TargetRef = NewTarget;
 	
+	std::shared_ptr<EnemySeek> NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(0, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Cube> SeekEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.4f, 0.5f, 0.8f, 1.0f), "Resources/Enemy1.png");
+	SeekEnemyMesh->SetLit(true);
+	NewSeekEnemy->AddMesh(SeekEnemyMesh);
+	NewSeekEnemy->Target = BossObject;
+	SeekEnemyMesh->AddCollisionBounds(1, 1, 1, NewSeekEnemy);
+	AddEnemy(NewSeekEnemy);
+
+	std::shared_ptr<Enemy3> PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(0, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Cube> PersueEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.9f, 0.8f, 0.0f, 1.0f), "Resources/Enemy1.png");
+	PersueEnemyMesh->SetLit(true);
+	PersueEnemy->AddMesh(PersueEnemyMesh);
+	PersueEnemy->Target = EPlayer;
+	PersueEnemyMesh->AddCollisionBounds(1, 1, 1, PersueEnemy);
+	AddEnemy(PersueEnemy);
 
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//NewCursor->SetVisibleRange({ 500, 150 });
@@ -202,9 +219,10 @@ void Level::Update()
 	}
 	else
 	{
-		float fDistance = -((glm::dot(Camera::GetInstance()->GetCameraPosition(), glm::vec3(0, 1, 0)) + 2.5f) /
+		float fDistance = -((glm::dot(Camera::GetInstance()->GetCameraPosition(), glm::vec3(0, 1, 0)) + 3.0f) /
 			(fDotProductDirections));
 		MouseAimTarget->transform.Position = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos) * fDistance + Camera::GetInstance()->GetCameraPosition();
+		MouseAimTarget->transform.Position.y += 0.1f;
 	}
 	
 	if (CurrentController == EPlayer)
@@ -304,12 +322,13 @@ void Level::DestroyCollidable(std::shared_ptr<Entity> _Entity)
 
 void Level::AddHexPlatform(std::string _ModelPath, glm::vec3 _v3Postion, glm::vec3 Rotation)
 {
-	std::shared_ptr<Entity> ModelEnt = std::make_shared<Entity>(Entity({ _v3Postion, Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
+	std::shared_ptr<Entity> ModelEnt = std::make_shared<Entity>(Entity({ _v3Postion, Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::CENTER));
 	std::shared_ptr<Model> NewModelMesh = std::make_shared<Model>(Model({ 1.0f, 1.0f, 1.0f, 1.0f }, _ModelPath.c_str()));
 	ModelEnt->AddMesh(NewModelMesh);
 	NewModelMesh->SetLit(true);
 	NewModelMesh->LightProperties.fAmbientStrength = 0.7f;
-	AddEntity(ModelEnt);
+	NewModelMesh->AddCollisionBounds(10, 4, 10, ModelEnt);
+	AddCollidable(ModelEnt);
 }
 
 /************************************************************
@@ -354,7 +373,7 @@ void Level::PlayRandomTrack()
 	const char* MusicOptions[] = { "Resources/Sound/Ludum Dare 28 - Track 1.wav",
 		"Resources/Sound/Ludum Dare 28 - Track 3.wav", "Resources/Sound/Ludum Dare 30 - Track 6.wav",
 		"Resources/Sound/Ludum Dare 30 - Track 7.wav", "Resources/Sound/Ludum Dare 38 - Track 10.wav" };
-	int iRandTrack = 3;//rand() % 5;
+	int iRandTrack = rand() % 5;
 	std::cout << "Playing " << MusicOptions[iRandTrack] << " | Number " << iRandTrack << std::endl;
 	SoundManager::GetInstance()->AddAudio(MusicOptions[iRandTrack], true, "GameBackgroundTrack " + std::to_string(iRandTrack));
 	SoundManager::GetInstance()->PlayAudio("GameBackgroundTrack " + std::to_string(iRandTrack), "BackgroundC");
@@ -369,7 +388,7 @@ void Level::PlayRandomTrack()
 ************************************************************/
 void Level::OnLoadScene()
 {
-	//PlayRandomTrack();
+	PlayRandomTrack();
 	UIManager::GetInstance()->SwitchUIMode(false);
 	UIManager::GetInstance()->m_bDisplayHUD = true;
 	for (auto& it : Enemies)
@@ -378,6 +397,7 @@ void Level::OnLoadScene()
 		if (IsEnemy1)
 		{
 			IsEnemy1->AddPathPoints();
+			break;
 		}
 		
 	}

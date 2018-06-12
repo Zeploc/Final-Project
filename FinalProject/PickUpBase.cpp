@@ -21,7 +21,7 @@
 // Engine Includes //
 #include "Engine\Time.h"
 #include "Engine\CollisionBounds.h"
-
+#include "Engine\LogManager.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -87,7 +87,7 @@ void PickUpBase::Update()
 
 void PickUpBase::OnPickUp()
 {
-	std::cout << "Pick up Collectd | Function \"OnPickUp\" base called!|\n";
+	LogManager::GetInstance()->DisplayLogMessage("Pick up Collectd | Function \"OnPickUp\" base called!|");
 	SetVisible(false);
 }
 

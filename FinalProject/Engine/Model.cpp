@@ -37,7 +37,7 @@ Model::Model(glm::vec4 _Colour, const char *  ModelSource)
 	Colour = _Colour;
 	TextureSource = ModelSource;
 	bHasTexture = true;
-	program = Shader::ModelProgram;
+	program = Shader::Programs["ModelProgram"];
 	//m_iIndicies = 36;
 	BindModel();
 	m_eShape = Utils::MODEL;
@@ -90,12 +90,12 @@ void Model::SetLit(bool _bIsLit)
 	Mesh::SetLit(_bIsLit);
 	if (bIsLit)
 	{
-		program = Shader::ModelProgramLit;
+		program = Shader::Programs["ModelProgramLit"];
 		pModelObject->program = program;
 	}
 	else
 	{
-		program = Shader::ModelProgram;
+		program = Shader::Programs["ModelProgram"];
 		pModelObject->program = program;
 	}
 }

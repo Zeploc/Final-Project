@@ -34,6 +34,9 @@ public:
 	bool CheckCollision(std::shared_ptr<Entity> Entity2, glm::vec3 Movement);
 	glm::vec3 GetDistance(std::shared_ptr<Entity> Entity2);
 
+	glm::vec3 GetDimensions() { return glm::vec3(fWidth, fHeight, fDepth); };
+	glm::vec3 GetOffset() { return v3Offset; }; 
+
 private:
 	float fHeight;
 	float fWidth;
