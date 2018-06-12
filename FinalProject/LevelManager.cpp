@@ -13,7 +13,8 @@
 //
 
 // Library Includes //
-
+#include <random>
+#include <cstdlib>
 // OpenGL Library Includes //
 
 // Engine Includes //
@@ -22,7 +23,11 @@
 
 // Local Includes //
 #include "Menu.h"
-
+#include "Enemy1.h"
+#include "Enemy2.h"
+#include "Enemy3.h"
+#include "Engine\Cube.h"
+#include "Level.h"
 // This Includes //
 #include "LevelManager.h"
 
@@ -198,6 +203,64 @@ void LevelManager::CheckHighscore()
 	}
 }
 
+void LevelManager::EnemySpawner()
+{
+	int RandomNum;
+	std::shared_ptr<Level> LevelRef = std::dynamic_pointer_cast <Level>(SceneManager::GetInstance()->GetCurrentScene());
+
+	RandomNum = rand() % 5 + 1;
+
+	switch (RandomNum)
+	{
+	case 1:
+	{
+		//Basic seeker
+		break;
+	}
+
+	case 2:
+	{
+		//Pursue lad
+		break;
+	}
+
+	case 3:
+	{
+		// Path Followers
+		break;
+	}
+
+	case 4:
+	{
+		//Flock
+		std::shared_ptr<Cube> EnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
+
+		for (int i = 0; i < 5; i++)
+		{
+			std::shared_ptr<Enemy2> NewEnemy = std::make_shared<Enemy2>(Enemy2({ glm::vec3(-5 + i * 0.3f, -2, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+			EnemeyMesh->SetLit(true);
+			NewEnemy->AddMesh(EnemeyMesh);
+			EnemeyMesh->AddCollisionBounds(1, 1, 1, NewEnemy);
+			LevelRef->AddEnemy(NewEnemy);
+			NewEnemy->SetTarget(LevelRef->MouseAimTarget);
+			
+		}
+		break;
+	}
+	case 5:
+	{
+		// Evade?
+	}
+	default:
+		break;
+	}
+	//Random number chooses what type of enemy to spawn
+
+	//Random timer chooses when to spawn them
+
+	//Switch spawns an enemy at a random edge on the map
+}
+
 /************************************************************
 #--Description--#:  Retrieves static instance pointer to this class
 #--Author--#: 		Alex Coultas
@@ -223,3 +286,4 @@ void LevelManager::DestoryInstance()
 {
 	m_pLevelManager = nullptr;
 }
+
