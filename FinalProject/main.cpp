@@ -173,7 +173,7 @@ void Update()
 	{
 		SceneManager::GetInstance()->UpdateCurrentScene();
 		UIManager::GetInstance()->Update();		
-		//LevelManager::GetInstance()->Update();
+		LevelManager::GetInstance()->Update();
 
 		Time::Update();
 		NetworkManager::GetInstance()->m_Network.Update();

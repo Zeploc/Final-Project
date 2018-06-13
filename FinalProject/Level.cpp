@@ -73,6 +73,8 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<CubeMap> WorldCubeMapMesh = std::make_shared<CubeMap>(CubeMap(1000.0f, 1000.0f, 1000.0f, TextureSources));
 	WorldCubeMap->AddMesh(WorldCubeMapMesh);
 	AddEntity(WorldCubeMap);
+	Utils::WorldCubeMap = WorldCubeMap;
+
 	SpawnPos = glm::vec3(17, 1.0f, 20);
 	// Add cube map first so transpancy works
 	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
@@ -88,30 +90,31 @@ Level::Level(std::string sSceneName)
 
 	CurrentController = Player;
 
-	std::shared_ptr<SpeedBoostPickUp> NewPickup = std::make_shared<SpeedBoostPickUp>(SpeedBoostPickUp(Utils::Transform{ { 7.5f, -2.0f, 10.0f }, { 45, 45, 45 }, {1, 1, 1} }, Utils::CENTER, EPlayer));
-	std::shared_ptr<Cube> NewPickupMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 0.4, 0.1, 0.6, 1.0f }));
-	NewPickup->AddMesh(NewPickupMesh);
-	NewPickupMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, NewPickup);
-	NewPickupMesh->SetLit(true);
-	AddEntity(NewPickup);
+	//std::shared_ptr<SpeedBoostPickUp> NewPickup = std::make_shared<SpeedBoostPickUp>(SpeedBoostPickUp(Utils::Transform{ { 7.5f, -2.0f, 10.0f }, { 45, 45, 45 }, {1, 1, 1} }, Utils::CENTER, EPlayer));
+	//std::shared_ptr<Cube> NewPickupMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 0.4, 0.1, 0.6, 1.0f }, "Resources/Box.png"));
+	//NewPickup->AddMesh(NewPickupMesh);
+	//NewPickupMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, NewPickup);
+	//NewPickupMesh->SetLit(true);
+	//AddEntity(NewPickup);
+	//NewPickupMesh->program = Shader::Programs["ReflectionProgram"];
 
-	std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -1.0f, -10.0f },{ 0, 0, 0 },{ 0.5f, 0.5f, 0.5f } }, Utils::CENTER));
-	std::shared_ptr<Model> SkullMesh = std::make_shared<Model>(Model({ 0.7f, 0.1f, 0.1f, 1.0f }, "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/skull.obj"));
-	BossObject->AddMesh(SkullMesh);
-	SkullMesh->AddCollisionBounds(3.0f, 5.0f, 3.0f, BossObject);
-	SkullMesh->SetLit(true);
-	SkullMesh->LightProperties.fShininess = 50.0f;
-	SkullMesh->LightProperties.fLightSpecStrength = 0.3f;
-	SkullMesh->LightProperties.fAmbientStrength = 0.05f;
-	AddEnemy(BossObject);
-	//BossRef = BossObject;
+	//std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -1.0f, -10.0f },{ 0, 0, 0 },{ 0.5f, 0.5f, 0.5f } }, Utils::CENTER));
+	//std::shared_ptr<Model> SkullMesh = std::make_shared<Model>(Model({ 0.7f, 0.1f, 0.1f, 1.0f }, "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/skull.obj"));
+	//BossObject->AddMesh(SkullMesh);
+	//SkullMesh->AddCollisionBounds(3.0f, 5.0f, 3.0f, BossObject);
+	//SkullMesh->SetLit(true);
+	//SkullMesh->LightProperties.fShininess = 50.0f;
+	//SkullMesh->LightProperties.fLightSpecStrength = 0.3f;
+	//SkullMesh->LightProperties.fAmbientStrength = 0.05f;
+	//AddEnemy(BossObject);
+	////BossRef = BossObject;
 
-	std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 17.0f, -2.5f, 20.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
-	std::shared_ptr<Cube> CubeCollisionMesh = std::make_shared<Cube>(Cube(2.0f, 2.0f, 2.0f, { 0.1, 0.3, 0.7, 1.0f }));
-	CubeCollision->AddMesh(CubeCollisionMesh);
-	CubeCollisionMesh->AddCollisionBounds(2.0f, 2.0f, 2.0f, CubeCollision);
-	CubeCollisionMesh->SetLit(true);
-	AddCollidable(CubeCollision);
+	//std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 17.0f, -2.5f, 20.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
+	//std::shared_ptr<Cube> CubeCollisionMesh = std::make_shared<Cube>(Cube(2.0f, 2.0f, 2.0f, { 0.1, 0.3, 0.7, 1.0f }));
+	//CubeCollision->AddMesh(CubeCollisionMesh);
+	//CubeCollisionMesh->AddCollisionBounds(2.0f, 2.0f, 2.0f, CubeCollision);
+	//CubeCollisionMesh->SetLit(true);
+	//AddCollidable(CubeCollision);
 
 	FPSCounterText = std::make_shared<UIText>(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 30.0f, Camera::GetInstance()->SCR_HEIGHT - 20.0f), 0.0f, glm::vec4(0.6, 0.6, 0.6, 1.0), "FPS:", "Resources/Fonts/Roboto-Condensed.ttf", 20, Utils::TOP_RIGHT);
 	AddUIElement(FPSCounterText);
@@ -137,28 +140,28 @@ Level::Level(std::string sSceneName)
 	//AddCollidable(Target);
 	MouseAimTarget = Target;
 
-	std::shared_ptr<Cube> CrowdPathFollowingEnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	//std::shared_ptr<Cube> CrowdPathFollowingEnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 
-	for (int i = 0; i < 10; i++)
-	{
-		std::shared_ptr<Enemy1> CrowdPathFollowingEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 5,0,0 }));
-		CrowdPathFollowingEnemeyMesh->SetLit(true);
-		CrowdPathFollowingEnemy->AddMesh(CrowdPathFollowingEnemeyMesh);
-		CrowdPathFollowingEnemeyMesh->AddCollisionBounds(1, 1, 1, CrowdPathFollowingEnemy);
-		AddEnemy(CrowdPathFollowingEnemy);
-		//AddEntity(NewEnemy);
-	}
-	std::shared_ptr<Cube> FlockingEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.9f, 0.3f, 0.1f, 1.0f), "Resources/Enemy1.png");
-	for (int i = 0; i < 8; i++)
-	{
-		std::shared_ptr<Enemy2> FlockingEnemy = std::make_shared<Enemy2>(Enemy2({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-		FlockingEnemyMesh->SetLit(true);
-		FlockingEnemy->AddMesh(FlockingEnemyMesh);
-		FlockingEnemyMesh->AddCollisionBounds(1, 1, 1, FlockingEnemy);
-		AddEnemy(FlockingEnemy);
-		FlockingEnemy->SetTarget(EPlayer);
-		//AddEntity(NewEnemy);
-	}
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	std::shared_ptr<Enemy1> CrowdPathFollowingEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 5,0,0 }));
+	//	CrowdPathFollowingEnemeyMesh->SetLit(true);
+	//	CrowdPathFollowingEnemy->AddMesh(CrowdPathFollowingEnemeyMesh);
+	//	CrowdPathFollowingEnemeyMesh->AddCollisionBounds(1, 1, 1, CrowdPathFollowingEnemy);
+	//	AddEnemy(CrowdPathFollowingEnemy);
+	//	//AddEntity(NewEnemy);
+	//}
+	//std::shared_ptr<Cube> FlockingEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.9f, 0.3f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	//for (int i = 0; i < 8; i++)
+	//{
+	//	std::shared_ptr<Enemy2> FlockingEnemy = std::make_shared<Enemy2>(Enemy2({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	//	FlockingEnemyMesh->SetLit(true);
+	//	FlockingEnemy->AddMesh(FlockingEnemyMesh);
+	//	FlockingEnemyMesh->AddCollisionBounds(1, 1, 1, FlockingEnemy);
+	//	AddEnemy(FlockingEnemy);
+	//	FlockingEnemy->SetTarget(EPlayer);
+	//	//AddEntity(NewEnemy);
+	//}
 
 	////Enemy1Ref = NewEnemy;
 
@@ -169,7 +172,7 @@ Level::Level(std::string sSceneName)
 	////AddEntity(NewTarget);
 	////TargetRef = NewTarget;
 	//
-	std::shared_ptr<EnemySeek> NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(0, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	/*std::shared_ptr<EnemySeek> NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(0, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Cube> SeekEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.4f, 0.5f, 0.8f, 1.0f), "Resources/Enemy1.png");
 	SeekEnemyMesh->SetLit(true);
 	NewSeekEnemy->AddMesh(SeekEnemyMesh);
@@ -183,7 +186,7 @@ Level::Level(std::string sSceneName)
 	PersueEnemy->AddMesh(PersueEnemyMesh);
 	PersueEnemy->Target = EPlayer;
 	PersueEnemyMesh->AddCollisionBounds(1, 1, 1, PersueEnemy);
-	AddEnemy(PersueEnemy);
+	AddEnemy(PersueEnemy);*/
 
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//NewCursor->SetVisibleRange({ 500, 150 });

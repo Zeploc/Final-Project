@@ -30,6 +30,7 @@
 
 // Static Variables //
 int Utils::iEntityNumber = 0;
+std::shared_ptr<Entity> Utils::WorldCubeMap;
 
 /************************************************************
 #--Description--#:  Gets position from anchor and current position

@@ -36,14 +36,8 @@ Cube::Cube(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 	m_iIndicies = 36;
 	BindCube();
 	m_eShape = Utils::CUBE;
-	if (bHasTexture)
-	{
-		program = Shader::Programs["Textureprogram"];
-	}
-	else
-	{
-		program = Shader::Programs["program"];
-	}
+
+	program = Shader::Programs["program"];
 }
 
 /************************************************************
@@ -64,14 +58,8 @@ Cube::Cube(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, const c
 	m_iIndicies = 36;
 	BindCube();
 	m_eShape = Utils::CUBE;
-	if (bHasTexture)
-	{
-		program = Shader::Programs["Textureprogram"];
-	}
-	else
-	{
-		program = Shader::Programs["program"];
-	}
+
+	program = Shader::Programs["Textureprogram"];
 }
 
 /************************************************************
