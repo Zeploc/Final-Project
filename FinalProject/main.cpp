@@ -51,6 +51,7 @@
 #include "NetworkManager.h"
 #include "AI.h"
 #include "Engine/LogManager.h"
+#include "LevelManager.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
@@ -90,6 +91,8 @@ int main(int argc, char **argv)
 	glutInitWindowSize(CAM->SCR_WIDTH, CAM->SCR_HEIGHT);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutCreateWindow("Game Window");
+
+	
 	//glutFullScreen();
 	
 	glewInit();				// OpenGL init
@@ -170,10 +173,13 @@ void Update()
 	{
 		SceneManager::GetInstance()->UpdateCurrentScene();
 		UIManager::GetInstance()->Update();
+		
+		LevelManager::GetInstance()->Update();
 		Time::Update();
 		NetworkManager::GetInstance()->m_Network.Update();
 		SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 	}
+
 	glutPostRedisplay();
 }
 
