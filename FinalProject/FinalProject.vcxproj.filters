@@ -150,9 +150,6 @@
     <ClCompile Include="Chat.cpp">
       <Filter>Game\Game UI</Filter>
     </ClCompile>
-    <ClCompile Include="ScoreTab.cpp">
-      <Filter>Game\Game UI</Filter>
-    </ClCompile>
     <ClCompile Include="OptionsScreen.cpp">
       <Filter>Game\Game UI</Filter>
     </ClCompile>
@@ -252,6 +249,9 @@
     <ClCompile Include="EnemySeek.cpp">
       <Filter>Game\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="EndGameScreen.cpp">
+      <Filter>Game\Game UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -330,9 +330,6 @@
       <Filter>Game\Game UI</Filter>
     </ClInclude>
     <ClInclude Include="Chat.h">
-      <Filter>Game\Game UI</Filter>
-    </ClInclude>
-    <ClInclude Include="ScoreTab.h">
       <Filter>Game\Game UI</Filter>
     </ClInclude>
     <ClInclude Include="OptionsScreen.h">
@@ -445,6 +442,9 @@
     </ClInclude>
     <ClInclude Include="EnemySeek.h">
       <Filter>Game\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EndGameScreen.h">
+      <Filter>Game\Game UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

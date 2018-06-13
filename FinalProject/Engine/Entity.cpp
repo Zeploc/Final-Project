@@ -57,6 +57,7 @@ Entity::~Entity()
 	EntityMesh = nullptr;
 }
 
+
 void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)
 {
 	EntityMesh = _NewMesh;

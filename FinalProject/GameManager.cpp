@@ -18,12 +18,15 @@
 
 // Engine Includes //
 #include "Engine\SceneManager.h"
+#include "Engine\LogManager.h"
 
 // Local Includes //
 #include "LevelManager.h"
+#include "UIManager.h"
 
 // This Includes //
 #include "GameManager.h"
+#include "Player.h"
 
 // Static Variables //
 std::shared_ptr<GameManager> GameManager::m_pGameManager;
@@ -70,6 +73,8 @@ void GameManager::SwitchToCurrentLevel()
 ************************************************************/
 void GameManager::ShowEndScreen(bool _bLost)
 {
+	UIManager::GetInstance()->SwitchUIMode(true);
+	UIManager::GetInstance()->m_bEndScreen = true;
 	//std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 	//if (!CurrentEndScreen) CurrentEndScreen = std::make_shared<EndScreen>(_bLost, CurrentLevel->GetTotalPoints());
 	//else
@@ -87,8 +92,18 @@ void GameManager::ShowEndScreen(bool _bLost)
 ************************************************************/
 void GameManager::PlayerDeath()
 {
-	LevelManager::GetInstance()->CheckHighscore();
-	GameManager::GetInstance()->ShowEndScreen(true);
+	bPlayerDead = true;
+	LogManager::GetInstance()->DisplayLogMessage("Player is Dead!");
+	ShowEndScreen(true);
+	std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());
+	CurrentLevel->DestroyAllEnemies();
+}
+
+void GameManager::RespawnPlayer()
+{
+	bPlayerDead = false;
+	std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());
+	CurrentLevel->EPlayer->Reset();
 }
 
 /************************************************************
@@ -99,8 +114,9 @@ void GameManager::PlayerDeath()
 ************************************************************/
 void GameManager::LevelWon()
 {
-	LevelManager::GetInstance()->CheckHighscore();
-	GameManager::GetInstance()->ShowEndScreen(false);
+	bPlayerDead = true;
+	//LevelManager::GetInstance()->CheckHighscore();
+	ShowEndScreen(false);
 }
 
 /************************************************************
@@ -111,7 +127,8 @@ void GameManager::LevelWon()
 ************************************************************/
 void GameManager::HideEndScreen()
 {
-	SceneManager::GetInstance()->RemoveScene("EndScreen");
+	UIManager::GetInstance()->SwitchUIMode(false);
+	UIManager::GetInstance()->m_bEndScreen = false;
 }
 
 /************************************************************

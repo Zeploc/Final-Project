@@ -35,6 +35,7 @@
 #include "UIManager.h"
 #include "Level.h"
 #include "Boss.h"
+#include "GameManager.h"
 
 
 // This Includes //
@@ -106,11 +107,11 @@ Player::~Player()
 void Player::Update()
 {
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
-	if (!GotLevel || !bActive || !UIManager::GetInstance()->m_bFPS) return;
+	if (!GotLevel || !bActive || !UIManager::GetInstance()->m_bFPS || !GameManager::GetInstance()->IsPlayerAlive()) return;
 	
-	if (transform.Position.y < -20.0f)// || m_fHealth <= 0)
+	if (transform.Position.y < -20.0f)
 	{		
-		PlayerDeath();
+		GameManager::GetInstance()->PlayerDeath();
 		return;
 	}
 
@@ -152,94 +153,11 @@ void Player::Update()
 	}
 
 	BulletTimer -= Time::dTimeDelta;
-
-	bool bBackToStart = false;
-	auto iEndPos = Bullets.end();
-	for (auto it = Bullets.begin(); it != iEndPos; it++)
+	if (Bullets.size() != 0)
 	{
-		if (bBackToStart)
-		{
-			it = Bullets.begin();
-			bBackToStart = false;
-		}
-		it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
-		it->Timer -= Time::dTimeDelta;
-		
-		if (it->Timer <= 0)
-		{
-			SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(it->BulletEntity);
-			it = Bullets.erase(it);
-			if (it == Bullets.begin())
-			{
-				bBackToStart = true;
-			}
-			else
-				it--;
-			if (Bullets.size() == 0) break;
-			iEndPos = Bullets.end();
-		}
+		HandleBullets();
 	}
-	bBackToStart = false;
-	std::shared_ptr<Level> LevelRef = dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
-	auto BulletEnd = Bullets.end();
-	for (auto Bulletit = Bullets.begin(); Bulletit != BulletEnd; ++Bulletit)
-	{
-		if (bBackToStart)
-		{
-			Bulletit = Bullets.begin();
-			bBackToStart = false;
-		}
-		for (auto& it : LevelRef->Enemies)
-		{			
-			if (Bulletit->BulletEntity->EntityMesh->GetCollisionBounds()->isColliding(it))
-			{
-				std::shared_ptr<Boss> IsBoss = std::dynamic_pointer_cast<Boss>(it);
-				if (IsBoss)
-				{
-					IsBoss->OnBulletCollision();
-					if (IsBoss->BossHealth <= 0 && IsBoss->IsActive())
-					{
-						it->SetVisible(false);
-						it->SetActive(false);
-						//Bulletit.BulletEntity->SetActive(false);
-						//Bulletit.BulletEntity->SetVisible(false);
-						LevelRef->DestroyCollidable(Bulletit->BulletEntity);
-						Bulletit = Bullets.erase(Bulletit);
-						BulletEnd = Bullets.end();
-						AddScore(50);
-						if (Bulletit == Bullets.begin())
-						{
-							bBackToStart = true;
-						}
-						else
-							Bulletit--;
-						if (Bullets.size() == 0) break;
-					}
-				}
-				else if (it->IsActive())
-				{
-					// Temp bullet kill
-					it->SetVisible(false);
-					it->SetActive(false);
-					//Bulletit.BulletEntity->SetActive(false);
-					//Bulletit.BulletEntity->SetVisible(false);
-					LevelRef->DestroyCollidable(Bulletit->BulletEntity);
-					Bulletit = Bullets.erase(Bulletit);
-					BulletEnd = Bullets.end();
-					AddScore(10);
-					if (Bulletit == Bullets.begin())
-					{
-						bBackToStart = true;
-					}
-					else
-						Bulletit--;
-					if (Bullets.size() == 0) break;
-				}
-			}
-		}
-		
-	}
-
+	
 	if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
 	{
 		MoveHorizontally(false);
@@ -346,15 +264,19 @@ void Player::Reset()
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->Scenes[SceneManager::GetInstance()->CurrentScene]);
 	v3Speed.x = 0;
 	v3Speed.z = 0;
+	v3Speed.y = 0;
 	transform.Position = GotLevel->SpawnPos;
+	SetHealth(100);
+	SetScore(0);
 }
-
 
 
 void Player::SetHealth(float _fNewHealth)
 {
 	m_fHealth = _fNewHealth;
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
+	if (m_fHealth <= 0)
+		GameManager::GetInstance()->PlayerDeath();
 }
 
 void Player::ApplyHealth(float _fmodify)
@@ -364,14 +286,19 @@ void Player::ApplyHealth(float _fmodify)
 	m_fHealth = min(m_fHealth, 100.0f);
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
 	if (m_fHealth <= 0)
-		PlayerDeath();
+		GameManager::GetInstance()->PlayerDeath();
 }
 
 void Player::AddScore(int _iAddScore)
 {
 	m_iScore += _iAddScore;
 	UIManager::GetInstance()->m_HUDInstance.SetScore(m_iScore);
+}
 
+void Player::SetScore(int _iNewScore)
+{
+	m_iScore = _iNewScore;
+	UIManager::GetInstance()->m_HUDInstance.SetScore(m_iScore);
 }
 
 void Player::ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime)
@@ -399,6 +326,97 @@ void Player::PowerUpComplete()
 		break;
 	default:
 		break;
+	}
+}
+
+void Player::HandleBullets()
+{
+	bool bBackToStart = false;
+	auto iEndPos = Bullets.end();
+	for (auto it = Bullets.begin(); it != iEndPos; it++)
+	{
+		if (bBackToStart)
+		{
+			it = Bullets.begin();
+			bBackToStart = false;
+		}
+		it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
+		it->Timer -= Time::dTimeDelta;
+
+		if (it->Timer <= 0)
+		{
+			SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(it->BulletEntity);
+			it = Bullets.erase(it);
+			if (it == Bullets.begin())
+			{
+				bBackToStart = true;
+			}
+			else
+				it--;
+			if (Bullets.size() == 0) break;
+			iEndPos = Bullets.end();
+		}
+	}
+	bBackToStart = false;
+	std::shared_ptr<Level> LevelRef = dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
+	auto BulletEnd = Bullets.end();
+	for (auto Bulletit = Bullets.begin(); Bulletit != BulletEnd; ++Bulletit)
+	{
+		if (bBackToStart)
+		{
+			Bulletit = Bullets.begin();
+			bBackToStart = false;
+		}
+		for (auto& it : LevelRef->CurrentEnemies)
+		{
+			if (Bulletit->BulletEntity->EntityMesh->GetCollisionBounds()->isColliding(it))
+			{
+				std::shared_ptr<Boss> IsBoss = std::dynamic_pointer_cast<Boss>(it);
+				if (IsBoss)
+				{
+					IsBoss->OnBulletCollision();
+					if (IsBoss->BossHealth <= 0 && IsBoss->IsActive())
+					{
+						it->SetVisible(false);
+						it->SetActive(false);
+						//Bulletit.BulletEntity->SetActive(false);
+						//Bulletit.BulletEntity->SetVisible(false);
+						LevelRef->DestroyCollidable(Bulletit->BulletEntity);
+						Bulletit = Bullets.erase(Bulletit);
+						BulletEnd = Bullets.end();
+						AddScore(50);
+						if (Bulletit == Bullets.begin())
+						{
+							bBackToStart = true;
+						}
+						else
+							Bulletit--;
+						if (Bullets.size() == 0) break;
+					}
+				}
+				else if (it->IsActive())
+				{
+					// Temp bullet kill
+					it->SetVisible(false);
+					it->SetActive(false);
+					//Bulletit.BulletEntity->SetActive(false);
+					//Bulletit.BulletEntity->SetVisible(false);
+					LevelRef->DestroyCollidable(Bulletit->BulletEntity);
+					Bulletit = Bullets.erase(Bulletit);
+					BulletEnd = Bullets.end();
+					AddScore(10);
+					if (Bulletit == Bullets.begin())
+					{
+						bBackToStart = true;
+					}
+					else
+						Bulletit--;
+					if (Bullets.size() == 0) break;
+				}
+			}
+		}
+		if (Bullets.size() == 0) break;
+
 	}
 }
 
@@ -482,7 +500,3 @@ void Player::HurtPlayer(float Damage)
 	ApplyHealth(-Damage);
 }
 
-void Player::PlayerDeath()
-{
-	LogManager::GetInstance()->DisplayLogMessage("Player is Dead!");
-}

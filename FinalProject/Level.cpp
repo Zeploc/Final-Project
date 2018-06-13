@@ -102,7 +102,7 @@ Level::Level(std::string sSceneName)
 	SkullMesh->LightProperties.fLightSpecStrength = 0.3f;
 	SkullMesh->LightProperties.fAmbientStrength = 0.05f;
 	AddEnemy(BossObject);
-	BossRef = BossObject;
+	//BossRef = BossObject;
 
 	std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 17.0f, -2.5f, 20.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
 	std::shared_ptr<Cube> CubeCollisionMesh = std::make_shared<Cube>(Cube(2.0f, 2.0f, 2.0f, { 0.1, 0.3, 0.7, 1.0f }));
@@ -171,7 +171,7 @@ Level::Level(std::string sSceneName)
 	std::shared_ptr<Cube> SeekEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.4f, 0.5f, 0.8f, 1.0f), "Resources/Enemy1.png");
 	SeekEnemyMesh->SetLit(true);
 	NewSeekEnemy->AddMesh(SeekEnemyMesh);
-	NewSeekEnemy->Target = BossObject;
+	NewSeekEnemy->Target = BossRef;
 	SeekEnemyMesh->AddCollisionBounds(1, 1, 1, NewSeekEnemy);
 	AddEnemy(NewSeekEnemy);
 
@@ -199,7 +199,8 @@ Level::Level(std::string sSceneName)
 Level::~Level()
 {
 	Collidables.clear();
-	Enemies.clear();
+	CurrentEnemies.clear();
+	EnemiesTemplate.clear();
 }
 
 /************************************************************
@@ -227,7 +228,8 @@ void Level::Update()
 	
 	if (CurrentController == EPlayer)
 	{
-		CameraMovement();
+		if (GameManager::GetInstance()->IsPlayerAlive())
+			CameraMovement();
 	}
 
 	if (Input::GetInstance()->KeyState['g'] == Input::INPUT_FIRST_PRESS && !UIManager::GetInstance()->GetUIMode())
@@ -251,12 +253,17 @@ void Level::Update()
 	if (Input::GetInstance()->KeyState[(unsigned char)'r'] == Input::INPUT_FIRST_PRESS)
 	{
 		RestartLevel();
-	}		
+	}	
 }
 
 void Level::RenderScene()
 {
 	Scene::RenderScene();
+
+	for (auto& it : EnemiesTemplate)
+	{
+		it->DrawEntity();
+	}
 
 	//TestModel->Render();
 }
@@ -281,8 +288,47 @@ void Level::AddCollidable(std::shared_ptr<Entity> Ent)
 ************************************************************/
 void Level::AddEnemy(std::shared_ptr<Entity> Enemy)
 {
-	AddEntity(Enemy);
-	Enemies.push_back(Enemy);
+	EnemiesTemplate.push_back(Enemy);
+	AddTempEnemy(Enemy);
+}
+
+void Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
+{
+	std::shared_ptr<Enemy1> IsEnemy1 = std::dynamic_pointer_cast<Enemy1>(NewEnemy);
+	std::shared_ptr<Enemy2> IsEnemy2 = std::dynamic_pointer_cast<Enemy2>(NewEnemy);
+	std::shared_ptr<EnemySeek> IsEnemySeek = std::dynamic_pointer_cast<EnemySeek>(NewEnemy);
+	std::shared_ptr<Boss> IsBoss = std::dynamic_pointer_cast<Boss>(NewEnemy);
+	bool bIsEnemy1 = IsEnemy1 != nullptr;
+	bool bIsEnemy2 = IsEnemy2 != nullptr;
+	bool bIsEnemySeek = IsEnemySeek != nullptr;
+	bool bIsBoss = IsBoss != nullptr;
+	if (bIsEnemy1)
+	{
+		std::shared_ptr<Enemy1> NewEnemyCopy = std::make_shared<Enemy1>(*IsEnemy1);
+		CurrentEnemies.push_back(NewEnemyCopy);
+		AddEntity(NewEnemyCopy);
+	}
+	else if (IsEnemy2)
+	{
+		std::shared_ptr<Enemy2> NewEnemyCopy = std::make_shared<Enemy2>(*IsEnemy2);
+		CurrentEnemies.push_back(NewEnemyCopy);
+		AddEntity(NewEnemyCopy);
+	}
+	else if (IsEnemySeek)
+	{
+		std::shared_ptr<EnemySeek> NewEnemyCopy = std::make_shared<EnemySeek>(*IsEnemySeek);
+		CurrentEnemies.push_back(NewEnemyCopy);
+		AddEntity(NewEnemyCopy);
+	}
+	else if (bIsBoss)
+	{
+		std::shared_ptr<Boss> NewEnemyCopy = std::make_shared<Boss>(Boss(IsBoss->transform, IsBoss->EntityAnchor));
+		NewEnemyCopy->AddMesh(IsBoss->EntityMesh);
+		CurrentEnemies.push_back(NewEnemyCopy);
+		AddEntity(NewEnemyCopy);
+		NewEnemyCopy->EntityMesh->GetCollisionBounds()->EntityRef = dynamic_pointer_cast<Entity>(NewEnemyCopy);
+		BossRef = NewEnemyCopy;
+	}
 }
 
 /************************************************************
@@ -331,6 +377,15 @@ void Level::AddHexPlatform(std::string _ModelPath, glm::vec3 _v3Postion, glm::ve
 	AddCollidable(ModelEnt);
 }
 
+void Level::DestroyAllEnemies()
+{
+	for (auto& it : CurrentEnemies)
+	{
+		DestroyEntity(it);
+	}
+	CurrentEnemies.clear();
+}
+
 /************************************************************
 #--Description--#:  Respawns current level enemies
 #--Author--#: 		Alex Coultas
@@ -339,6 +394,12 @@ void Level::AddHexPlatform(std::string _ModelPath, glm::vec3 _v3Postion, glm::ve
 ************************************************************/
 void Level::RespawnEnemies()
 {
+	DestroyAllEnemies();
+
+	for (auto& TemplateE : EnemiesTemplate)
+	{
+		AddTempEnemy(TemplateE);
+	}
 	//for (unsigned int i = 0; i < Enemies.size(); i++)
 	//{
 	//	DestroyCollidable(Enemies[i]);
@@ -391,16 +452,7 @@ void Level::OnLoadScene()
 	PlayRandomTrack();
 	UIManager::GetInstance()->SwitchUIMode(false);
 	UIManager::GetInstance()->m_bDisplayHUD = true;
-	for (auto& it : Enemies)
-	{
-		std::shared_ptr<Enemy1> IsEnemy1 = std::dynamic_pointer_cast<Enemy1>(it);
-		if (IsEnemy1)
-		{
-			IsEnemy1->AddPathPoints();
-			break;
-		}
-		
-	}
+	RestartLevel();	
 }
 /************************************************************
 #--Description--#:  Restarts the level
@@ -411,9 +463,21 @@ void Level::OnLoadScene()
 void Level::RestartLevel()
 {
 	//EPlayer->Reset();
-	Camera::GetInstance()->SetCameraPos(glm::vec3(0, 0, 3));
-	iScore = iCoinsCollected * 5;
+	//Camera::GetInstance()->SetCameraPos(glm::vec3(0, 0, 3));
+	//iScore = iCoinsCollected * 5;
 	RespawnEnemies();
+	GameManager::GetInstance()->RespawnPlayer();
+	GameManager::GetInstance()->HideEndScreen();
+	for (auto& it : CurrentEnemies)
+	{
+		std::shared_ptr<Enemy1> IsEnemy1 = std::dynamic_pointer_cast<Enemy1>(it);
+		if (IsEnemy1)
+		{
+			IsEnemy1->AddPathPoints();
+			break;
+		}
+
+	}
 }
 
 /************************************************************

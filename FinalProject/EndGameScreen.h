@@ -6,7 +6,7 @@
 //
 // (c) 2005 - 2018 Media Design School
 //
-// File Name    	:    ScoreTab.h
+// File Name    	:    EndGameScreen.h
 // Description    	:    Header file outlining the Class
 // Author       	:    Alex Coultas
 // Mail         	:    alex.cou7417@mediadesign.school.nz
@@ -15,22 +15,27 @@
 // Engine Includes //
 #include "Engine\UIImage.h"
 #include "Engine\UIText.h"
+#include "Engine/UIButton.h"
 
 // Library Includes //
 #include <memory>
 
 #pragma once
-class ScoreTab
+class EndScreen
 {
 public:
-	ScoreTab();
-	~ScoreTab();
+	EndScreen();
+	~EndScreen();
 
 	void Update();
 	void Render();
 
 private:
 	std::shared_ptr<UIImage> m_pBackImage;
-	std::shared_ptr<UIText> m_pScoresTitle;
+	std::shared_ptr<UIText> m_pMessage;
+	std::shared_ptr<UIText> m_pScore;
+	std::shared_ptr<UIButton> m_pQuit;
+	std::shared_ptr<UIButton> m_pRestart;
+
 };
 

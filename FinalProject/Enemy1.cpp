@@ -66,7 +66,7 @@ void Enemy1::AddPathPoints()
 
 void Enemy1::Update()
 {
-	std::vector<std::shared_ptr<Entity>> Avoidables = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene())->Enemies;
+	std::vector<std::shared_ptr<Entity>> Avoidables = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene())->CurrentEnemies;
 	m_v3CurrentVelocity += AI::pathFollowingForce(transform.Position, CurrentPath, m_v3CurrentVelocity, 10.0f, m_fSpeed) * 5.0f;
 	m_v3CurrentVelocity += AI::Align(this->shared_from_this(), 20.0f, Avoidables, m_fSpeed) * 0.5f;
 	m_v3CurrentVelocity += AI::Cohesion(this->shared_from_this(), 20.0f, Avoidables, m_fSpeed) * 0.05f;

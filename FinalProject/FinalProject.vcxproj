@@ -188,7 +188,7 @@
     <ClCompile Include="Engine\Time.cpp" />
     <ClCompile Include="Engine\UISlider.cpp" />
     <ClCompile Include="Engine\Pyramid.cpp" />
-    <ClCompile Include="ScoreTab.cpp" />
+    <ClCompile Include="EndGameScreen.cpp" />
     <ClCompile Include="Engine\Sphere.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="socket.cpp" />
@@ -251,7 +251,7 @@
     <ClInclude Include="Engine\Time.h" />
     <ClInclude Include="Engine\UISlider.h" />
     <ClInclude Include="Engine\Pyramid.h" />
-    <ClInclude Include="ScoreTab.h" />
+    <ClInclude Include="EndGameScreen.h" />
     <ClInclude Include="Engine\Sphere.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="socket.h" />

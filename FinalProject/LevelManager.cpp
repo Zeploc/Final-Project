@@ -117,7 +117,7 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 				}
 			}
 
-			_Scene->SetPlayerPosition({ 0, -2.5f, 0 });			
+			_Scene->SetPlayerPosition({ 17, 1.0f, 20 });
 			_Scene->AddEntity(_Scene->MouseAimTarget);
 
 			break;

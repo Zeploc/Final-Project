@@ -33,7 +33,6 @@ Boss::Boss(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 	NextRushTime = Time::dCurrentTime/1000 + 15.0f;
 }
 
-
 Boss::~Boss()
 {
 }

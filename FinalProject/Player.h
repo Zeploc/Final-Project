@@ -56,19 +56,19 @@ public:
 	void ChangeMoveSpeed(float _fSpeed) { m_fCurrentPlayerSpeed = _fSpeed; };
 
 	void HurtPlayer(float Damage);
-	void PlayerDeath();
 	void Reset();
 
 	void SetHealth(float _fNewHealth);
 	void ApplyHealth(float _fmodify);
 	void AddScore(int _iAddScore);
+	void SetScore(int _iNewScore);
 
 	void ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime);
 
 private:
-	// Bullets
-	
+	// Bullets	
 	float BulletSpeed = 30.0f;
+	void HandleBullets();
 	
 
 	// Movement
@@ -85,6 +85,7 @@ private:
 	// Score and Health
 	float m_fHealth = 100;
 	int m_iScore = 0;
+	
 
 	//Power Ups
 	void PowerUpComplete();
