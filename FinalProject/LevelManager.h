@@ -56,12 +56,14 @@ private:
 public:
 	static std::shared_ptr<LevelManager> GetInstance();
 	static void DestoryInstance();
+	void Update();
 	~LevelManager(); // Shared pointer has to be able to call destructor so can't be private
 
 private:
 	static std::shared_ptr<LevelManager> m_pLevelManager;
 	LevelManager();
 	LevelManager(LevelManager const&);              // Don't Implement
+	float SpawnTimer = 0.5f;
 	void operator=(LevelManager const&); // Don't implement
 };
 

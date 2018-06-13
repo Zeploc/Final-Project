@@ -46,6 +46,7 @@
 #include "EnemySeek.h"
 #include "SpeedBoostPickUp.h"
 #include "Boss.h"
+#include "LevelManager.h"
 
 // This Includes //
 #include "Level.h"
@@ -64,6 +65,7 @@
 Level::Level(std::string sSceneName)
 	: Scene(sSceneName)
 {
+	
 	Camera::GetInstance()->SetCameraForwardVector({0, -1, -1});
 	Camera::GetInstance()->SetCameraPos({ 17, 15, 30 });
 	std::shared_ptr<Entity> WorldCubeMap = std::make_shared<Entity>(Entity({ { 0, 0, 0 },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
@@ -135,53 +137,53 @@ Level::Level(std::string sSceneName)
 	//AddCollidable(Target);
 	MouseAimTarget = Target;
 
-	std::shared_ptr<Cube> CrowdPathFollowingEnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	//std::shared_ptr<Cube> CrowdPathFollowingEnemeyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f), "Resources/Enemy1.png");
 
-	for (int i = 0; i < 10; i++)
-	{
-		std::shared_ptr<Enemy1> CrowdPathFollowingEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 5,0,0 }));
-		CrowdPathFollowingEnemeyMesh->SetLit(true);
-		CrowdPathFollowingEnemy->AddMesh(CrowdPathFollowingEnemeyMesh);
-		CrowdPathFollowingEnemeyMesh->AddCollisionBounds(1, 1, 1, CrowdPathFollowingEnemy);
-		AddEnemy(CrowdPathFollowingEnemy);
-		//AddEntity(NewEnemy);
-	}
-	std::shared_ptr<Cube> FlockingEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.9f, 0.3f, 0.1f, 1.0f), "Resources/Enemy1.png");
-	for (int i = 0; i < 8; i++)
-	{
-		std::shared_ptr<Enemy2> FlockingEnemy = std::make_shared<Enemy2>(Enemy2({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-		FlockingEnemyMesh->SetLit(true);
-		FlockingEnemy->AddMesh(FlockingEnemyMesh);
-		FlockingEnemyMesh->AddCollisionBounds(1, 1, 1, FlockingEnemy);
-		AddEnemy(FlockingEnemy);
-		FlockingEnemy->SetTarget(EPlayer);
-		//AddEntity(NewEnemy);
-	}
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	std::shared_ptr<Enemy1> CrowdPathFollowingEnemy = std::make_shared<Enemy1>(Enemy1({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER, { 5,0,0 }));
+	//	CrowdPathFollowingEnemeyMesh->SetLit(true);
+	//	CrowdPathFollowingEnemy->AddMesh(CrowdPathFollowingEnemeyMesh);
+	//	CrowdPathFollowingEnemeyMesh->AddCollisionBounds(1, 1, 1, CrowdPathFollowingEnemy);
+	//	AddEnemy(CrowdPathFollowingEnemy);
+	//	//AddEntity(NewEnemy);
+	//}
+	//std::shared_ptr<Cube> FlockingEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.9f, 0.3f, 0.1f, 1.0f), "Resources/Enemy1.png");
+	//for (int i = 0; i < 8; i++)
+	//{
+	//	std::shared_ptr<Enemy2> FlockingEnemy = std::make_shared<Enemy2>(Enemy2({ glm::vec3(-5 + i * 0.3f, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	//	FlockingEnemyMesh->SetLit(true);
+	//	FlockingEnemy->AddMesh(FlockingEnemyMesh);
+	//	FlockingEnemyMesh->AddCollisionBounds(1, 1, 1, FlockingEnemy);
+	//	AddEnemy(FlockingEnemy);
+	//	FlockingEnemy->SetTarget(EPlayer);
+	//	//AddEntity(NewEnemy);
+	//}
 
-	//Enemy1Ref = NewEnemy;
+	////Enemy1Ref = NewEnemy;
 
-	std::shared_ptr<Entity> NewTarget = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::CENTER));
-	std::shared_ptr<Sphere> NewTargetMesh = std::make_shared<Sphere>(0.5f, 1.0f, 0.5f, glm::vec4(1.0f, 0.2f, 0.5f, 1.0f));
-	NewTargetMesh->SetLit(true);
-	NewTarget->AddMesh(NewTargetMesh);
-	//AddEntity(NewTarget);
-	//TargetRef = NewTarget;
-	
-	std::shared_ptr<EnemySeek> NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(0, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-	std::shared_ptr<Cube> SeekEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.4f, 0.5f, 0.8f, 1.0f), "Resources/Enemy1.png");
-	SeekEnemyMesh->SetLit(true);
-	NewSeekEnemy->AddMesh(SeekEnemyMesh);
-	NewSeekEnemy->Target = BossObject;
-	SeekEnemyMesh->AddCollisionBounds(1, 1, 1, NewSeekEnemy);
-	AddEnemy(NewSeekEnemy);
+	//std::shared_ptr<Entity> NewTarget = std::make_shared<Entity>(Entity({ glm::vec3(0, -3, 0), glm::vec3(-90, 0, 0), glm::vec3(1, 1 ,1) }, Utils::CENTER));
+	//std::shared_ptr<Sphere> NewTargetMesh = std::make_shared<Sphere>(0.5f, 1.0f, 0.5f, glm::vec4(1.0f, 0.2f, 0.5f, 1.0f));
+	//NewTargetMesh->SetLit(true);
+	//NewTarget->AddMesh(NewTargetMesh);
+	////AddEntity(NewTarget);
+	////TargetRef = NewTarget;
+	//
+	//std::shared_ptr<EnemySeek> NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(0, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	//std::shared_ptr<Cube> SeekEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.4f, 0.5f, 0.8f, 1.0f), "Resources/Enemy1.png");
+	//SeekEnemyMesh->SetLit(true);
+	//NewSeekEnemy->AddMesh(SeekEnemyMesh);
+	//NewSeekEnemy->Target = BossObject;
+	//SeekEnemyMesh->AddCollisionBounds(1, 1, 1, NewSeekEnemy);
+	//AddEnemy(NewSeekEnemy);
 
-	std::shared_ptr<Enemy3> PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(0, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
-	std::shared_ptr<Cube> PersueEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.9f, 0.8f, 0.0f, 1.0f), "Resources/Enemy1.png");
-	PersueEnemyMesh->SetLit(true);
-	PersueEnemy->AddMesh(PersueEnemyMesh);
-	PersueEnemy->Target = EPlayer;
-	PersueEnemyMesh->AddCollisionBounds(1, 1, 1, PersueEnemy);
-	AddEnemy(PersueEnemy);
+	//std::shared_ptr<Enemy3> PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(0, -2.5, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+	//std::shared_ptr<Cube> PersueEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.9f, 0.8f, 0.0f, 1.0f), "Resources/Enemy1.png");
+	//PersueEnemyMesh->SetLit(true);
+	//PersueEnemy->AddMesh(PersueEnemyMesh);
+	//PersueEnemy->Target = EPlayer;
+	//PersueEnemyMesh->AddCollisionBounds(1, 1, 1, PersueEnemy);
+	//AddEnemy(PersueEnemy);
 
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
 	//NewCursor->SetVisibleRange({ 500, 150 });
@@ -210,6 +212,7 @@ Level::~Level()
 ************************************************************/
 void Level::Update()
 {
+	LevelManager::GetInstance()->EnemySpawner();
 	MouseAimTarget->transform.Rotation.z += 10.0f * Time::dTimeDelta;
 	float fDotProductDirections = glm::dot(Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos), glm::vec3(0, 1, 0));
 	if (fDotProductDirections == 0) // Perpendicular
