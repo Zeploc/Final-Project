@@ -252,6 +252,9 @@
     <ClCompile Include="EndGameScreen.cpp">
       <Filter>Game\Game UI</Filter>
     </ClCompile>
+    <ClCompile Include="FireRatePickUp.cpp">
+      <Filter>Game\Pickups</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -445,6 +448,9 @@
     </ClInclude>
     <ClInclude Include="EndGameScreen.h">
       <Filter>Game\Game UI</Filter>
+    </ClInclude>
+    <ClInclude Include="FireRatePickUp.h">
+      <Filter>Game\Pickups</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

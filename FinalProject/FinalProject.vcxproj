@@ -152,6 +152,7 @@
     <ClCompile Include="Engine\Entity.cpp" />
     <ClCompile Include="Engine\Input.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
+    <ClCompile Include="FireRatePickUp.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameSettings.cpp" />
     <ClCompile Include="HostGameMenu.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="Engine\UIText.h" />
     <ClInclude Include="Engine\UIElement.h" />
     <ClInclude Include="Engine\Utils.h" />
+    <ClInclude Include="FireRatePickUp.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameSettings.h" />
     <ClInclude Include="HostGameMenu.h" />

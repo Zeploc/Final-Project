@@ -148,7 +148,15 @@ void Player::Update()
 			NewBullet.CurrentVelocity = (BulletDirection*BulletSpeed);
 			NewBullet.BulletEntity = Bullet;
 			Bullets.push_back(NewBullet);
-			BulletTimer = 0.12f;
+			if (FireRatePickup)
+			{
+				BulletTimer = 0.5f;
+			}
+			else
+			{
+				BulletTimer = 0.12f;
+			}
+			
 		}
 	}
 
@@ -312,6 +320,11 @@ void Player::ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime)
 	case SPEEDBOOST:
 		m_fCurrentPlayerSpeed = GameSettings::fMoveSpeed * 2;
 		break;
+	case FIRERATE:
+	{
+		FireRatePickup = true;
+		break;
+	}
 	default:
 		break;
 	}
@@ -324,6 +337,8 @@ void Player::PowerUpComplete()
 	case SPEEDBOOST:
 		m_fCurrentPlayerSpeed = GameSettings::fMoveSpeed;
 		break;
+	case FIRERATE:
+		FireRatePickup = false;
 	default:
 		break;
 	}
