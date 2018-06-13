@@ -200,11 +200,11 @@ void Player::Update()
 		RollTimer = 0.5f;		
 	}
 
-	if (m_fHealth <= 0)
+	/*if (m_fHealth <= 0)
 	{
 		this->shared_from_this()->SetActive(false);
 		this->shared_from_this()->SetVisible(false);
-	}
+	}*/
 
 
 	RollTimer -= Time::dTimeDelta;
@@ -275,8 +275,8 @@ void Player::SetHealth(float _fNewHealth)
 {
 	m_fHealth = _fNewHealth;
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
-	if (m_fHealth <= 0)
-		GameManager::GetInstance()->PlayerDeath();
+	//if (m_fHealth <= 0)
+		//GameManager::GetInstance()->PlayerDeath();
 }
 
 void Player::ApplyHealth(float _fmodify)
@@ -285,8 +285,8 @@ void Player::ApplyHealth(float _fmodify)
 	m_fHealth = max(m_fHealth, 0.0f);
 	m_fHealth = min(m_fHealth, 100.0f);
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
-	if (m_fHealth <= 0)
-		GameManager::GetInstance()->PlayerDeath();
+	//if (m_fHealth <= 0)
+		//GameManager::GetInstance()->PlayerDeath();
 }
 
 void Player::AddScore(int _iAddScore)

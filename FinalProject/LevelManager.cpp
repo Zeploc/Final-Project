@@ -207,8 +207,7 @@ void LevelManager::CheckHighscore()
 }
 
 void LevelManager::EnemySpawner()
-{
-	
+{	
 	std::shared_ptr<Level> LevelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
 
 	int RandomEnemyNum = rand() % 4 + 1;

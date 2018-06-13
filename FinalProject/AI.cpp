@@ -81,7 +81,7 @@ glm::vec3 AI::FleeForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::ve
 
 glm::vec3 AI::PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, glm::vec3 PreviousPosition, float ScaleFactor, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed)
 {	
-	if (glm::length(Source->transform.Position - Target->transform.Position) < ScaleFactor / 2.0f)
+	if (glm::length(Source->transform.Position - Target->transform.Position) < ScaleFactor / 1.5f)
 	{
 		return SeekForce(Source->transform.Position, Target->transform.Position, fMass, CurrentVelocity, MaxSpeed);
 	}

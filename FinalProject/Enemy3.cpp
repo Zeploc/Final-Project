@@ -36,7 +36,7 @@ Enemy3::~Enemy3()
 
 void Enemy3::Update()
 {	
-	m_v3CurrentVelocity += AI::PursueForce(this->shared_from_this(), Target, PreviousPosition, 5, 30, m_v3CurrentVelocity, m_fSpeed);
+	m_v3CurrentVelocity += AI::PursueForce(this->shared_from_this(), Target, PreviousPosition, 10, 30, m_v3CurrentVelocity, m_fSpeed);
 	
 	transform.Position += m_v3CurrentVelocity * (float)Time::dTimeDelta;
 	PreviousPosition = Target->transform.Position;

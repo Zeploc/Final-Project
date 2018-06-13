@@ -172,9 +172,9 @@ void Update()
 	else
 	{
 		SceneManager::GetInstance()->UpdateCurrentScene();
-		UIManager::GetInstance()->Update();
-		
-		LevelManager::GetInstance()->Update();
+		UIManager::GetInstance()->Update();		
+		//LevelManager::GetInstance()->Update();
+
 		Time::Update();
 		NetworkManager::GetInstance()->m_Network.Update();
 		SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE

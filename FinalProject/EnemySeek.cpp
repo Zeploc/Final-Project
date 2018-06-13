@@ -36,7 +36,7 @@ EnemySeek::~EnemySeek()
 void EnemySeek::Update()
 {	
 	if (Target)
-		m_v3CurrentVelocity += AI::SeekWithArrival(transform.Position, Target->transform.Position, 50, m_v3CurrentVelocity, 3.0f, m_fSpeed);
+		m_v3CurrentVelocity += AI::SeekWithArrival(transform.Position, Target->transform.Position, 50, m_v3CurrentVelocity, 5.0f, m_fSpeed);
 	
 	transform.Position += m_v3CurrentVelocity * (float)Time::dTimeDelta;
 }
