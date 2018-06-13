@@ -72,7 +72,6 @@ glm::vec3 AI::FleeForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::ve
 	{
 		LookAtDirection = glm::vec3(glm::normalize(LookAtDirection));
 	}
-	// Fix tho
 	glm::vec3 DesiredVelocity = LookAtDirection * MaxSpeed;
 	glm::vec3 Steering = CurrentVelocity - DesiredVelocity;
 	Steering /= fMass;
@@ -85,7 +84,7 @@ glm::vec3 AI::PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity
 	{
 		return SeekForce(Source->transform.Position, Target->transform.Position, fMass, CurrentVelocity, MaxSpeed);
 	}
-	//ScaleFactor = glm::length(Source->transform.Position - Target->transform.Position) * MaxSpeed;-
+	//ScaleFactor = glm::length(Source->transform.Position - Target->transform.Position) * MaxSpeed;
 	glm::vec3 TargetDirection = Target->transform.Position - PreviousPosition;
 	if (glm::length(TargetDirection) != 0) // In case vector is zero vector (Can't normalise zero vector)
 	{
@@ -166,14 +165,7 @@ glm::vec3 AI::pathFollowingForce(glm::vec3 Source, Path Currentpath, glm::vec3 C
 		}
 	}
 	
-	return SeekForce(Source, NormalPosition + PathDirection * (Currentpath.fRadius * 2), fMass, CurrentVelocity, MaxSpeed);
-	
-	//if (Distance > Currentpath.fRadius)
-	//{	
-	//	return SeekForce(Source, NormalPosition + PathDirection * 1.0f, fMass, CurrentVelocity, MaxSpeed);
-	//
-	//}
-
+	return SeekForce(Source, NormalPosition + PathDirection * (Currentpath.fRadius * 2), fMass, CurrentVelocity, MaxSpeed);	
 }
 
 glm::vec3 AI::Seperation(std::shared_ptr<Entity> Source, float fCloseness, std::vector<std::shared_ptr<Entity>> Avoidables, float MaxSpeed)
