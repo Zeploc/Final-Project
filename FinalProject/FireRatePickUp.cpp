@@ -47,6 +47,6 @@ void FireRatePickup::OnPickUp()
 	std::shared_ptr<Player> IsPlayer = std::dynamic_pointer_cast<Player>(CollidingEntity);
 	if (IsPlayer)
 	{
-		IsPlayer->ApplyPowerUp(FIRERATE, 5.0f);
+		IsPlayer->ApplyPowerUp(FIRERATE, 4.0f);
 	}
 }
