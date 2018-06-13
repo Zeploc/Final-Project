@@ -42,10 +42,15 @@ void Boss::Update()
 {
 	Entity::Update();
 	std::shared_ptr<Level> LevelRef = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
-
+	HitCooldown -= Time::dTimeDelta;
 	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer))
 	{
-		LevelRef->EPlayer->HurtPlayer(25);
+		if (HitCooldown <= 0)
+		{
+			LevelRef->EPlayer->HurtPlayer(25);
+			HitCooldown = 1.3f;
+		}
+		
 	}
 
 	if (bActive = false)

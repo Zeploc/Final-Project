@@ -23,10 +23,12 @@ private:
 	float NextRushTime;
 	float RushLength;
 	float RushTimer = 0.7f;
-	float HitCooldown = 1.3f;
+	float HitCooldown = 0.0f;
 	float fNextDecisionTime = 0.0f;
 	float fMaxSpeed;
 	bool HasHit = false;
+
+
 	BossStates BossState;
 
 	std::shared_ptr<Entity> CollidingEntity;
