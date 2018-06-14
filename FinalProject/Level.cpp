@@ -344,6 +344,21 @@ void Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 	}
 }
 
+void Level::DestroyEnemy(std::shared_ptr<Entity> _DeleteEnemy)
+{
+	for (auto it = CurrentEnemies.begin(); it != CurrentEnemies.end(); ++it)
+	{
+		if (*it == _DeleteEnemy)
+		{
+			//*it = nullptr;
+			CurrentEnemies.erase(it);
+			break;
+		}
+	}
+	DestroyEntity(_DeleteEnemy);
+	_DeleteEnemy = nullptr;
+}
+
 /************************************************************
 #--Description--#:  Add Collidable entity
 #--Author--#: 		Alex Coultas

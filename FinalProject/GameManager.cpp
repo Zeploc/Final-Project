@@ -75,6 +75,7 @@ void GameManager::ShowEndScreen(bool _bLost)
 {
 	UIManager::GetInstance()->SwitchUIMode(true);
 	UIManager::GetInstance()->m_bEndScreen = true;
+	UIManager::GetInstance()->m_EndScreen.SetScore(LevelManager::GetInstance()->GetCurrentActiveLevel()->EPlayer->GetScore());
 	//std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 	//if (!CurrentEndScreen) CurrentEndScreen = std::make_shared<EndScreen>(_bLost, CurrentLevel->GetTotalPoints());
 	//else

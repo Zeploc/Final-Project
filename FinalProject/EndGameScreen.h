@@ -30,6 +30,8 @@ public:
 	void Update();
 	void Render();
 
+	void SetScore(int iScore);
+
 private:
 	std::shared_ptr<UIImage> m_pBackImage;
 	std::shared_ptr<UIText> m_pMessage;

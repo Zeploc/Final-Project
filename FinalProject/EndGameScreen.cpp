@@ -85,6 +85,11 @@ void EndScreen::Render()
 	m_pRestart->DrawUIElement();
 }
 
+void EndScreen::SetScore(int iScore)
+{
+	m_pScore->sText = "Total score: " + std::to_string(iScore);
+}
+
 void BackToMenu()
 {
 	std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());

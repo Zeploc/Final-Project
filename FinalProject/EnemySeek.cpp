@@ -19,9 +19,14 @@
 #include "AI.h"
 #include "Level.h"
 #include "LevelManager.h"
-// Engine Includes //
+#include "Player.h"
 
+// Engine Includes //
 #include "Engine\Time.h"
+#include "Engine\CollisionBounds.h"
+
+// Library Includes //
+#include <cassert>
 
 
 EnemySeek::EnemySeek(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
@@ -38,6 +43,7 @@ EnemySeek::~EnemySeek()
 
 void EnemySeek::Update()
 {
+	if (!bActive) return;
 	std::shared_ptr<Level> LevelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
 
 	if (Target)
@@ -48,5 +54,11 @@ void EnemySeek::Update()
 		
 	
 	transform.Position += m_v3CurrentVelocity * (float)Time::dTimeDelta;
+	float fDistance = abs(glm::length(transform.Position - LevelRef->EPlayer->transform.Position));
+	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer) || fDistance <= 1.0f)
+	{
+		assert((IsVisible()));
+		LevelRef->EPlayer->HurtPlayer(15);
+	}
 }
 

@@ -146,17 +146,24 @@ std::shared_ptr<Entity> Scene::AddEntity(Utils::Transform _Transform, float _fWi
 ************************************************************/
 void Scene::DestroyEntity(std::shared_ptr<Entity> _Entity)
 {
-	if (_Entity) _Entity->OnDestroy();
+	if (_Entity)
+	{
+		if (_Entity.use_count() > 1)
+		{
+			std::cout << "Entity still has " << std::to_string(_Entity.use_count() - 1) << std::endl;
+		}
+		_Entity->OnDestroy();
+	}
 	for (auto it = Entities.begin(); it != Entities.end(); ++it)
 	{
 		if (*it == _Entity || *it == nullptr)
 		{
-			*it = nullptr;
 			Entities.erase(it);
+			//*it = nullptr;
 			break;
 		}
 	}
-	_Entity = nullptr;
+	_Entity.reset();
 }
 
 /************************************************************
