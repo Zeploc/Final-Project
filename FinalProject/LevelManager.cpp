@@ -35,6 +35,8 @@
 #include "Player.h"
 #include "SpeedBoostPickUp.h"
 #include "Boss.h"
+#include "UIManager.h"
+#include "HUD.h"
 
 // This Includes //
 #include "LevelManager.h"
@@ -109,12 +111,13 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 	{
 		case 1:
 		{
+			CurrentRoundTime = WAVE1;
+			fCurrentRoundElapsed = CurrentRoundTime;
 			float Width = 8.6f;
 			float Height = 7.5f;
 			int BoardSize = 5;
 			for (int z = 0; z < BoardSize; z++)
 			{
-				fCurrentRoundElapsed = WAVE1;
 				for (int x = 0; x < BoardSize; x++)
 				{
 					float fCurrentX = Width * x;
@@ -133,18 +136,7 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 			NewPickupMesh->SetLit(true);
 			_Scene->AddEntity(NewPickup);
 			NewPickupMesh->program = Shader::Programs["ReflectionProgram"];
-
-			std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -1.0f, -10.0f },{ 0, 0, 0 },{ 0.5f, 0.5f, 0.5f } }, Utils::CENTER));
-			std::shared_ptr<Model> SkullMesh = std::make_shared<Model>(Model({ 0.7f, 0.1f, 0.1f, 1.0f }, "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/skull.obj"));
-			BossObject->AddMesh(SkullMesh);
-			SkullMesh->AddCollisionBounds(3.0f, 5.0f, 3.0f, BossObject);
-			SkullMesh->SetLit(true);
-			SkullMesh->LightProperties.fShininess = 50.0f;
-			SkullMesh->LightProperties.fLightSpecStrength = 0.3f;
-			SkullMesh->LightProperties.fAmbientStrength = 0.05f;
-			_Scene->AddEnemy(BossObject);
-			//BossRef = BossObject;
-
+			
 			std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 17.0f, -2.5f, 20.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
 			std::shared_ptr<Cube> CubeCollisionMesh = std::make_shared<Cube>(Cube(2.0f, 2.0f, 2.0f, { 0.1, 0.3, 0.7, 1.0f }));
 			CubeCollision->AddMesh(CubeCollisionMesh);
@@ -159,8 +151,37 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 		}
 		case 2:
 		{
-			fCurrentRoundElapsed = WAVE2;
-			_Scene->SetPlayerPosition({ -3, 2.0f, 0 });
+			CurrentRoundTime = WAVE2;
+			fCurrentRoundElapsed = CurrentRoundTime;
+			float Width = 8.6f;
+			float Height = 7.5f;
+			int BoardSize = 5;
+			for (int z = 0; z < BoardSize; z++)
+			{
+				for (int x = 0; x < BoardSize; x++)
+				{
+					float fCurrentX = Width * x;
+					if (z % 2 != 0)
+					{
+						fCurrentX -= Width / 2;
+					}
+					_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/ground.fbx", { fCurrentX, -5.0, Height * z }, { 0,30,0 });
+
+				}
+			}
+
+			std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -1.0f, -10.0f },{ 0, 0, 0 },{ 0.5f, 0.5f, 0.5f } }, Utils::CENTER));
+			std::shared_ptr<Model> SkullMesh = std::make_shared<Model>(Model({ 0.7f, 0.1f, 0.1f, 1.0f }, "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/skull.obj"));
+			BossObject->AddMesh(SkullMesh);
+			SkullMesh->AddCollisionBounds(3.0f, 5.0f, 3.0f, BossObject);
+			SkullMesh->SetLit(true);
+			SkullMesh->LightProperties.fShininess = 50.0f;
+			SkullMesh->LightProperties.fLightSpecStrength = 0.3f;
+			SkullMesh->LightProperties.fAmbientStrength = 0.05f;
+			_Scene->AddEnemy(BossObject);
+
+			_Scene->SetPlayerPosition({ 3, 2.0f, 0 });
+			_Scene->AddEntity(_Scene->MouseAimTarget);
 			//At 0 player cant move/strafe//_Scene->AddCollidable(Utils::Transform{ glm::vec3(-7, -0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 1.5, Utils::CENTER, glm::vec4(0.8, 0.8, 0.8, 1.0), "Resources/Level/Block2.png", 4, true);
 			break;
 		}
@@ -190,6 +211,7 @@ void LevelManager::NextLevel()
 		LevelManager::GetInstance()->GetCurrentActiveLevel()->PlayRandomTrack();
 	}
 }
+
 /************************************************************
 #--Description--#:  Switches to current level
 #--Author--#: 		Alex Coultas
@@ -433,6 +455,11 @@ void LevelManager::EnemySpawner()
 	}
 }
 
+void LevelManager::ResetWaveTimer()
+{
+	fCurrentRoundElapsed = CurrentRoundTime;
+}
+
 /************************************************************
 #--Description--#:  Retrieves static instance pointer to this class
 #--Author--#: 		Alex Coultas
@@ -461,8 +488,15 @@ void LevelManager::DestoryInstance()
 
 void LevelManager::Update()
 {
-	SpawnTimer -= Time::dTimeDelta;
-	fCurrentRoundElapsed -= Time::dTimeDelta;
-	std::cout << "Current elapsed " + std::to_string(fCurrentRoundElapsed) << std::endl;
+	if (GetCurrentActiveLevel())
+	{
+		SpawnTimer -= Time::dTimeDelta;
+		fCurrentRoundElapsed -= Time::dTimeDelta;
+		UIManager::GetInstance()->m_HUDInstance.SetWaveTimer(fCurrentRoundElapsed);
+		if (fCurrentRoundElapsed <= 0)
+		{
+			NextLevel();
+		}
+	}
 }
 

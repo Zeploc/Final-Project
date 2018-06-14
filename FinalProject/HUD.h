@@ -32,8 +32,10 @@ public:
 
 	void SetScore(int _iScore);
 	void SetHealth(float _fHealth);
+	void SetWaveTimer(float _fCurrentTime);
 
 private:
+	std::shared_ptr<UIText> m_pWaveTime;
 	std::shared_ptr<UIImage> m_pBackImage;
 	std::shared_ptr<UIText> m_pScore;
 	std::shared_ptr<UIText> m_pHealth;

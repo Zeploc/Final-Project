@@ -263,12 +263,7 @@ void Level::Update()
 void Level::RenderScene()
 {
 	Scene::RenderScene();
-
-	/*for (auto& it : EnemiesTemplate)
-	{
-		it->DrawEntity();
-	}*/
-
+	
 }
 
 /************************************************************
@@ -491,6 +486,7 @@ void Level::RestartLevel()
 		}
 
 	}
+
 }
 
 /************************************************************
@@ -511,7 +507,9 @@ void Level::CameraMovement()
 	float fCamHeight = 15;
 	float fBackDistance = 15;
 
-	glm::vec3 Difference = BossRef->transform.Position - EPlayer->transform.Position;
+	glm::vec3 Difference = glm::vec3();
+	if (BossRef)
+		Difference = BossRef->transform.Position - EPlayer->transform.Position;
 	float fDistance = abs(glm::length(Difference));
 	glm::vec3 Direction = fDistance != 0 ? glm::normalize(Difference) : Difference;
 

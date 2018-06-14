@@ -29,8 +29,8 @@
 
 enum RoundTimes
 {
-	WAVE1 = 35,
-	WAVE2 = 0
+	WAVE1 = 5,// 35,
+	WAVE2 = 1000
 };
 
 #pragma once
@@ -46,6 +46,8 @@ public:
 	int GetHighscore(int _iLevel);
 	void CheckHighscore();
 	void EnemySpawner();
+	void ResetWaveTimer();
+	void SwitchToFirstLevel() { iCurrentLevelID = 1; };
 
 	void Init();
 
