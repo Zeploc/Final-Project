@@ -40,7 +40,7 @@ HostGameMenu::~HostGameMenu()
 void HostGameMenu::Init(std::shared_ptr<Scene> _Scene)
 {
 	// Add Host Elements
-	std::shared_ptr<UIText> HostText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Host Game:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
+	std::shared_ptr<UIText> HostText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.9, 0.9, 0.9, 1.0f), "Host Game:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
 	HostText->SetActive(false);
 	std::shared_ptr<UIButton> HostGameBackBtn(new UIButton(glm::vec2(0, Camera::GetInstance()->SCR_HEIGHT), Utils::BOTTOM_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 80, MenuScreenBtn));
 	HostGameBackBtn->AddText("Back", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });

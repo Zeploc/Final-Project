@@ -47,6 +47,7 @@ public:
 	virtual void SetLit(bool _bIsLit) { bIsLit = _bIsLit; };
 
 	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, std::shared_ptr<Entity> _EntityRef);
+	void AddCollisionBounds(std::shared_ptr<CollisionBounds> NewCollision);
 	std::shared_ptr<CollisionBounds> GetCollisionBounds() {
 		return MeshCollisionBounds;
 	};

@@ -103,6 +103,8 @@ public:
 
 	static int AddEntityID();
 
+	static std::shared_ptr<Entity> WorldCubeMap;
+
 private:
 	static int iEntityNumber;
 };

@@ -20,6 +20,10 @@
 // Engine Includes //
 #include "Engine\SceneManager.h"
 #include "Engine\Plane.h"
+#include "Engine\Time.h"
+#include "Engine\Cube.h"
+#include "Engine\Model.h"
+#include "Engine\Shader.h"
 
 // Local Includes //
 #include "Menu.h"
@@ -27,10 +31,15 @@
 #include "Enemy2.h"
 #include "Enemy3.h"
 #include "EnemySeek.h"
-#include "Engine\Cube.h"
 #include "Level.h"
 #include "Player.h"
-#include "Engine\Time.h"
+#include "SpeedBoostPickUp.h"
+#include "FireRatePickUp.h"
+#include "HeatSeekerPickUp.h"
+#include "Boss.h"
+#include "UIManager.h"
+#include "HUD.h"
+
 // This Includes //
 #include "LevelManager.h"
 
@@ -104,6 +113,8 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 	{
 		case 1:
 		{
+			CurrentRoundTime = WAVE1;
+			fCurrentRoundElapsed = CurrentRoundTime;
 			float Width = 8.6f;
 			float Height = 7.5f;
 			int BoardSize = 5;
@@ -117,8 +128,41 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 						fCurrentX -= Width / 2;
 					}
 					_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/ground.fbx", { fCurrentX, -5.0, Height * z }, { 0,30,0 });
+					
 				}
 			}
+			std::shared_ptr<SpeedBoostPickUp> NewPickup = std::make_shared<SpeedBoostPickUp>(SpeedBoostPickUp(Utils::Transform{ { 7.5f, -2.0f, 10.0f },{ 45, 45, 45 },{ 1, 1, 1 } }, Utils::CENTER, _Scene->EPlayer));
+			std::shared_ptr<Cube> NewPickupMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 0.4, 0.1, 0.6, 1.0f }, "Resources/Box.png"));
+			NewPickup->AddMesh(NewPickupMesh);
+			NewPickupMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, NewPickup);
+			NewPickupMesh->SetLit(true);
+			_Scene->AddEntity(NewPickup);
+			NewPickupMesh->program = Shader::Programs["ReflectionProgram"];
+
+			
+			std::shared_ptr<FireRatePickup> FireRatePickupInstance = std::make_shared<FireRatePickup>(FireRatePickup(Utils::Transform{ { 5.5f, -2.0f, 10.0f },{ 45, 45, 45 },{ 1, 1, 1 } }, Utils::CENTER, _Scene->EPlayer));
+			std::shared_ptr<Cube> FireRateMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 0.4, 0.1, 0.6, 1.0f }, "Resources/Box.png"));
+			FireRatePickupInstance->AddMesh(FireRateMesh);
+			FireRateMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, FireRatePickupInstance);
+			FireRateMesh->SetLit(true);
+			_Scene->AddEntity(FireRatePickupInstance);
+			FireRateMesh->program = Shader::Programs["ReflectionProgram"];
+
+
+			std::shared_ptr<HeatSeekerPickUp> HeatSeekingPickupInstance = std::make_shared<HeatSeekerPickUp>(HeatSeekerPickUp(Utils::Transform{ { 2.5f, -2.0f, 10.0f },{ 45, 45, 45 },{ 1, 1, 1 } }, Utils::CENTER, _Scene->EPlayer));
+			std::shared_ptr<Cube> HeatSeekMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 0.4, 0.1, 0.6, 1.0f }, "Resources/Box.png"));
+			HeatSeekingPickupInstance->AddMesh(HeatSeekMesh);
+			HeatSeekMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, HeatSeekingPickupInstance);
+			HeatSeekMesh->SetLit(true);
+			_Scene->AddEntity(HeatSeekingPickupInstance);
+			HeatSeekMesh->program = Shader::Programs["ReflectionProgram"];
+
+			std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 17.0f, -2.5f, 20.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
+			std::shared_ptr<Cube> CubeCollisionMesh = std::make_shared<Cube>(Cube(2.0f, 2.0f, 2.0f, { 0.1, 0.3, 0.7, 1.0f }));
+			CubeCollision->AddMesh(CubeCollisionMesh);
+			CubeCollisionMesh->AddCollisionBounds(2.0f, 2.0f, 2.0f, CubeCollision);
+			CubeCollisionMesh->SetLit(true);
+			_Scene->AddCollidable(CubeCollision);
 
 			_Scene->SetPlayerPosition({ 17, 1.0f, 20 });
 			_Scene->AddEntity(_Scene->MouseAimTarget);
@@ -127,7 +171,37 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 		}
 		case 2:
 		{
-			_Scene->SetPlayerPosition({ -3, 2.0f, 0 });
+			CurrentRoundTime = WAVE2;
+			fCurrentRoundElapsed = CurrentRoundTime;
+			float Width = 8.6f;
+			float Height = 7.5f;
+			int BoardSize = 5;
+			for (int z = 0; z < BoardSize; z++)
+			{
+				for (int x = 0; x < BoardSize; x++)
+				{
+					float fCurrentX = Width * x;
+					if (z % 2 != 0)
+					{
+						fCurrentX -= Width / 2;
+					}
+					_Scene->AddHexPlatform("Resources/Models/Isometric_3D_Hex_Pack/ground.fbx", { fCurrentX, -5.0, Height * z }, { 0,30,0 });
+
+				}
+			}
+
+			std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -1.0f, -10.0f },{ 0, 0, 0 },{ 0.5f, 0.5f, 0.5f } }, Utils::CENTER));
+			std::shared_ptr<Model> SkullMesh = std::make_shared<Model>(Model({ 0.7f, 0.1f, 0.1f, 1.0f }, "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/skull.obj"));
+			BossObject->AddMesh(SkullMesh);
+			SkullMesh->AddCollisionBounds(3.0f, 5.0f, 3.0f, BossObject);
+			SkullMesh->SetLit(true);
+			SkullMesh->LightProperties.fShininess = 50.0f;
+			SkullMesh->LightProperties.fLightSpecStrength = 0.3f;
+			SkullMesh->LightProperties.fAmbientStrength = 0.05f;
+			_Scene->AddEnemy(BossObject);
+
+			_Scene->SetPlayerPosition({ 3, 2.0f, 0 });
+			_Scene->AddEntity(_Scene->MouseAimTarget);
 			//At 0 player cant move/strafe//_Scene->AddCollidable(Utils::Transform{ glm::vec3(-7, -0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 1.5, Utils::CENTER, glm::vec4(0.8, 0.8, 0.8, 1.0), "Resources/Level/Block2.png", 4, true);
 			break;
 		}
@@ -148,15 +222,18 @@ void LevelManager::NextLevel()
 	std::shared_ptr<Level> LevelScene = std::shared_ptr<Level>(new Level("New Level"));
 	if (!AddLevel(LevelScene))
 	{
+		UIManager::GetInstance()->m_bLoadingScreen = true;
 		SceneManager::GetInstance()->SwitchScene("MainMenu");
 	}
 	else
 	{
+		UIManager::GetInstance()->m_bLoadingScreen = true;
 		iCurrentLevelID++;
 		SceneManager::GetInstance()->SwitchScene(LevelScene->SceneName);
 		LevelManager::GetInstance()->GetCurrentActiveLevel()->PlayRandomTrack();
 	}
 }
+
 /************************************************************
 #--Description--#:  Switches to current level
 #--Author--#: 		Alex Coultas
@@ -207,8 +284,7 @@ void LevelManager::CheckHighscore()
 }
 
 void LevelManager::EnemySpawner()
-{
-	
+{	
 	std::shared_ptr<Level> LevelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
 
 	int RandomEnemyNum = rand() % 4 + 1;
@@ -227,22 +303,22 @@ void LevelManager::EnemySpawner()
 				{
 				case 1:
 				{
-					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(0 + i, -2.5, 0 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(-20, -2.5, -20), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 2:
 				{
-					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(0 + i, -2.5, 30 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(-20, -2.5, 50), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 3:
 				{
-					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(30 + i, -2.5, 30 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(50, -2.5, 50), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 4:
 				{
-					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(30 + i, -2.5, 0 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(50, -2.5, -20), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				default:
@@ -254,7 +330,7 @@ void LevelManager::EnemySpawner()
 				NewSeekEnemy->AddMesh(SeekEnemyMesh);
 				NewSeekEnemy->Target = LevelRef->EPlayer;
 				SeekEnemyMesh->AddCollisionBounds(1, 1, 1, NewSeekEnemy);
-				LevelRef->AddEnemy(NewSeekEnemy);
+				LevelRef->AddTempEnemy(NewSeekEnemy);
 				int RandomSideNum = rand() % 4 + 1;
 			}
 			SpawnTimer += 3.0f;
@@ -270,22 +346,22 @@ void LevelManager::EnemySpawner()
 				{
 				case 1:
 				{
-					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(0 + i, -2.5, 0 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(-20, -2.5, -20), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 2:
 				{
-					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(0 + i, -2.5, 30 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(-20, -2.5, 50), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 3:
 				{
-					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(30 + i, -2.5, 30 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(50, -2.5, 50), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 4:
 				{
-					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(30 + i, -2.5, 0 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(50, -2.5, -20), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				default:
@@ -297,7 +373,7 @@ void LevelManager::EnemySpawner()
 				PersueEnemy->AddMesh(PersueEnemyMesh);
 				PersueEnemy->Target = LevelRef->EPlayer;
 				PersueEnemyMesh->AddCollisionBounds(1, 1, 1, PersueEnemy);
-				LevelRef->AddEnemy(PersueEnemy);
+				LevelRef->AddTempEnemy(PersueEnemy);
 			}
 			SpawnTimer += 3.0f;
 			break;
@@ -340,7 +416,7 @@ void LevelManager::EnemySpawner()
 				CrowdPathFollowingEnemeyMesh->SetLit(true);
 				CrowdPathFollowingEnemy->AddMesh(CrowdPathFollowingEnemeyMesh);
 				CrowdPathFollowingEnemeyMesh->AddCollisionBounds(1, 1, 1, CrowdPathFollowingEnemy);
-				LevelRef->AddEnemy(CrowdPathFollowingEnemy);
+				LevelRef->AddTempEnemy(CrowdPathFollowingEnemy);
 				//AddEntity(NewEnemy);
 			}
 			SpawnTimer += 3.0f;
@@ -383,7 +459,7 @@ void LevelManager::EnemySpawner()
 				EnemeyMesh->SetLit(true);
 				FlockingEnemy->AddMesh(EnemeyMesh);
 				EnemeyMesh->AddCollisionBounds(1, 1, 1, FlockingEnemy);
-				LevelRef->AddEnemy(FlockingEnemy);
+				LevelRef->AddTempEnemy(FlockingEnemy);
 				FlockingEnemy->SetTarget(LevelRef->EPlayer);
 			}
 			SpawnTimer += 3.0f;
@@ -399,6 +475,11 @@ void LevelManager::EnemySpawner()
 
 		//Switch spawns an enemy at a random edge on the map
 	}
+}
+
+void LevelManager::ResetWaveTimer()
+{
+	fCurrentRoundElapsed = CurrentRoundTime;
 }
 
 /************************************************************
@@ -429,6 +510,15 @@ void LevelManager::DestoryInstance()
 
 void LevelManager::Update()
 {
-	SpawnTimer -= Time::dTimeDelta;
+	if (GetCurrentActiveLevel())
+	{
+		SpawnTimer -= Time::dTimeDelta;
+		fCurrentRoundElapsed -= Time::dTimeDelta;
+		UIManager::GetInstance()->m_HUDInstance.SetWaveTimer(fCurrentRoundElapsed);
+		if (fCurrentRoundElapsed <= 0)
+		{
+			NextLevel();
+		}
+	}
 }
 

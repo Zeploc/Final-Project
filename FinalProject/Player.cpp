@@ -36,6 +36,8 @@
 #include "Level.h"
 #include "Boss.h"
 #include "GameManager.h"
+#include "LevelManager.h"
+#include "AI.h"
 
 
 // This Includes //
@@ -139,16 +141,24 @@ void Player::Update()
 		if (BulletTimer <= 0)
 		{
 			Bullet NewBullet;
-			std::shared_ptr<Entity> Bullet = std::make_shared<Entity>(Entity({ this->transform.Position, this->transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
+			std::shared_ptr<Entity> Bullet = std::make_shared<Entity>(Entity({ this->transform.Position, this->transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::CENTER));
 			std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
-			BulletCube->AddCollisionBounds(0.3f, 0.3f, 0.3f, Bullet);
+			BulletCube->AddCollisionBounds(0.3f, 10.0f, 0.3f, Bullet);
 			Bullet->AddMesh(BulletCube);
 			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(Bullet);
 			glm::vec3 BulletDirection = glm::normalize(VectorToMouseFromPlayer);
 			NewBullet.CurrentVelocity = (BulletDirection*BulletSpeed);
 			NewBullet.BulletEntity = Bullet;
 			Bullets.push_back(NewBullet);
-			BulletTimer = 0.12f;
+			if (FireRatePickup)
+			{
+				BulletTimer = 0.05f;
+			}
+			else
+			{
+				BulletTimer = 0.12f;
+			}
+			
 		}
 	}
 
@@ -200,11 +210,11 @@ void Player::Update()
 		RollTimer = 0.5f;		
 	}
 
-	if (m_fHealth <= 0)
+	/*if (m_fHealth <= 0)
 	{
 		this->shared_from_this()->SetActive(false);
 		this->shared_from_this()->SetVisible(false);
-	}
+	}*/
 
 
 	RollTimer -= Time::dTimeDelta;
@@ -312,6 +322,15 @@ void Player::ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime)
 	case SPEEDBOOST:
 		m_fCurrentPlayerSpeed = GameSettings::fMoveSpeed * 2;
 		break;
+	case FIRERATE:
+	{
+		FireRatePickup = true;
+		break;
+	}
+	case HEATSEEK:
+	{
+		bSeeking = true;
+	}
 	default:
 		break;
 	}
@@ -324,6 +343,8 @@ void Player::PowerUpComplete()
 	case SPEEDBOOST:
 		m_fCurrentPlayerSpeed = GameSettings::fMoveSpeed;
 		break;
+	case FIRERATE:
+		FireRatePickup = false;
 	default:
 		break;
 	}
@@ -340,7 +361,26 @@ void Player::HandleBullets()
 			it = Bullets.begin();
 			bBackToStart = false;
 		}
+		//if (bSeeking)
+		//{
+		//	std::shared_ptr<Entity> CurrentClosestEnt;
+		//	float fPreviousClosestDistance = 10000000.0f;
+		//	for (auto& Enemiesit : LevelManager::GetInstance()->GetCurrentActiveLevel()->CurrentEnemies)
+		//	{
+		//		glm::vec3 LocationDifference = it->BulletEntity->transform.Position - Enemiesit->transform.Position;
+		//		float fDistance = abs(glm::length(LocationDifference)); // Distance from current avoidable
+		//		if (fDistance < fPreviousClosestDistance)
+		//		{
+		//			CurrentClosestEnt = Enemiesit;
+		//			fPreviousClosestDistance = fDistance;
+
+		//		}
+		//	}
+		//	AI::SeekForce(it->BulletEntity->transform.Position, CurrentClosestEnt->transform.Position, 20, it->CurrentVelocity, 5);
+			
+		
 		it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
+		
 		it->Timer -= Time::dTimeDelta;
 
 		if (it->Timer <= 0)
@@ -416,7 +456,6 @@ void Player::HandleBullets()
 			}
 		}
 		if (Bullets.size() == 0) break;
-
 	}
 }
 

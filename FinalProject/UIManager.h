@@ -47,9 +47,11 @@ public:
 	void SwitchUIMode(bool _bNewMode);
 	bool GetUIMode() { return m_bUIMode; };
 	bool m_bFPS = false;
+	bool m_bLoadingScreen = false;
 
 private:
 	bool m_bUIMode = true;
+	std::shared_ptr<UIImage> ControlsImage;
 
 	// Singleton
 public:

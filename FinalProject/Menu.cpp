@@ -48,6 +48,7 @@ void OptionsScreenBtn();
 void MenuScreenBtn();
 void HostGameScreenBtn();
 void JoinGameScreenBtn();
+void ControlsToggle();
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -59,7 +60,7 @@ Menu::Menu(std::string sSceneName)
 	: Scene(sSceneName)
 {
 	// Add Title Elements
-	std::shared_ptr<UIText> Title(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.6, 0.6, 0.6, 1.0), "TEST MENU", "Resources/Fonts/Roboto-Black.ttf", 100, Utils::CENTER));
+	std::shared_ptr<UIText> Title(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.9, 0.9, 0.9, 1.0), "SKULL TIDE", "Resources/Fonts/Roboto-Black.ttf", 100, Utils::CENTER));
 	std::shared_ptr<UIButton> StartBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 - 100), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 70, StartGameBtn));
 	StartBtn->AddText("START GAME", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	std::shared_ptr<UIButton> HostGameBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 - 20), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 70, HostGameScreenBtn));
@@ -70,7 +71,7 @@ Menu::Menu(std::string sSceneName)
 	OptionsBtn->AddText("OPTIONS", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	std::shared_ptr<UIButton> QuitBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 + 220), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 70, ExitGameBtn));
 	QuitBtn->AddText("QUIT GAME", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
-	std::shared_ptr<UIImage> BackImage(new UIImage(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2), Utils::CENTER, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Camera::GetInstance()->SCR_WIDTH, Camera::GetInstance()->SCR_HEIGHT, "Resources/ExampleBackground.png", 2));
+	std::shared_ptr<UIImage> BackImage(new UIImage(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2), Utils::CENTER, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Camera::GetInstance()->SCR_WIDTH, Camera::GetInstance()->SCR_HEIGHT, "Resources/OlbertsLowPolyForest.png", 2));
 	std::shared_ptr<UIImage> UIIMG(new UIImage(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), Utils::CENTER, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 600, 100, "Resources/Box.png", 2));
 	// Add elements to scene UI elements
 	AddUIElement(BackImage);
@@ -80,6 +81,7 @@ Menu::Menu(std::string sSceneName)
 	AddUIElement(HostGameBtn);
 	AddUIElement(JoinGameBtn);
 	AddUIElement(QuitBtn);
+
 	// Add elements to vector list
 	v_MenuElements.push_back(Title);
 	v_MenuElements.push_back(StartBtn);
@@ -97,26 +99,36 @@ Menu::Menu(std::string sSceneName)
 	//ButtonPositions[2] = QuitBtn->GetPosition() - glm::vec2((float)QuitBtn->ImageComponent.GetWidth() / 2.0f, 0.0f);
 	
 	// Add Options Elements
-	std::shared_ptr<UIText> OptionsText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 - 200.0f), 0, glm::vec4(0.2, 0.2, 0.2, 1.0), "OPTIONS:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
+	std::shared_ptr<UIText> OptionsText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 - 200.0f), 0, glm::vec4(0.9, 0.9, 0.9, 1.0), "OPTIONS:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
 	OptionsText->SetActive(false);
 	std::shared_ptr<UIButton> BackBtn(new UIButton(glm::vec2(0, Camera::GetInstance()->SCR_HEIGHT), Utils::BOTTOM_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 480, 80, MenuScreenBtn));
 	BackBtn->AddText("Back", "Resources/Fonts/Roboto-Thin.ttf", 34, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	BackBtn->SetActive(false);
-	m_VolumeSlider = std::make_shared<UISlider>(UISlider({ Camera::GetInstance()->SCR_WIDTH / 2,Camera::GetInstance()->SCR_HEIGHT / 2 }, 0, { 0.2f, 0.2f, 0.2f, 1.0f }, { 0.6f, 0.6f, 0.6f, 1.0f }, 300, 20, 40, 10, Utils::CENTER, "Main Volume:"));
+	ControlsImage = std::make_shared<UIImage>(UIImage(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2), Utils::CENTER, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Camera::GetInstance()->SCR_WIDTH, Camera::GetInstance()->SCR_HEIGHT, "Resources/Controls Image Background.png", 2));
+	ControlsImage->SetActive(false);
+	m_VolumeSlider = std::make_shared<UISlider>(UISlider({ Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 }, 0, { 0.2f, 0.2f, 0.2f, 1.0f }, { 0.6f, 0.6f, 0.6f, 1.0f }, 300, 20, 40, 10, Utils::CENTER, "Main Volume"));
+	m_VolumeSlider->SliderBar.TextComponent.Colour = { 0.9f, 0.9f, 0.9f, 1.0f };
+	m_VolumeSlider->SliderBar.TextComponent.sFont = "Resources/Fonts/Roboto-Regular.ttf";
 	m_VolumeSlider->SetMinimumPosition(0.0f);
 	m_VolumeSlider->SetMaximumPosition(10.0f);
 	m_VolumeSlider->SetLockSize(0.5f);
 	m_VolumeSlider->SetStartPosition(GameSettings::fVolumeLevel);
 	m_VolumeSlider->SetActive(false);
+	ControlsBtn = std::make_shared<UIButton>(UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 + 100.0f), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 340, 60, ControlsToggle));
+	ControlsBtn->AddText("Controls", "Resources/Fonts/Roboto-Thin.ttf", 28, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+	ControlsBtn->SetActive(false);
 
 	// Add elements to scene UI elements
 	AddUITextElement(OptionsText);
 	AddUIElement(BackBtn);
 	AddUIElement(m_VolumeSlider);
+	AddUIElement(ControlsImage);
+	AddUIElement(ControlsBtn);
 	// Add elements to vector list
 	v_OptionsElements.push_back(OptionsText);
 	v_OptionsElements.push_back(BackBtn);
 	v_OptionsElements.push_back(m_VolumeSlider);
+	v_OptionsElements.push_back(ControlsBtn);
 	
 	// Add cursor
 	//std::shared_ptr<Cursor> NewCursor = std::make_shared<Cursor>("Resources/Grey_Cursor.png");
@@ -172,6 +184,7 @@ void Menu::OnLoadScene()
 	UIManager::GetInstance()->m_bDisplayChat = false;
 	UIManager::GetInstance()->m_bDisplayHUD = false;
 	UIManager::GetInstance()->SwitchUIMode(true);
+	UIManager::GetInstance()->m_bLoadingScreen = false;
 	LobbyScreen.Init(this->shared_from_this());
 	JoinGameScreen.Init(this->shared_from_this());
 	HostGameScreen.Init(this->shared_from_this());
@@ -255,6 +268,20 @@ void Menu::ToggleMenuSection(MENUSECTION _NewSection)
 	}
 }
 
+void Menu::ToggleControls()
+{
+	bool bToggled = !ControlsImage->IsActive();
+	for (auto it : v_OptionsElements)
+		it->SetActive(!bToggled);
+
+	ControlsImage->SetActive(bToggled);
+	ControlsBtn->SetActive(true);
+	if (bToggled)
+		ControlsBtn->SetPosition({ Camera::GetInstance()->SCR_WIDTH / 2 + 200.0f, Camera::GetInstance()->SCR_HEIGHT - 80.0f });
+	else
+		ControlsBtn->SetPosition({ Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 + 100.0f });
+}
+
 
 
 /************************************************************
@@ -267,7 +294,8 @@ void StartGameBtn()
 {
 	LogManager::GetInstance()->DisplayLogMessage("Start Game (Switch to Level)");
 	SoundManager::GetInstance()->StopAudio("BackgroundC");
-	SceneManager::GetInstance()->SwitchScene("Level " + std::to_string(LevelManager::GetInstance()->CurrentLevel()));
+	LevelManager::GetInstance()->SwitchToFirstLevel();
+	LevelManager::GetInstance()->SwitchToCurrentLevel();
 	LevelManager::GetInstance()->GetCurrentActiveLevel()->PlayRandomTrack();
 }
 
@@ -329,6 +357,12 @@ void JoinGameScreenBtn()
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 	MenuRef->ToggleMenuSection(JOIN);
 	NetworkManager::GetInstance()->m_Network.InitClient();
+}
+
+void ControlsToggle()
+{
+	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
+	MenuRef->ToggleControls();
 }
 
 

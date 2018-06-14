@@ -17,7 +17,8 @@
 
 // Local Includes //
 #include "AI.h"
-
+#include "Level.h"
+#include "LevelManager.h"
 // Engine Includes //
 
 #include "Engine\Time.h"
@@ -26,6 +27,8 @@
 EnemySeek::EnemySeek(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 	: Entity(_Transform, _Anchor)
 {
+
+	
 }
 
 
@@ -34,9 +37,15 @@ EnemySeek::~EnemySeek()
 }
 
 void EnemySeek::Update()
-{	
+{
+	std::shared_ptr<Level> LevelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
+
 	if (Target)
-		m_v3CurrentVelocity += AI::SeekWithArrival(transform.Position, Target->transform.Position, 50, m_v3CurrentVelocity, 3.0f, m_fSpeed);
+	{
+		m_v3CurrentVelocity += AI::SeekWithArrival(transform.Position, Target->transform.Position, 50, m_v3CurrentVelocity, 5.0f, m_fSpeed);
+		m_v3CurrentVelocity += AI::Seperation(this->shared_from_this(), 1.5f, LevelRef->CurrentEnemies, 5);
+	}
+		
 	
 	transform.Position += m_v3CurrentVelocity * (float)Time::dTimeDelta;
 }

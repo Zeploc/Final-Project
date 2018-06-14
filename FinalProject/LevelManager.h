@@ -27,6 +27,12 @@
 
 // Static Variables //
 
+enum RoundTimes
+{
+	WAVE1 = 100,// 35,
+	WAVE2 = 1000
+};
+
 #pragma once
 class LevelManager
 {
@@ -40,12 +46,17 @@ public:
 	int GetHighscore(int _iLevel);
 	void CheckHighscore();
 	void EnemySpawner();
+	void ResetWaveTimer();
+	void SwitchToFirstLevel() { iCurrentLevelID = 1; };
 
 	void Init();
 
 private:
 	int iCurrentLevelID;
 	int iNumberOfLevels = 0;
+
+	RoundTimes CurrentRoundTime = WAVE1;
+	float fCurrentRoundElapsed;
 
 	std::vector<int> LevelHighScores;
 

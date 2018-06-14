@@ -36,9 +36,9 @@ void RestartGame();
 EndScreen::EndScreen()
 {
 	m_pBackImage = std::make_shared<UIImage>(UIImage({ Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 }, Utils::CENTER, 0, { 0.5f, 0.5f, 0.5f, 1.0f }, 1000, 500));
-	m_pMessage = std::make_shared<UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 - 120 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "You lost at round NULL ;)", "Resources/Fonts/Roboto-Black.ttf", 45, Utils::CENTER));
+	m_pMessage = std::make_shared<UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 - 120 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "You lost", "Resources/Fonts/Roboto-Black.ttf", 45, Utils::CENTER));
 
-	m_pScore = std::make_shared<UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2}, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "You scored -50 heh", "Resources/Fonts/Roboto-Thin.ttf", 45, Utils::CENTER));
+	m_pScore = std::make_shared<UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2}, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "You scored: ", "Resources/Fonts/Roboto-Thin.ttf", 45, Utils::CENTER));
 	m_pQuit = std::make_shared<UIButton>(UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2 + 200, Camera::GetInstance()->SCR_HEIGHT / 2 + 150), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 300, 60, BackToMenu));
 	m_pQuit->AddText("Back to Menu", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	m_pRestart = std::make_shared<UIButton>(UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2 - 200, Camera::GetInstance()->SCR_HEIGHT / 2 + 150), Utils::CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 300, 60, RestartGame));

@@ -18,12 +18,15 @@
 // Local Includes //
 #include "AI.h"
 #include "Level.h"
+#include "Player.h"
+
 // Engine Includes //
 #include "Engine\SceneManager.h"
 #include "Engine\Scene.h"
 #include "Engine\Entity.h"
 #include "Engine\Cube.h"
 #include "Engine\Time.h"
+#include "Engine\CollisionBounds.h"
 
 
 Enemy2::Enemy2(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
@@ -37,6 +40,8 @@ Enemy2::~Enemy2()
 
 void Enemy2::Update()
 {
+	Entity::Update();
+	std::shared_ptr<Level> LevelRef = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 	if (Target)
 	{
 		std::vector<std::shared_ptr<Entity>> Avoidables = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene())->CurrentEnemies;
@@ -51,6 +56,17 @@ void Enemy2::Update()
 		m_v3CurrentVelocity = glm::normalize(m_v3CurrentVelocity) * m_fSpeed;
 	}
 	transform.Position += m_v3CurrentVelocity * (float)Time::dTimeDelta;
+
+	if (!EntityMesh) // No mesh added
+		return;
+	if (!EntityMesh->GetCollisionBounds()) // No collision Bounds added
+		return;
+
+
+	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer))
+	{
+		LevelRef->EPlayer->HurtPlayer(15);
+	}
 }
 
 void Enemy2::SetTarget(std::shared_ptr<Entity> _Target)
@@ -59,3 +75,4 @@ void Enemy2::SetTarget(std::shared_ptr<Entity> _Target)
 
 	PreviousPosition = Target->transform.Position;
 }
+
