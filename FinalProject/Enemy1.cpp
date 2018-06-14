@@ -17,6 +17,7 @@
 
 // Local Includes //
 #include "Level.h"
+#include "Player.h"
 
 // OpenGL Includes //
 #include <glm/gtc/matrix_transform.hpp>
@@ -27,6 +28,7 @@
 #include "Engine\Entity.h"
 #include "Engine\Cube.h"
 #include "Engine\Time.h"
+#include "Engine\CollisionBounds.h"
 
 
 Enemy1::Enemy1(Utils::Transform _Transform, Utils::EANCHOR _Anchor, glm::vec3 InitialVelocity)
@@ -66,6 +68,9 @@ void Enemy1::AddPathPoints()
 
 void Enemy1::Update()
 {
+	Entity::Update();
+	std::shared_ptr<Level> LevelRef = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
+
 	std::vector<std::shared_ptr<Entity>> Avoidables = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene())->CurrentEnemies;
 	m_v3CurrentVelocity += AI::Align(this->shared_from_this(), 20.0f, Avoidables, m_fSpeed) * 0.5f;
 	m_v3CurrentVelocity += AI::Cohesion(this->shared_from_this(), 10.0f, Avoidables, m_fSpeed) * 0.2f;
@@ -73,6 +78,18 @@ void Enemy1::Update()
 	m_v3CurrentVelocity += AI::pathFollowingForce(transform.Position, CurrentPath, m_v3CurrentVelocity, 10.0f, m_fSpeed) * 5.0f;
 
 	
+
+	if (!EntityMesh) // No mesh added
+		return;
+	if (!EntityMesh->GetCollisionBounds()) // No collision Bounds added
+		return;
+	
+
+	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer))
+	{
+		LevelRef->EPlayer->HurtPlayer(15);
+	}
+
 	if (glm::length(m_v3CurrentVelocity) > m_fSpeed)
 	{
 		m_v3CurrentVelocity = glm::normalize(m_v3CurrentVelocity) * m_fSpeed;

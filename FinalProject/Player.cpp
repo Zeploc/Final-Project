@@ -285,8 +285,8 @@ void Player::SetHealth(float _fNewHealth)
 {
 	m_fHealth = _fNewHealth;
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
-	//if (m_fHealth <= 0)
-		//GameManager::GetInstance()->PlayerDeath();
+	if (m_fHealth <= 0)
+		GameManager::GetInstance()->PlayerDeath();
 }
 
 void Player::ApplyHealth(float _fmodify)
@@ -295,8 +295,8 @@ void Player::ApplyHealth(float _fmodify)
 	m_fHealth = max(m_fHealth, 0.0f);
 	m_fHealth = min(m_fHealth, 100.0f);
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
-	//if (m_fHealth <= 0)
-		//GameManager::GetInstance()->PlayerDeath();
+	if (m_fHealth <= 0)
+		GameManager::GetInstance()->PlayerDeath();
 }
 
 void Player::AddScore(int _iAddScore)
@@ -361,28 +361,26 @@ void Player::HandleBullets()
 			it = Bullets.begin();
 			bBackToStart = false;
 		}
-		if (bSeeking)
-		{
-			std::shared_ptr<Entity> CurrentClosestEnt;
-			float fPreviousClosestDistance = 10000000.0f;
-			for (auto& Enemiesit : LevelManager::GetInstance()->GetCurrentActiveLevel()->CurrentEnemies)
-			{
-				glm::vec3 LocationDifference = it->BulletEntity->transform.Position - Enemiesit->transform.Position;
-				float fDistance = abs(glm::length(LocationDifference)); // Distance from current avoidable
-				if (fDistance < fPreviousClosestDistance)
-				{
-					CurrentClosestEnt = Enemiesit;
-					fPreviousClosestDistance = fDistance;
+		//if (bSeeking)
+		//{
+		//	std::shared_ptr<Entity> CurrentClosestEnt;
+		//	float fPreviousClosestDistance = 10000000.0f;
+		//	for (auto& Enemiesit : LevelManager::GetInstance()->GetCurrentActiveLevel()->CurrentEnemies)
+		//	{
+		//		glm::vec3 LocationDifference = it->BulletEntity->transform.Position - Enemiesit->transform.Position;
+		//		float fDistance = abs(glm::length(LocationDifference)); // Distance from current avoidable
+		//		if (fDistance < fPreviousClosestDistance)
+		//		{
+		//			CurrentClosestEnt = Enemiesit;
+		//			fPreviousClosestDistance = fDistance;
 
-				}
-			}
-			AI::SeekForce(it->BulletEntity->transform.Position, CurrentClosestEnt->transform.Position, 20, it->CurrentVelocity, 5);
+		//		}
+		//	}
+		//	AI::SeekForce(it->BulletEntity->transform.Position, CurrentClosestEnt->transform.Position, 20, it->CurrentVelocity, 5);
 			
-		}
-		else
-		{
-			it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
-		}
+		
+		it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
+		
 		it->Timer -= Time::dTimeDelta;
 
 		if (it->Timer <= 0)
@@ -458,7 +456,6 @@ void Player::HandleBullets()
 			}
 		}
 		if (Bullets.size() == 0) break;
-
 	}
 }
 

@@ -99,9 +99,9 @@ void UIManager::Update()
 	
 	// Update system instances
 	m_ChatInstance.Update();
-	m_EndScreen.Update();
+	if (m_bEndScreen) m_EndScreen.Update();
 	m_HUDInstance.Update();
-	if (m_bDisplayPauseOptions) m_OptionsScreenInstance.Update();
+	if (m_bDisplayPauseOptions)m_OptionsScreenInstance.Update();
 	if (m_bDisplayMessageBox) m_MessageBoxInstance.Update();
 }
 

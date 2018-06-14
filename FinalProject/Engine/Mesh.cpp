@@ -88,3 +88,8 @@ void Mesh::AddCollisionBounds(float fWidth, float fHeight, float fDepth, std::sh
 {
 	MeshCollisionBounds = std::make_shared<CollisionBounds>(fWidth, fHeight, fDepth, _EntityRef);
 }
+
+void Mesh::AddCollisionBounds(std::shared_ptr<CollisionBounds> NewCollision)
+{
+	MeshCollisionBounds = NewCollision;
+}
