@@ -28,14 +28,17 @@
 #include "Engine\Cube.h"
 #include "Engine\Time.h"
 
+
 Enemy1::Enemy1(Utils::Transform _Transform, Utils::EANCHOR _Anchor, glm::vec3 InitialVelocity)
 	: Entity(_Transform, _Anchor)
 {
 	m_v3CurrentVelocity = InitialVelocity;
 	m_fSpeed = glm::length(m_v3CurrentVelocity);
-	CurrentPath.v3Points.push_back({0, -2.5, 0});
-	CurrentPath.v3Points.push_back({ 30, -2.5, 10 });
-	CurrentPath.v3Points.push_back({ 10, -2.5, 20 });
+	if (m_fSpeed == 0) m_fSpeed = 1;
+	CurrentPath.v3Points.push_back({-5, -2.5, 0});
+	CurrentPath.v3Points.push_back({ 30, -2.5, 5 });
+	CurrentPath.v3Points.push_back({ 30, -2.5, 30 });
+	CurrentPath.v3Points.push_back({ 5, -2.5, 30 });
 	CurrentPath.fRadius = 1.0f;
 }
 
@@ -63,10 +66,12 @@ void Enemy1::AddPathPoints()
 
 void Enemy1::Update()
 {
-	std::vector<std::shared_ptr<Entity>> Avoidables = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene())->Enemies;
-	m_v3CurrentVelocity += AI::pathFollowingForce(transform.Position, CurrentPath, m_v3CurrentVelocity, 10.0f, m_fSpeed);
+	std::vector<std::shared_ptr<Entity>> Avoidables = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene())->CurrentEnemies;
+	m_v3CurrentVelocity += AI::pathFollowingForce(transform.Position, CurrentPath, m_v3CurrentVelocity, 10.0f, m_fSpeed) * 5.0f;
+	m_v3CurrentVelocity += AI::Align(this->shared_from_this(), 20.0f, Avoidables, m_fSpeed) * 0.5f;
+	m_v3CurrentVelocity += AI::Cohesion(this->shared_from_this(), 20.0f, Avoidables, m_fSpeed) * 0.05f;
 	m_v3CurrentVelocity += AI::Seperation(this->shared_from_this(), 1.0f, Avoidables, m_fSpeed) * 10.0f;
-	m_v3CurrentVelocity += AI::Align(this->shared_from_this(), 20.0f, Avoidables, m_fSpeed) * 0.1f;
+
 	
 	if (glm::length(m_v3CurrentVelocity) > m_fSpeed)
 	{

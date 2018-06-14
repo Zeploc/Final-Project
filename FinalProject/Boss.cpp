@@ -33,7 +33,6 @@ Boss::Boss(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 	NextRushTime = Time::dCurrentTime/1000 + 15.0f;
 }
 
-
 Boss::~Boss()
 {
 }
@@ -42,6 +41,7 @@ void Boss::Update()
 {
 	Entity::Update();
 	std::shared_ptr<Level> LevelRef = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
+<<<<<<< HEAD
 	HitCooldown -= Time::dTimeDelta;
 	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer))
 	{
@@ -53,6 +53,9 @@ void Boss::Update()
 		
 	}
 
+=======
+		
+>>>>>>> 1dac37704edc2dc20280f3ad8dd3f762e27c8ebd
 	if (bActive = false)
 	{
 		return;
@@ -63,6 +66,11 @@ void Boss::Update()
 	if (!EntityMesh->GetCollisionBounds()) // No collision Bounds added
 		return;
 
+	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer))
+	{
+		LevelRef->EPlayer->HurtPlayer(25);
+	}
+	
 	//Rotate({ 0, 10.0f * Time::dTimeDelta, 0 });
 	//transform.Position.y = m_fOscillatingHeight + sin(Time::dCurrentTime / 200) * 20.0f * Time::dTimeDelta;
 	if (Time::dCurrentTime/1000 >= NextRushTime)

@@ -30,6 +30,7 @@
 // Local Includes //
 #include "Enemy1.h"
 #include "Enemy2.h"
+#include "EnemySeek.h"
 
 std::shared_ptr<Entity> AI::TestPosition1 = nullptr;
 std::shared_ptr<Entity> AI::TestPosition2 = nullptr;
@@ -66,7 +67,7 @@ glm::vec3 AI::SeekForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::ve
 
 glm::vec3 AI::FleeForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed)
 {
-	glm::vec3 LookAtDirection = Target - Source;
+	glm::vec3 LookAtDirection = Target - Source; 
 	if (glm::length(LookAtDirection) != 0) // In case vector is zero vector (Can't normalise zero vector)
 	{
 		LookAtDirection = glm::vec3(glm::normalize(LookAtDirection));
@@ -80,7 +81,11 @@ glm::vec3 AI::FleeForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::ve
 
 glm::vec3 AI::PursueForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity> Target, glm::vec3 PreviousPosition, float ScaleFactor, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed)
 {	
-	//glm::vec3 TargetVelocity = SeekForce(PreviousPosition, Target->transform.Position, fMass, CurrentVelocity, MaxSpeed);
+	if (glm::length(Source->transform.Position - Target->transform.Position) < ScaleFactor / 2.0f)
+	{
+		return SeekForce(Source->transform.Position, Target->transform.Position, fMass, CurrentVelocity, MaxSpeed);
+	}
+	//ScaleFactor = glm::length(Source->transform.Position - Target->transform.Position) * MaxSpeed;-
 	glm::vec3 TargetDirection = Target->transform.Position - PreviousPosition;
 	if (glm::length(TargetDirection) != 0) // In case vector is zero vector (Can't normalise zero vector)
 	{
@@ -100,10 +105,10 @@ glm::vec3 AI::EvadeForce(std::shared_ptr<Entity> Source, std::shared_ptr<Entity>
 	return SeekForce(Source->transform.Position, -TargetVelocity * ScaleFactor + Target->transform.Position, fMass, CurrentVelocity, MaxSpeed);
 }
 
-glm::vec3 AI::SeekWithArrival(std::shared_ptr<Entity> Source, glm::vec3 Target, float _fSlowingRange, float _fMaxSpeed)
+glm::vec3 AI::SeekWithArrival(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float _fSlowingRange, float _fMaxSpeed)
 {
-	glm::vec3 v3SeekDirection = SeekForce(Source->transform.Position, Target, 1, { 1, 0 ,0 }, 5);
-	float fDistanceToTarget = abs(glm::length((Target - Source->transform.Position)));
+	glm::vec3 v3SeekDirection = SeekForce(Source, Target, fMass, CurrentVelocity, _fMaxSpeed);
+	float fDistanceToTarget = abs(glm::length((Target - Source)));
 	if (fDistanceToTarget < _fSlowingRange)
 	{
 		return v3SeekDirection * _fMaxSpeed * (fDistanceToTarget / _fSlowingRange);
@@ -215,6 +220,9 @@ glm::vec3 AI::Align(std::shared_ptr<Entity> Source, float fRadius, std::vector<s
 {
 	glm::vec3 AverageDirection = glm::vec3();
 	int iCount = 0;
+	bool bIsEnemy1 = std::dynamic_pointer_cast<Enemy1>(Source) != nullptr;
+	bool bIsEnemy2 = std::dynamic_pointer_cast<Enemy2>(Source) != nullptr;
+	bool bIsEnemySeek = std::dynamic_pointer_cast<EnemySeek>(Source) != nullptr;
 	for (auto& it : Avoidables)
 	{
 		if (it == Source) continue;
@@ -226,27 +234,34 @@ glm::vec3 AI::Align(std::shared_ptr<Entity> Source, float fRadius, std::vector<s
 			glm::vec3 DirectionAwayFromCurrent = glm::normalize(LocationDifference);
 			std::shared_ptr<Enemy1> IsEnemy1 = std::dynamic_pointer_cast<Enemy1>(it);
 			std::shared_ptr<Enemy2> IsEnemy2 = std::dynamic_pointer_cast<Enemy2>(it);
-			if (IsEnemy1)
+			std::shared_ptr<EnemySeek> IsEnemySeek = std::dynamic_pointer_cast<EnemySeek>(it);
+			if (IsEnemy1 && bIsEnemy1)
 			{
 				if (glm::length(IsEnemy1->GetVelocity()) == 0) continue;
 				AverageDirection += glm::normalize(IsEnemy1->GetVelocity());
 			}
-			if (IsEnemy2)
+			else if (IsEnemy2 && bIsEnemy2)
 			{
 				if (glm::length(IsEnemy2->GetVelocity()) == 0) continue;
 				AverageDirection += glm::normalize(IsEnemy2->GetVelocity());
 			}
-
+			else if (IsEnemySeek && bIsEnemySeek)
+			{
+				if (glm::length(IsEnemySeek->GetVelocity()) == 0) continue;
+				AverageDirection += glm::normalize(IsEnemySeek->GetVelocity());
+			}
+			else
+			{
+				continue;
+			}
 			iCount++;
-
-
 		}
 	}
 
 	if (iCount > 0)
 	{
 		float fDividend = 1.0f / (float)iCount;
-		AverageDirection = glm::normalize(AverageDirection * fDividend);
+		AverageDirection = glm::length(AverageDirection) == 0 ? AverageDirection : glm::normalize(AverageDirection * fDividend);
 	}
 	else // None in range
 		return AverageDirection;
@@ -260,19 +275,25 @@ glm::vec3 AI::Cohesion(std::shared_ptr<Entity> Source, float fRadius, std::vecto
 {
 	glm::vec3 AverageTransform = glm::vec3();
 	int iCount = 0;
+	bool bIsEnemy1 = std::dynamic_pointer_cast<Enemy1>(Source) != nullptr;
+	bool bIsEnemy2 = std::dynamic_pointer_cast<Enemy2>(Source) != nullptr;
+	bool bIsEnemySeek = std::dynamic_pointer_cast<EnemySeek>(Source) != nullptr;
 	for (auto& it : Avoidables)
 	{
 		if (it == Source) continue;
 		glm::vec3 LocationDifference = it->transform.Position - Source->transform.Position;
 		float fDistance = abs(glm::length(LocationDifference)); // Distance from current avoidable
 
-		if (fDistance < fRadius) // If within allign radius
+		std::shared_ptr<Enemy1> IsEnemy1 = std::dynamic_pointer_cast<Enemy1>(it);
+		std::shared_ptr<Enemy2> IsEnemy2 = std::dynamic_pointer_cast<Enemy2>(it);
+		std::shared_ptr<EnemySeek> IsEnemySeek = std::dynamic_pointer_cast<EnemySeek>(it);
+
+		if (fDistance < fRadius && ((IsEnemy1 && bIsEnemy1) || IsEnemy2 && bIsEnemy2 || IsEnemySeek && bIsEnemySeek)) // If within allign radius
 		{
 			glm::vec3 DirectionAwayFromCurrent = glm::normalize(LocationDifference);
 			if (glm::length((it)->transform.Position) == 0) continue;
 			AverageTransform += ((it)->transform.Position);
 			iCount++;
-
 		}
 	}
 
@@ -286,18 +307,23 @@ glm::vec3 AI::Cohesion(std::shared_ptr<Entity> Source, float fRadius, std::vecto
 
 	std::shared_ptr<Enemy1> IsEnemy1 = std::dynamic_pointer_cast<Enemy1>(Source);
 	std::shared_ptr<Enemy2> IsEnemy2 = std::dynamic_pointer_cast<Enemy2>(Source);
+	std::shared_ptr<EnemySeek> IsEnemySeek = std::dynamic_pointer_cast<EnemySeek>(Source);
 	glm::vec3 Velocity = glm::vec3();
 
 	if (IsEnemy1)
 	{
 		Velocity = IsEnemy1->GetVelocity();
 	}
-	if (IsEnemy2)
+	else if (IsEnemy2)
 	{
 		Velocity = IsEnemy2->GetVelocity();
 	}
+	else if (IsEnemySeek)
+	{
+		Velocity = IsEnemySeek->GetVelocity();
+	}
 	
-	return SeekForce(Source->transform.Position, AverageTransform,1,Velocity,MaxSpeed);
+	return SeekForce(Source->transform.Position, AverageTransform, 1, Velocity,MaxSpeed);
 }
 
 glm::vec3 AI::ObstacleAvoidance(std::shared_ptr<Entity> Source, float MAX_SEE_AHEAD, glm::vec3 CurrentVelocity)

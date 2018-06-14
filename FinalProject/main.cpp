@@ -50,6 +50,8 @@
 #include "NetworkSystem.h"
 #include "NetworkManager.h"
 #include "AI.h"
+#include "Engine/LogManager.h"
+#include "LevelManager.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
@@ -70,6 +72,8 @@ void Update();
 void Init();
 void OnExit();
 
+bool bLoading = true;
+
 /************************************************************
 #--Description--#: 	The main function of the program
 #--Author--#: 		Alex Coultas
@@ -87,6 +91,8 @@ int main(int argc, char **argv)
 	glutInitWindowSize(CAM->SCR_WIDTH, CAM->SCR_HEIGHT);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutCreateWindow("Game Window");
+
+	
 	//glutFullScreen();
 	
 	glewInit();				// OpenGL init
@@ -123,11 +129,17 @@ void renderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	Camera::GetInstance()->Update();
+	if (bLoading)
+	{
+		LogManager::GetInstance()->Render();
+	}
+	else
+	{
+		Camera::GetInstance()->Update();
 
-	SM->RenderCurrentScene();
-	UIManager::GetInstance()->Render();	
-	
+		SM->RenderCurrentScene();
+		UIManager::GetInstance()->Render();
+	}	
 	glutSwapBuffers();
 }
 
@@ -151,11 +163,23 @@ void changeSize(int w, int h)
 ************************************************************/
 void Update()
 {
-	SceneManager::GetInstance()->UpdateCurrentScene();
-	UIManager::GetInstance()->Update();
-	Time::Update();
-	NetworkManager::GetInstance()->m_Network.Update();
-	SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
+	if (bLoading)
+	{
+		SoundManager::GetInstance()->InitFMod();
+		LevelManager::GetInstance()->Init();
+		bLoading = false;
+	}
+	else
+	{
+		SceneManager::GetInstance()->UpdateCurrentScene();
+		UIManager::GetInstance()->Update();
+		
+		LevelManager::GetInstance()->Update();
+		Time::Update();
+		NetworkManager::GetInstance()->m_Network.Update();
+		SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
+	}
+
 	glutPostRedisplay();
 }
 
@@ -167,16 +191,24 @@ void Update()
 ************************************************************/
 void Init()
 {
-	ShaderLoader loader;
-	Shader::program = loader.CreateProgram("Resources/Shaders/VertexShader.vs", "Resources/Shaders/FragmentShader.fs");
-	Shader::Textureprogram = loader.CreateProgram("Resources/Shaders/TextureVertexShader.vs", "Resources/Shaders/TextureFragmentShader.fs");
-	Shader::LitTextureprogram = loader.CreateProgram("Resources/Shaders/LitVertexShader.vs", "Resources/Shaders/LitFragmentShader.fs");
-	Shader::TextUIprogram = loader.CreateProgram("Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs");
-	Shader::UIprogram = loader.CreateProgram("Resources/Shaders/UI.vs", "Resources/Shaders/UI.fs");
-	Shader::CubeMapProgram = loader.CreateProgram("Resources/Shaders/CubeMapVertexShader.vs", "Resources/Shaders/CubeMapFragmentShader.fs");
-	Shader::ModelProgram = loader.CreateProgram("Resources/Shaders/ModelVertexShader.vs", "Resources/Shaders/ModelFragmentShader.fs");
-	Shader::ModelProgramLit = loader.CreateProgram("Resources/Shaders/ModelVertexShaderLit.vs", "Resources/Shaders/ModelFragmentShaderLit.fs");
-	Shader::ReflectionProgram = loader.CreateProgram("Resources/Shaders/ReflectionShader.vs", "Resources/Shaders/ReflectionShader.fs");
+	Shader::AddProgram("Resources/Shaders/VertexShader.vs", "Resources/Shaders/FragmentShader.fs", "program");
+	//Shader::program = loader.CreateProgram("Resources/Shaders/VertexShader.vs", "Resources/Shaders/FragmentShader.fs");
+	Shader::AddProgram("Resources/Shaders/TextureVertexShader.vs", "Resources/Shaders/TextureFragmentShader.fs", "Textureprogram");
+	//Shader::Textureprogram = loader.CreateProgram("Resources/Shaders/TextureVertexShader.vs", "Resources/Shaders/TextureFragmentShader.fs");
+	Shader::AddProgram("Resources/Shaders/LitVertexShader.vs", "Resources/Shaders/LitFragmentShader.fs", "LitTextureprogram");
+	//Shader::LitTextureprogram = loader.CreateProgram("Resources/Shaders/LitVertexShader.vs", "Resources/Shaders/LitFragmentShader.fs");
+	Shader::AddProgram("Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs", "TextUIprogram");
+	//Shader::TextUIprogram = loader.CreateProgram("Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs");
+	Shader::AddProgram("Resources/Shaders/UI.vs", "Resources/Shaders/UI.fs", "UIprogram");
+	//Shader::UIprogram = loader.CreateProgram("Resources/Shaders/UI.vs", "Resources/Shaders/UI.fs");
+	Shader::AddProgram("Resources/Shaders/CubeMapVertexShader.vs", "Resources/Shaders/CubeMapFragmentShader.fs", "CubeMapProgram");
+	//Shader::CubeMapProgram = loader.CreateProgram("Resources/Shaders/CubeMapVertexShader.vs", "Resources/Shaders/CubeMapFragmentShader.fs");
+	Shader::AddProgram("Resources/Shaders/ModelVertexShader.vs", "Resources/Shaders/ModelFragmentShader.fs", "ModelProgram");
+	//Shader::ModelProgram = loader.CreateProgram("Resources/Shaders/ModelVertexShader.vs", "Resources/Shaders/ModelFragmentShader.fs");
+	Shader::AddProgram("Resources/Shaders/ModelVertexShaderLit.vs", "Resources/Shaders/ModelFragmentShaderLit.fs", "ModelProgramLit");
+	//Shader::ModelProgramLit = loader.CreateProgram("Resources/Shaders/ModelVertexShaderLit.vs", "Resources/Shaders/ModelFragmentShaderLit.fs");
+	Shader::AddProgram("Resources/Shaders/ReflectionShader.vs", "Resources/Shaders/ReflectionShader.fs", "ReflectionProgram");
+	//Shader::ReflectionProgram = loader.CreateProgram("Resources/Shaders/ReflectionShader.vs", "Resources/Shaders/ReflectionShader.fs");
 	
 	glCullFace(GL_BACK); // Cull the Back faces
 	glFrontFace(GL_CW); // Front face is Clockwise order
@@ -192,9 +224,7 @@ void Init()
 	glutIgnoreKeyRepeat(1);
 
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
-
-	SoundManager::GetInstance()->InitFMod();
-	LevelManager::GetInstance()->Init();
+	LogManager::GetInstance()->Init();
 }
 
 /************************************************************

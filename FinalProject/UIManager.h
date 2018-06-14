@@ -15,7 +15,7 @@
 
 // Local Includes //
 #include "Chat.h"
-#include "ScoreTab.h"
+#include "EndGameScreen.h"
 #include "OptionsScreen.h"
 #include "MessageBox.h"
 #include "HUD.h"
@@ -28,7 +28,7 @@ class UIManager
 {
 public:
 	Chat m_ChatInstance;
-	ScoreTab m_ScoreTabInstance;
+	EndScreen m_EndScreen;
 	OptionsScreen m_OptionsScreenInstance;
 	UIMessageBox m_MessageBoxInstance;
 	HUD m_HUDInstance;
@@ -39,7 +39,7 @@ public:
 	void ShowMessageBox(std::string _Message);
 
 	bool m_bDisplayChat = false;
-	bool m_bDisplayTabScores = false;
+	bool m_bEndScreen = false;
 	bool m_bDisplayPauseOptions = false;
 	bool m_bDisplayMessageBox = false;
 	bool m_bDisplayHUD = false;

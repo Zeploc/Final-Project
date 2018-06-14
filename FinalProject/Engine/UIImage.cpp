@@ -82,16 +82,16 @@ void UIImage::DrawUIElement()
 	{
 	}
 	glEnable(GL_BLEND);
-	glUseProgram(Shader::UIprogram);
+	glUseProgram(Shader::Programs["UIprogram"]);
 	glm::mat4 proj = glm::ortho(0.0f, (GLfloat)Camera::GetInstance()->SCR_WIDTH, 0.0f, (GLfloat)Camera::GetInstance()->SCR_HEIGHT);
 	glm::vec3 NewPos = glm::vec3(position, 0);
 	NewPos.y = Camera::GetInstance()->SCR_HEIGHT - position.y;
-	NewPos = Utils::GetAncoredPosition(NewPos, glm::vec2(iWidth, iHeight), ImageAnchor);// = glm::vec3(position.x, Camera::GetInstance()->SCR_HEIGHT - position.y, 0);
+	NewPos = Utils::GetAncoredPosition2D(NewPos, glm::vec2(iWidth, iHeight), ImageAnchor);// = glm::vec3(position.x, Camera::GetInstance()->SCR_HEIGHT - position.y, 0);
 	
 	proj = glm::translate(proj, NewPos);	
-	glUniformMatrix4fv(glGetUniformLocation(Shader::UIprogram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
-	glUniform1i(glGetUniformLocation(Shader::UIprogram, "bIsTex"), bHasTexture);
-	glUniform4f(glGetUniformLocation(Shader::UIprogram, "Color"), Colour.r, Colour.g, Colour.b, Colour.a);
+	glUniformMatrix4fv(glGetUniformLocation(Shader::Programs["UIprogram"], "proj"), 1, GL_FALSE, glm::value_ptr(proj));
+	glUniform1i(glGetUniformLocation(Shader::Programs["UIprogram"], "bIsTex"), bHasTexture);
+	glUniform4f(glGetUniformLocation(Shader::Programs["UIprogram"], "Color"), Colour.r, Colour.g, Colour.b, Colour.a);
 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

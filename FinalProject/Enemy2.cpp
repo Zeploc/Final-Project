@@ -39,11 +39,11 @@ void Enemy2::Update()
 {
 	if (Target)
 	{
-		std::vector<std::shared_ptr<Entity>> Avoidables = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene())->Enemies;
+		std::vector<std::shared_ptr<Entity>> Avoidables = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene())->CurrentEnemies;
 		m_v3CurrentVelocity += AI::SeekForce(transform.Position, Target->transform.Position, 10.0f, m_v3CurrentVelocity, m_fSpeed);
-		m_v3CurrentVelocity += AI::Seperation(this->shared_from_this(), 1.0f, Avoidables, m_fSpeed)*10.0f;
-		m_v3CurrentVelocity += AI::Align(this->shared_from_this(), 20.0f, Avoidables, m_fSpeed) * 0.1f;
-		m_v3CurrentVelocity += AI::Cohesion(this->shared_from_this(), 10.0f, Avoidables, m_fSpeed)*0.1f;
+		m_v3CurrentVelocity += AI::Seperation(this->shared_from_this(), 1.0f, Avoidables, m_fSpeed) * 7.0f;
+		m_v3CurrentVelocity += AI::Align(this->shared_from_this(), 5.0f, Avoidables, m_fSpeed) * 1.0f;
+		m_v3CurrentVelocity += AI::Cohesion(this->shared_from_this(), 5.0f, Avoidables, m_fSpeed)*0.1f;
 	}
 
 	if (glm::length(m_v3CurrentVelocity) > m_fSpeed)

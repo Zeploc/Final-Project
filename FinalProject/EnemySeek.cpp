@@ -6,14 +6,14 @@
 //
 // (c) 2005 - 2018 Media Design School
 //
-// File Name    	:    Enemy3.cpp
-// Description    	:    Enemy AI using AI Systems
+// File Name    	:    EnemySeek.cpp
+// Description    	:    Enemy AI using AI Seek
 // Author       	:    Alex Coultas
 // Mail         	:    alex.cou7417@mediadesign.school.nz
 //
 
 // This Includes //
-#include "Enemy3.h"
+#include "EnemySeek.h"
 
 // Local Includes //
 #include "AI.h"
@@ -23,22 +23,21 @@
 #include "Engine\Time.h"
 
 
-Enemy3::Enemy3(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
+EnemySeek::EnemySeek(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 	: Entity(_Transform, _Anchor)
 {
-	PreviousPosition = transform.Position;
 }
 
 
-Enemy3::~Enemy3()
+EnemySeek::~EnemySeek()
 {
 }
 
-void Enemy3::Update()
+void EnemySeek::Update()
 {	
-	m_v3CurrentVelocity += AI::PursueForce(this->shared_from_this(), Target, PreviousPosition, 5, 30, m_v3CurrentVelocity, m_fSpeed);
+	if (Target)
+		m_v3CurrentVelocity += AI::SeekWithArrival(transform.Position, Target->transform.Position, 50, m_v3CurrentVelocity, 3.0f, m_fSpeed);
 	
 	transform.Position += m_v3CurrentVelocity * (float)Time::dTimeDelta;
-	PreviousPosition = Target->transform.Position;
 }
 

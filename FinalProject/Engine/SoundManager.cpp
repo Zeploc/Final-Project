@@ -16,6 +16,7 @@
 // OpenGL Library Includes //
 
 // Engine Includes //
+#include "LogManager.h"
 
 // Local Includes //
 
@@ -82,6 +83,7 @@ const bool SoundManager::AddAudio(const char * Path, bool bLoop, std::string sNa
 		CreatedSound->setMode(FMOD_LOOP_NORMAL);
 	SoundObject NewSoundObj = { CreatedSound , sName };
 	Sounds.push_back(NewSoundObj);
+	LogManager::GetInstance()->DisplayLogMessage("Loading audio file at \"" + std::string(Path) + "\"");
 	return true;
 }
 

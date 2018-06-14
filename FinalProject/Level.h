@@ -44,11 +44,14 @@ public:
 	void RenderScene();
 
 	void AddCollidable(std::shared_ptr<Entity>);
-	void AddEnemy(std::shared_ptr<Entity>);
 	std::shared_ptr<Entity> AddCollidable(Utils::Transform _Transform, float _fWidth, float _fHeight, Utils::EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, int iCount, bool bHorizontal);
 	void DestroyCollidable(std::shared_ptr<Entity>);
 	void AddHexPlatform(std::string _ModelPath, glm::vec3 _v3Postion, glm::vec3 Rotation);
+	
+	void AddEnemy(std::shared_ptr<Entity>);
+	void AddTempEnemy(std::shared_ptr<Entity> NewEnemy);
 
+	void DestroyAllEnemies();
 	void RespawnEnemies();
 	void PlayRandomTrack();
 
@@ -65,7 +68,7 @@ public:
 	std::shared_ptr<Entity> BossRef;
 
 	std::vector<std::shared_ptr<Entity>> Collidables;
-	std::vector<std::shared_ptr<Entity>> Enemies;
+	std::vector<std::shared_ptr<Entity>> CurrentEnemies;
 
 	glm::vec3 SpawnPos;
 
@@ -86,6 +89,8 @@ private:
 	int iCoinsCollected = 0;
 
 	glm::vec3 camVel = glm::vec3();
+
+	std::vector<std::shared_ptr<Entity>> EnemiesTemplate;
 
 	void CameraMovement();
 };

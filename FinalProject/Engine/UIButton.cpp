@@ -146,7 +146,7 @@ void UIButton::SetPressSound(const char * _SoundPath)
 void UIButton::DrawUIElement()
 {
 	if (!bActive) return;
-	glUseProgram(Shader::TextUIprogram);
+	glUseProgram(Shader::Programs["TextUIprogram"]);
 	ImageComponent.DrawUIElement();
 	if (bHasText) TextComponent.DrawUIElement();
 }

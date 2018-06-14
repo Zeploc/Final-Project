@@ -32,12 +32,19 @@ class GameManager
 public:
 	void SwitchToCurrentLevel();
 	void ShowEndScreen(bool _bLost);
-	void PlayerDeath();
+	void HideEndScreen();
+
 	void LevelWon();
+	void PlayerDeath();
+	void RespawnPlayer();
+
+	bool IsPlayerAlive() {
+		return !bPlayerDead;
+	}
 
 private:
 
-	void HideEndScreen();
+	bool bPlayerDead = false;
 	
 
 	// Singleton

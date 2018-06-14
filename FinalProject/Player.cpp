@@ -35,6 +35,7 @@
 #include "UIManager.h"
 #include "Level.h"
 #include "Boss.h"
+#include "GameManager.h"
 
 
 // This Includes //
@@ -106,61 +107,14 @@ Player::~Player()
 void Player::Update()
 {
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
-	if (!GotLevel || !bActive || !UIManager::GetInstance()->m_bFPS) return;
+	if (!GotLevel || !bActive || !UIManager::GetInstance()->m_bFPS || !GameManager::GetInstance()->IsPlayerAlive()) return;
 	
-	/*glm::vec3 LookAtDirection = Target - Source;*/
-	//if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
-	//{
-	//	transform.Scale.x = 1;
-	//	if (AnimationInfo.v2CurrentFrame.y < 2)
-	//	{
-	//		if (CollisionBox.v2Offset.y == -0.17f && ((AnimationInfo.v2CurrentFrame.x >= 4 && AnimationInfo.v2CurrentFrame.y == 0) || (AnimationInfo.v2CurrentFrame.x == 0 && AnimationInfo.v2CurrentFrame.y == 1)))
-	//		{
-	//			transform.Position.y += 0.02f;
-	//		}
-	//		CollisionBox.v2Offset.y = -0.10f;
-	//		AnimationInfo.v2StartFrame = { 1, 1 };
-	//		AnimationInfo.v2CurrentFrame = { 1, 1 };
-	//		AnimationInfo.v2EndFrame = { 6, 1 };
-	//		CollisionBox.fWidth = 0.8f;
-	//		CollisionBox.fHeight = 0.86f;
-	//	}
-	//}
-	//else if (Input::GetInstance()->KeyState[(unsigned char)'a'] == Input::INPUT_FIRST_PRESS)
-	//{
-	//	transform.Scale.x = -1;
-	//	if (AnimationInfo.v2CurrentFrame.y < 2)
-	//	{
-	//		if (CollisionBox.v2Offset.y == -0.17f && ((AnimationInfo.v2CurrentFrame.x >= 4 && AnimationInfo.v2CurrentFrame.y == 0) || (AnimationInfo.v2CurrentFrame.x == 0 && AnimationInfo.v2CurrentFrame.y == 1)))
-	//		{
-	//			transform.Position.y += 0.02f;
-	//		}
-	//		CollisionBox.v2Offset.y = -0.10f;
-	//		AnimationInfo.v2StartFrame = { 1, 1 };
-	//		AnimationInfo.v2CurrentFrame = { 1, 1 };
-	//		AnimationInfo.v2EndFrame = { 6, 1 };
-	//		CollisionBox.fWidth = 0.8f;
-	//		CollisionBox.fHeight = 0.86f;
-	//	}
-	//}
-	//else if (Input::GetInstance()->KeyState[(unsigned char)'s'] == Input::INPUT_FIRST_PRESS)
-	//{
-	//	AnimationInfo.v2StartFrame = { 4, 0 };
-	//	AnimationInfo.v2CurrentFrame = { 4, 0 };
-	//	AnimationInfo.v2EndFrame = { 0, 1 };
-	//	CollisionBox.fWidth = 0.6f;
-	//	CollisionBox.fHeight = 0.7f;
-	//	CollisionBox.v2Offset.y = -0.17f;
-	//}
-	//else if ((((AnimationInfo.v2CurrentFrame.y == 1 && AnimationInfo.v2CurrentFrame.x != 0)|| AnimationInfo.v2CurrentFrame.y == 3) && Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_RELEASED && Input::GetInstance()->KeyState[(unsigned char)'a'] == Input::INPUT_RELEASED) || AnimationInfo.v2CurrentFrame == glm::vec2(2, 3))
-	//{
-	//	AnimationInfo.v2CurrentFrame = { 0, 0 };
-	//	AnimationInfo.v2StartFrame = { 0, 0 };
-	//	AnimationInfo.v2EndFrame = { 3, 0 };
-	//	CollisionBox.fWidth = 0.6f;
-	//	CollisionBox.fHeight = 0.86f;
-	//	CollisionBox.v2Offset.y = -0.10f;
-	//}
+	if (transform.Position.y < -20.0f)
+	{		
+		GameManager::GetInstance()->PlayerDeath();
+		return;
+	}
+
 	glm::vec3 MouseWorldPosition = { 0,0,0 };
 
 	float fDotProductDirections = glm::dot(Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos), glm::vec3(0, 1, 0));
@@ -199,68 +153,11 @@ void Player::Update()
 	}
 
 	BulletTimer -= Time::dTimeDelta;
-
-	bool bBackToStart = false;
-	auto iEndPos = Bullets.end();
-	for (auto it = Bullets.begin(); it != iEndPos; it++)
+	if (Bullets.size() != 0)
 	{
-		if (bBackToStart)
-		{
-			it = Bullets.begin();
-			bBackToStart = false;
-		}
-		it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
-		it->Timer -= Time::dTimeDelta;
-		
-		if (it->Timer <= 0)
-		{
-			SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(it->BulletEntity);
-			it = Bullets.erase(it);
-			if (it == Bullets.begin())
-			{
-				bBackToStart = true;
-			}
-			else
-				it--;
-			if (Bullets.size() == 0) break;
-			iEndPos = Bullets.end();
-		}
-	}
-	std::shared_ptr<Level> LevelRef = dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
-	for (auto& Bulletit : Bullets)
-	{
-		for (auto& it : LevelRef->Enemies)
-		{			
-			if (Bulletit.BulletEntity->EntityMesh->GetCollisionBounds()->isColliding(it))
-			{
-				std::shared_ptr<Boss> IsBoss = std::dynamic_pointer_cast<Boss>(it);
-				if (IsBoss)
-				{
-					IsBoss->OnBulletCollision();
-					if (IsBoss->BossHealth <= 0 && IsBoss->IsActive())
-					{
-						it->SetVisible(false);
-						it->SetActive(false);
-						Bulletit.BulletEntity->SetActive(false);
-						Bulletit.BulletEntity->SetVisible(false);
-						AddScore(50);					
-					}
-				}
-				else if (it->IsActive())
-				{
-					// Temp bullet kill
-					it->SetVisible(false);
-					it->SetActive(false);
-					Bulletit.BulletEntity->SetActive(false);
-					Bulletit.BulletEntity->SetVisible(false);
-					AddScore(10);
-				}
-			}
-		}
-		
+		HandleBullets();
 	}
 	
-
 	if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
 	{
 		MoveHorizontally(false);
@@ -271,9 +168,8 @@ void Player::Update()
 	}
 	else
 	{
-		fHSpeed = 0;
+		v3Speed.x = 0;
 	}
-
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'w'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'w'] == Input::INPUT_FIRST_PRESS)
 	{
@@ -285,31 +181,32 @@ void Player::Update()
 	}
 	else
 	{
-		fVSpeed = 0;
+		v3Speed.z = 0;
 	}
 	
-	
-
-
 	if (RollTimer > 0 && Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS && bHasDodged == true)
 	{
-		fHSpeed *= 35;
-		fVSpeed *= 35;
+		v3Speed.x *= 35;
+		v3Speed.z *= 35;
 		bHasDodged = false;
 		DodgeCooldown = 1.0f;
 	}
 
 	if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_FIRST_PRESS && bHasDodged == false && DodgeCooldown < 0)
 	{
-		fHSpeed *= 15;
-		fVSpeed *= 15;
+		v3Speed.x *= 15;
+		v3Speed.z *= 15;
 		bHasDodged = true;
-		RollTimer = 0.5f;
-		
+		RollTimer = 0.5f;		
 	}
 
-	
-	
+	if (m_fHealth <= 0)
+	{
+		this->shared_from_this()->SetActive(false);
+		this->shared_from_this()->SetVisible(false);
+	}
+
+
 	RollTimer -= Time::dTimeDelta;
 	
 
@@ -320,91 +217,29 @@ void Player::Update()
 	
 	DodgeCooldown -= Time::dTimeDelta;
 
+	bool bAddGrav = true;
+	for (auto it : GotLevel->Collidables)
+	{
+		if (EntityMesh->GetCollisionBounds()->CheckCollision(it, glm::vec3(v3Speed.x, v3Speed.y - GameSettings::fGravity * (float)Time::dTimeDelta, v3Speed.z))) // Checks if will collide at - gravity
+		{
+			if (it->transform.Position.y >= transform.Position.y)
+				v3Speed.y = EntityMesh->GetCollisionBounds()->GetDistance(it).y; // Moves up to object (moves up the distance from object)				
+			else
+			{
+				v3Speed.y = -EntityMesh->GetCollisionBounds()->GetDistance(it).y; // Moves up to object (moves down the distance from object)
+				//bJump = false;
+			}
+			bAddGrav = false;				
+			break;
+		}
+	}
 
-	//Reducing the velocity to 0 if the movement button is let go
+	if (GotLevel->Collidables.size() == 0 || bAddGrav)
+		if (v3Speed.y > -GameSettings::fTerminalVelocity * (float)Time::dTimeDelta) v3Speed.y -= GameSettings::fGravity * (float)Time::dTimeDelta; // moves down with -gravity
+		else v3Speed.y = -GameSettings::fTerminalVelocity * (float)Time::dTimeDelta;
 	
-
-	//else
-	//{
-	//	if (Input::GetInstance()->KeyState[(unsigned char)'s'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'s'] == Input::INPUT_FIRST_PRESS)
-	//	{
-	//		if (AnimationInfo.v2CurrentFrame.x >= 1 && AnimationInfo.v2CurrentFrame.y == 3) // If running animation
-	//		{
-	//			// Set to running
-	//			AnimationInfo.v2StartFrame = { 1, 1 };
-	//			AnimationInfo.v2CurrentFrame = { 1, 1 };
-	//			AnimationInfo.v2EndFrame = { 6, 1 };
-	//			CollisionBox.fWidth = 0.8f;
-	//			CollisionBox.fHeight = 0.86f;
-	//			CollisionBox.v2Offset.y = -0.17f;
-	//		}
-	//		else if (AnimationInfo.v2CurrentFrame.x >= 0 && AnimationInfo.v2CurrentFrame.x <= 3 && AnimationInfo.v2CurrentFrame.y == 0) // If Standing/ Idle animation
-	//		{
-	//			// Set to Crouched
-	//			AnimationInfo.v2StartFrame = { 4, 0 };
-	//			//AnimationInfo.v2CurrentFrame = { 4, 0 };
-	//			AnimationInfo.v2EndFrame = { 0, 1 };
-	//			CollisionBox.fWidth = 0.6f;
-	//			CollisionBox.fHeight = 0.7f;
-	//			CollisionBox.v2Offset.y = -0.17f;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		if (!bJump)
-	//		{
-	//			AnimationInfo.v2StartFrame = { 0, 0 };
-	//			AnimationInfo.v2EndFrame = { 3, 0 };
-	//			CollisionBox.fWidth = 0.6f;
-	//			CollisionBox.fHeight = 0.86f;
-	//			if (CollisionBox.v2Offset.y == -0.17f && ((AnimationInfo.v2CurrentFrame.x >= 4 && AnimationInfo.v2CurrentFrame.y == 0) || (AnimationInfo.v2CurrentFrame.x == 0 && AnimationInfo.v2CurrentFrame.y == 1)))
-	//			{
-	//				transform.Position.y += 0.02f;
-	//			}
-	//			CollisionBox.v2Offset.y = -0.10f;
-	//		}
-	//	}
-	//	fHSpeed = 0;
-	//}
-	//if (Input::GetInstance()->KeyState[(unsigned char)'w'] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[(unsigned char)'w'] == Input::INPUT_HOLD)
-	//{
-	//	if (!bJump)
-	//	{
-	//		bJump = true;
-	//		fVSpeed = GameSettings::fJumpSize / 10;
-	//		AnimationInfo.v2CurrentFrame = { 0, 2 };
-	//		AnimationInfo.v2StartFrame = { 4, 2 };
-	//		AnimationInfo.v2EndFrame = { 4, 2 };
-	//	}
-	//}
-
-	//if (GotLevel && Input::GetInstance()->KeyState[(unsigned char)'w'] != Input::INPUT_FIRST_PRESS)
-	//{
-	//	bool bAddGrav = true;
-	//	for (auto it : GotLevel->Collidables)
-	//	{
-	//		// now its dis one?
-	//		if (Utils::CheckCollision2D(std::make_shared<Entity>(*this), it, glm::vec2(fHSpeed, fVSpeed - GameSettings::fGravity * (float)Time::dTimeDelta))) // Checks if will collide at - gravity
-	//		{
-	//			if (it->transform.Position.y >= transform.Position.y)
-	//				fVSpeed = Utils::GetDistance2D(std::make_shared<Entity>(*this), it).y; // Moves up to object (moves up the distance from object)				
-	//			else
-	//			{
-	//				fVSpeed = -Utils::GetDistance2D(std::make_shared<Entity>(*this), it).y; // Moves up to object (moves down the distance from object)
-	//				bJump = false;
-	//			}
-	//			bAddGrav = false;
-	//			
-	//			break;
-	//		}
-	//	}
-	//	if (GotLevel->Collidables.size() == 0 || bAddGrav)
-	//		if (fVSpeed > -GameSettings::fTerminalVelocity * (float)Time::dTimeDelta) fVSpeed -= GameSettings::fGravity * (float)Time::dTimeDelta; // moves down with -gravity
-	//		else fVSpeed = -GameSettings::fTerminalVelocity * (float)Time::dTimeDelta;
-	//}
-
-	Translate(glm::vec3(fHSpeed, 0, fVSpeed));
-	//GotLevel->DebugText->sText = std::to_string(fVSpeed);
+	Translate(glm::vec3(v3Speed.x, v3Speed.y, v3Speed.z));
+	//GotLevel->DebugText->sText = std::to_string(v2HSpeed.z);
 
 	if (CurrentPowerUp != NONE)
 	{
@@ -427,30 +262,43 @@ void Player::Update()
 void Player::Reset()
 {
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->Scenes[SceneManager::GetInstance()->CurrentScene]);
-	fHSpeed = 0;
-	fVSpeed = 0;
+	v3Speed.x = 0;
+	v3Speed.z = 0;
+	v3Speed.y = 0;
 	transform.Position = GotLevel->SpawnPos;
+	SetHealth(100);
+	SetScore(0);
 }
-
 
 
 void Player::SetHealth(float _fNewHealth)
 {
 	m_fHealth = _fNewHealth;
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
+	if (m_fHealth <= 0)
+		GameManager::GetInstance()->PlayerDeath();
 }
 
 void Player::ApplyHealth(float _fmodify)
 {
 	m_fHealth += _fmodify;
+	m_fHealth = max(m_fHealth, 0.0f);
+	m_fHealth = min(m_fHealth, 100.0f);
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
+	if (m_fHealth <= 0)
+		GameManager::GetInstance()->PlayerDeath();
 }
 
 void Player::AddScore(int _iAddScore)
 {
 	m_iScore += _iAddScore;
 	UIManager::GetInstance()->m_HUDInstance.SetScore(m_iScore);
+}
 
+void Player::SetScore(int _iNewScore)
+{
+	m_iScore = _iNewScore;
+	UIManager::GetInstance()->m_HUDInstance.SetScore(m_iScore);
 }
 
 void Player::ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime)
@@ -481,6 +329,97 @@ void Player::PowerUpComplete()
 	}
 }
 
+void Player::HandleBullets()
+{
+	bool bBackToStart = false;
+	auto iEndPos = Bullets.end();
+	for (auto it = Bullets.begin(); it != iEndPos; it++)
+	{
+		if (bBackToStart)
+		{
+			it = Bullets.begin();
+			bBackToStart = false;
+		}
+		it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
+		it->Timer -= Time::dTimeDelta;
+
+		if (it->Timer <= 0)
+		{
+			SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(it->BulletEntity);
+			it = Bullets.erase(it);
+			if (it == Bullets.begin())
+			{
+				bBackToStart = true;
+			}
+			else
+				it--;
+			if (Bullets.size() == 0) break;
+			iEndPos = Bullets.end();
+		}
+	}
+	bBackToStart = false;
+	std::shared_ptr<Level> LevelRef = dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
+	auto BulletEnd = Bullets.end();
+	for (auto Bulletit = Bullets.begin(); Bulletit != BulletEnd; ++Bulletit)
+	{
+		if (bBackToStart)
+		{
+			Bulletit = Bullets.begin();
+			bBackToStart = false;
+		}
+		for (auto& it : LevelRef->CurrentEnemies)
+		{
+			if (Bulletit->BulletEntity->EntityMesh->GetCollisionBounds()->isColliding(it))
+			{
+				std::shared_ptr<Boss> IsBoss = std::dynamic_pointer_cast<Boss>(it);
+				if (IsBoss)
+				{
+					IsBoss->OnBulletCollision();
+					if (IsBoss->BossHealth <= 0 && IsBoss->IsActive())
+					{
+						it->SetVisible(false);
+						it->SetActive(false);
+						//Bulletit.BulletEntity->SetActive(false);
+						//Bulletit.BulletEntity->SetVisible(false);
+						LevelRef->DestroyCollidable(Bulletit->BulletEntity);
+						Bulletit = Bullets.erase(Bulletit);
+						BulletEnd = Bullets.end();
+						AddScore(50);
+						if (Bulletit == Bullets.begin())
+						{
+							bBackToStart = true;
+						}
+						else
+							Bulletit--;
+						if (Bullets.size() == 0) break;
+					}
+				}
+				else if (it->IsActive())
+				{
+					// Temp bullet kill
+					it->SetVisible(false);
+					it->SetActive(false);
+					//Bulletit.BulletEntity->SetActive(false);
+					//Bulletit.BulletEntity->SetVisible(false);
+					LevelRef->DestroyCollidable(Bulletit->BulletEntity);
+					Bulletit = Bullets.erase(Bulletit);
+					BulletEnd = Bullets.end();
+					AddScore(10);
+					if (Bulletit == Bullets.begin())
+					{
+						bBackToStart = true;
+					}
+					else
+						Bulletit--;
+					if (Bullets.size() == 0) break;
+				}
+			}
+		}
+		if (Bullets.size() == 0) break;
+
+	}
+}
+
 /************************************************************
 #--Description--#:  Move player in specified direction
 #--Author--#: 		Alex Coultas
@@ -498,24 +437,24 @@ void Player::MoveHorizontally(bool bLeft)
 		if (GotLevel->Collidables.size() == 0)
 		{
 			if (bLeft)
-				fHSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
+				v3Speed.x = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			else
-				fHSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
+				v3Speed.x = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			return;
 		}
 		for (auto it : GotLevel->Collidables)
 		{
 			if (EntityMesh->GetCollisionBounds()->CheckCollision(it, glm::vec3(m_fCurrentPlayerSpeed * Time::dTimeDelta * Direction, 0, 0)))
 			{
-					fHSpeed = Direction * abs(EntityMesh->GetCollisionBounds()->GetDistance(it).x);
+					v3Speed.x = Direction * abs(EntityMesh->GetCollisionBounds()->GetDistance(it).x);
 					break;
 			}
 			else
 			{
 				if (bLeft)
-					fHSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
+					v3Speed.x = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 				else
-					fHSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
+					v3Speed.x = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			}
 		}
 	}
@@ -532,9 +471,9 @@ void Player::MoveVertical(bool bUp)
 		if (GotLevel->Collidables.size() == 0)
 		{
 			if (bUp)
-				fVSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
+				v3Speed.z = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			else
-				fVSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
+				v3Speed.z = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			return;
 		}
 		for (auto it : GotLevel->Collidables)
@@ -542,15 +481,15 @@ void Player::MoveVertical(bool bUp)
 
 			if (EntityMesh->GetCollisionBounds()->CheckCollision(it, glm::vec3(0, 0, m_fCurrentPlayerSpeed * Time::dTimeDelta * Direction)))
 			{
-				fVSpeed = Direction * abs(EntityMesh->GetCollisionBounds()->GetDistance(it).z);
+				v3Speed.z = Direction * abs(EntityMesh->GetCollisionBounds()->GetDistance(it).z);
 				break;
 			}
 			else
 			{
 				if (bUp)
-					fVSpeed = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
+					v3Speed.z = -m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 				else
-					fVSpeed = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
+					v3Speed.z = m_fCurrentPlayerSpeed * (float)Time::dTimeDelta;
 			}
 		}
 	}
@@ -560,3 +499,4 @@ void Player::HurtPlayer(float Damage)
 {
 	ApplyHealth(-Damage);
 }
+

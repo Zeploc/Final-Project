@@ -35,8 +35,9 @@ public:
 	~Shader();
 	static void CleanUp();
 
+	static void AddProgram(std::string VertexShaderPath, std::string FragmentShaderPath, std::string ShaderName);
 
-	static GLuint program;
+	/*static GLuint program;
 	static GLuint Textureprogram;
 	static GLuint LitTextureprogram;
 	static GLuint TextUIprogram;
@@ -44,10 +45,11 @@ public:
 	static GLuint CubeMapProgram;
 	static GLuint ModelProgram;
 	static GLuint ModelProgramLit;
-	static GLuint ReflectionProgram;
+	static GLuint ReflectionProgram;*/
 	
 	static std::map<std::string, std::shared_ptr<ModelObject>> Models;
 	static std::map<const char *, GLuint> Textures;
+	static std::map<std::string, GLuint> Programs;
 	
 	/*static GLuint BindPyramidArray(float fWidth, float fHeight, float fDepth, glm::vec4 Colour);
 	static GLuint BindPyramidArray(float fWidth, float fHeight, float fDepth, glm::vec4 Colour, const char *  TextureSource, GLuint& Texture, glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1));

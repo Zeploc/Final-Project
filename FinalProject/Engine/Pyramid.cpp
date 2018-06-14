@@ -38,11 +38,11 @@ Pyramid::Pyramid(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 	m_eShape = Utils::PYRAMID;
 	if (bHasTexture)
 	{
-		program = Shader::Textureprogram;
+		program = Shader::Programs["Textureprogram"];
 	}
 	else
 	{
-		program = Shader::program;
+		program = Shader::Programs["program"];
 	}
 }
 
@@ -66,11 +66,11 @@ Pyramid::Pyramid(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, c
 	m_eShape = Utils::PYRAMID;
 	if (bHasTexture)
 	{
-		program = Shader::Textureprogram;
+		program = Shader::Programs["Textureprogram"];
 	}
 	else
 	{
-		program = Shader::program;
+		program = Shader::Programs["program"];
 	}
 
 }

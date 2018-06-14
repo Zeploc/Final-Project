@@ -52,24 +52,23 @@ public:
 	~Player();
 
 	void Update();
-	glm::vec2 GetVelocity() { return glm::vec2(fHSpeed, fVSpeed); };
+	glm::vec3 GetVelocity() { return v3Speed; };
 	void ChangeMoveSpeed(float _fSpeed) { m_fCurrentPlayerSpeed = _fSpeed; };
-	void Reset();
 
 	void HurtPlayer(float Damage);
-
+	void Reset();
 
 	void SetHealth(float _fNewHealth);
 	void ApplyHealth(float _fmodify);
 	void AddScore(int _iAddScore);
-
+	void SetScore(int _iNewScore);
 
 	void ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime);
 
 private:
-	// Bullets
-	
+	// Bullets	
 	float BulletSpeed = 30.0f;
+	void HandleBullets();
 	
 
 	// Movement
@@ -78,8 +77,7 @@ private:
 	float RollTimer = 0.8f;
 	float BulletTimer = 0.12f;
 	float DodgeCooldown;
-	float fHSpeed = 0;
-	float fVSpeed = 0;
+	glm::vec3 v3Speed = { 0, 0, 0 };
 	float m_fCurrentPlayerSpeed = GameSettings::fMoveSpeed;
 	bool bHasDodged = false;
 	bool bJump = false;
@@ -87,6 +85,7 @@ private:
 	// Score and Health
 	float m_fHealth = 100;
 	int m_iScore = 0;
+	
 
 	//Power Ups
 	void PowerUpComplete();

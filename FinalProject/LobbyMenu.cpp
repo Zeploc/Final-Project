@@ -86,6 +86,9 @@ void LobbyMenu::ShowElements()
 	for (auto it : v_ScreenElements)
 		it->SetActive(true);
 
+
+	//Check if Server, if not, set start server button to inactive
+
 	UIManager::GetInstance()->m_bDisplayChat = true;
 
 	if (!NetworkManager::GetInstance()->m_Network.IsServer()) // Current Instance is a client

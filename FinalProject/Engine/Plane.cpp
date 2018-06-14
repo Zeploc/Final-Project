@@ -41,11 +41,11 @@ Plane::Plane(float fWidth, float fHeight, glm::vec4  _Colour)
 	m_eShape = Utils::PLANE;
 	if (bHasTexture)
 	{
-		program = Shader::Textureprogram;
+		program = Shader::Programs["Textureprogram"];
 	}
 	else
 	{
-		program = Shader::program;
+		program = Shader::Programs["program"];
 	}
 }
 
@@ -68,11 +68,11 @@ Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour, const char * _Textu
 	m_eShape = Utils::PLANE;
 	if (bHasTexture)
 	{
-		program = Shader::Textureprogram;
+		program = Shader::Programs["Textureprogram"];
 	}
 	else
 	{
-		program = Shader::program;
+		program = Shader::Programs["program"];
 	}
 }
 
@@ -107,11 +107,11 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char * Text
 	BindPlane();
 	if (bHasTexture)
 	{
-		program = Shader::Textureprogram;
+		program = Shader::Programs["Textureprogram"];
 	}
 	else
 	{
-		program = Shader::program;
+		program = Shader::Programs["program"];
 	}
 }
 
@@ -151,11 +151,11 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char * Text
 	BindPlane();
 	if (bHasTexture)
 	{
-		program = Shader::Textureprogram;
+		program = Shader::Programs["Textureprogram"];
 	}
 	else
 	{
-		program = Shader::program;
+		program = Shader::Programs["program"];
 	}
 }
 
@@ -230,7 +230,7 @@ void Plane::Render(Utils::Transform Newtransform)
 	{
 		glUseProgram(program);
 		glEnable(GL_BLEND);
-		GLint UVCoordsLoc = glGetUniformLocation(Shader::Textureprogram, "uTexCoordOffset");
+		GLint UVCoordsLoc = glGetUniformLocation(Shader::Programs["Textureprogram"], "uTexCoordOffset");
 		glUniform2f(UVCoordsLoc, AnimationInfo.v2CurrentFrame.x * AnimationInfo.v2FrameSize.x, AnimationInfo.v2CurrentFrame.y * AnimationInfo.v2FrameSize.y);
 	}
 	else

@@ -80,18 +80,18 @@ void UIManager::Update()
 	if (SceneManager::GetInstance()->GetCurrentScene()->SceneName == "MainMenu")
 	{
 		if (m_bDisplayPauseOptions) m_bDisplayPauseOptions = false;
-		//if (m_bDisplayChat) m_bDisplayChat = false;
+		//if (m_bDis playChat) m_bDisplayChat = false;
 		if (m_bUIMode == false)	SwitchUIMode(true);
 	}
-	// Show Tab Scores
-	if (Input::GetInstance()->KeyState[(const int)'\t'] == Input::INPUT_FIRST_PRESS)
-	{
-		m_bDisplayTabScores = true;
-	}
+	//// Show Tab Scores
+	//if (Input::GetInstance()->KeyState[(const int)'\t'] == Input::INPUT_FIRST_PRESS)
+	//{
+	//	m_bEndScreen = true;
+	//}
 	// Hide Tab Scores
 	else if (Input::GetInstance()->KeyState[(const int)'\t'] == Input::INPUT_FIRST_RELEASE)
 	{
-		m_bDisplayTabScores = false;
+		m_bEndScreen = false;
 	}
 	// FPS mode only on when UI Mode is off
 	if (m_bFPS == m_bUIMode)
@@ -99,7 +99,7 @@ void UIManager::Update()
 	
 	// Update system instances
 	m_ChatInstance.Update();
-	m_ScoreTabInstance.Update();
+	m_EndScreen.Update();
 	m_HUDInstance.Update();
 	if (m_bDisplayPauseOptions) m_OptionsScreenInstance.Update();
 	if (m_bDisplayMessageBox) m_MessageBoxInstance.Update();
@@ -115,7 +115,7 @@ void UIManager::Render()
 {
 	// Render System instances
 	if (m_bDisplayChat) m_ChatInstance.Render();
-	if (m_bDisplayTabScores) m_ScoreTabInstance.Render();
+	if (m_bEndScreen) m_EndScreen.Render();
 	if (m_bDisplayPauseOptions) m_OptionsScreenInstance.Render();
 	if (m_bDisplayMessageBox) m_MessageBoxInstance.Render();
 	if (m_bDisplayHUD) m_HUDInstance.Render();
