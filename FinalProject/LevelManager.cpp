@@ -222,10 +222,12 @@ void LevelManager::NextLevel()
 	std::shared_ptr<Level> LevelScene = std::shared_ptr<Level>(new Level("New Level"));
 	if (!AddLevel(LevelScene))
 	{
+		UIManager::GetInstance()->m_bLoadingScreen = true;
 		SceneManager::GetInstance()->SwitchScene("MainMenu");
 	}
 	else
 	{
+		UIManager::GetInstance()->m_bLoadingScreen = true;
 		iCurrentLevelID++;
 		SceneManager::GetInstance()->SwitchScene(LevelScene->SceneName);
 		LevelManager::GetInstance()->GetCurrentActiveLevel()->PlayRandomTrack();

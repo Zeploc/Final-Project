@@ -51,7 +51,7 @@ LobbyMenu::~LobbyMenu()
 void LobbyMenu::Init(std::shared_ptr<Scene> _Scene)
 {
 	// Add Lobby Elements
-	std::shared_ptr<UIText> LobbyText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), "Game Lobby:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
+	std::shared_ptr<UIText> LobbyText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.9, 0.9, 0.9, 1.0f), "Game Lobby:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
 	LobbyText->SetActive(false);
 	PlayerName = std::make_shared<UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH - 100.0f, 300.0f }, 0, glm::vec4(0.6f, 0.6f, 0.6f, 1.0f), "Player", "Resources/Fonts/Roboto-Bold.ttf", 50, Utils::CENTER_RIGHT));
 	PlayerName->SetActive(false);

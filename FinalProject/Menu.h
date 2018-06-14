@@ -62,6 +62,8 @@ public:
 	JoinGameMenu JoinGameScreen;
 	HostGameMenu HostGameScreen;
 
+	void ToggleControls();
+
 	//void ToggleInstructions();
 private:
 
@@ -75,6 +77,7 @@ private:
 	MENUSECTION m_CurrentSection = MAIN;
 	std::shared_ptr<UIImage> m_Arrow;
 	std::shared_ptr<UISlider> m_VolumeSlider;
-
+	std::shared_ptr<UIImage> ControlsImage;
+	std::shared_ptr<UIButton> ControlsBtn;
 };
 

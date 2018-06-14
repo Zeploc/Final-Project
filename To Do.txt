@@ -1,0 +1,18 @@
+Readme showing control scheme
+Sound
+
+B:
+	
+A:
+	3 Pickups
+	Assertions
+	Documentation
+	Another option
+	Controls indentifiable (For controls and power ups)
+	
+	
+Programming practise:
+	No warnings
+	No memory leaks
+	
+	Debug and release builds

@@ -460,6 +460,7 @@ void Level::OnLoadScene()
 	PlayRandomTrack();
 	UIManager::GetInstance()->SwitchUIMode(false);
 	UIManager::GetInstance()->m_bDisplayHUD = true;
+	UIManager::GetInstance()->m_bLoadingScreen = false;
 	RestartLevel();	
 }
 /************************************************************

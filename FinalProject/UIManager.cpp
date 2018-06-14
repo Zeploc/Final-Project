@@ -31,7 +31,7 @@ std::shared_ptr<UIManager> UIManager::m_pUIManager;
 ************************************************************/
 UIManager::UIManager()
 {
-
+	ControlsImage = std::make_shared<UIImage>(UIImage(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2), Utils::CENTER, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Camera::GetInstance()->SCR_WIDTH, Camera::GetInstance()->SCR_HEIGHT, "Resources/Controls Image Background.png", 2));
 }
 
 
@@ -119,6 +119,7 @@ void UIManager::Render()
 	if (m_bDisplayPauseOptions) m_OptionsScreenInstance.Render();
 	if (m_bDisplayMessageBox) m_MessageBoxInstance.Render();
 	if (m_bDisplayHUD) m_HUDInstance.Render();
+	if (m_bLoadingScreen) ControlsImage->DrawUIElement();
 }
 
 void UIManager::ShowMessageBox(std::string _Message)
