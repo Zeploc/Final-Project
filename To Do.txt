@@ -15,6 +15,5 @@ Programming practise:
 	
 	Debug and release builds
 	
-	Boss death
-	End condition on boss level
-	Pickups spawn?
+
+	Restart boss level load

@@ -31,6 +31,7 @@ public:
 	void Render();
 
 	void SetScore(int iScore);
+	void SetEndText(std::string _EndText);
 
 private:
 	std::shared_ptr<UIImage> m_pBackImage;

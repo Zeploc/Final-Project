@@ -42,6 +42,8 @@ public:
 		return !bPlayerDead;
 	}
 
+	std::shared_ptr<Player> GetPlayer();
+
 private:
 
 	bool bPlayerDead = false;

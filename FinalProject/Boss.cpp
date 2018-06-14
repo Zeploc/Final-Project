@@ -1,6 +1,7 @@
 
 // Library Includes //
 #include <memory.h>
+#include <iostream>
 
 // This Includes //
 #include "Boss.h"
@@ -10,7 +11,8 @@
 #include "AI.h"
 #include "Level.h"
 #include "Player.h"
-
+#include "GameManager.h"
+#include "UIManager.h"
 
 // Engine Includes //
 #include "Engine\SceneManager.h"
@@ -122,10 +124,13 @@ void Boss::Update()
 void Boss::OnBulletCollision()
 {
 	BossHealth -= 1;
+	std::cout << "Bullet hit boss, new health " + std::to_string(BossHealth) << std::endl;
 
 	if (BossHealth <= 0)
 	{
-		/*std::shared_ptr<Level> LevelRef = dynamic_pointer_cast <Level>(SceneManager::GetInstance()->GetCurrentScene());*/
+		GameManager::GetInstance()->GetPlayer()->AddScore(50);
+		GameManager::GetInstance()->PlayerDeath();
+		UIManager::GetInstance()->m_EndScreen.SetEndText("Boss defeated!");
 	}
 }
 

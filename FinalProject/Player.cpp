@@ -415,6 +415,7 @@ void Player::HandleBullets()
 		while (bEnemyKilled)
 		{
 			bEnemyKilled = false;
+			if (LevelRef->CurrentEnemies.size() == 0) break;
 			auto EnemyEnd = LevelRef->CurrentEnemies.end();
 			for (auto Enemyit = LevelRef->CurrentEnemies.begin(); Enemyit != EnemyEnd; ++Enemyit)
 			{
@@ -426,25 +427,27 @@ void Player::HandleBullets()
 						IsBoss->OnBulletCollision();
 						if (IsBoss->BossHealth <= 0 && IsBoss->IsActive())
 						{
-							/*(*Enemyit)->SetVisible(false);
-							(*Enemyit)->SetActive(false);*/
-							//Bulletit.BulletEntity->SetActive(false);
-							//Bulletit.BulletEntity->SetVisible(false);
-							LevelRef->DestroyCollidable(Bulletit->BulletEntity);
 							bEnemyKilled = true;
-							Bulletit->TrackingEntity = nullptr;
+						}
+						//	/*(*Enemyit)->SetVisible(false);
+						//	(*Enemyit)->SetActive(false);*/
+						//	//Bulletit.BulletEntity->SetActive(false);
+						//	//Bulletit.BulletEntity->SetVisible(false);
+							LevelRef->DestroyCollidable(Bulletit->BulletEntity);
+						//	bEnemyKilled = true;
+							Bulletit->TrackingEntity = nullptr;		
 							Bulletit = Bullets.erase(Bulletit);
 							BulletEnd = Bullets.end();
-							AddScore(50);
-							if (Bulletit == Bullets.begin())
+						//	AddScore(50);
+							if (Bulletit == Bullets.begin() || LevelRef->CurrentEnemies.size() == 1)
 							{
 								bBackToStart = true;
 							}
 							else
 								Bulletit--;
 							if (Bullets.size() == 0) break;
-							if (bEnemyKilled) break;
-						}
+						//}
+						if (bEnemyKilled || LevelRef->CurrentEnemies.size() == 0) break;
 					}
 					else if ((*Enemyit)->IsActive())
 					{
@@ -460,7 +463,7 @@ void Player::HandleBullets()
 						Bulletit = Bullets.erase(Bulletit);
 						BulletEnd = Bullets.end();
 						AddScore(10);
-						if (Bulletit == Bullets.begin())
+						if (Bulletit == Bullets.begin() || LevelRef->CurrentEnemies.size() == 1)
 						{
 							bBackToStart = true;
 						}

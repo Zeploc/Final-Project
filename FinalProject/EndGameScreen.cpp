@@ -90,6 +90,11 @@ void EndScreen::SetScore(int iScore)
 	m_pScore->sText = "Total score: " + std::to_string(iScore);
 }
 
+void EndScreen::SetEndText(std::string _EndText)
+{
+	m_pMessage->sText = _EndText;
+}
+
 void BackToMenu()
 {
 	std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());
@@ -100,6 +105,7 @@ void BackToMenu()
 
 void RestartGame()
 {
-	std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());
-	CurrentLevel->RestartLevel();
+	LevelManager::GetInstance()->SwitchToFirstLevel();
+	//LevelManager::GetInstance()->SwitchToCurrentLevel();
+	//LevelManager::GetInstance()->GetCurrentActiveLevel()->RestartLevel();
 }
