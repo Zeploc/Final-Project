@@ -134,7 +134,7 @@ void Player::Update()
 	float AngleToMouse = acos(glm::dot(VectorToMouseFromPlayer, glm::vec3(0, 0, -1)));
 	if (fDir > 0) AngleToMouse = M_PI + ((2 * M_PI) - AngleToMouse + M_PI);
 	this->transform.Rotation.y = (AngleToMouse / (M_PI * 2)) * 360 + 180;
-	 
+	
 		
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD || Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
 	{
@@ -145,11 +145,19 @@ void Player::Update()
 			std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
 			BulletCube->AddCollisionBounds(0.3f, 10.0f, 0.3f, Bullet);
 			Bullet->AddMesh(BulletCube);
+			Bullet->transform.Position.y = -2.0f;
 			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(Bullet);
 			glm::vec3 BulletDirection = glm::normalize(VectorToMouseFromPlayer);
 			NewBullet.CurrentVelocity = (BulletDirection*BulletSpeed);
+			NewBullet.CurrentVelocity.y = 0.0f;
 			NewBullet.BulletEntity = Bullet;
+			if (bSeeking)
+			{
+				SetTrackingClosetEnemy(NewBullet);
+			}
+
 			Bullets.push_back(NewBullet);
+			
 			if (FireRatePickup)
 			{
 				BulletTimer = 0.05f;
@@ -209,17 +217,10 @@ void Player::Update()
 		bHasDodged = true;
 		RollTimer = 0.5f;		
 	}
-
-	/*if (m_fHealth <= 0)
-	{
-		this->shared_from_this()->SetActive(false);
-		this->shared_from_this()->SetVisible(false);
-	}*/
-
-
-	RollTimer -= Time::dTimeDelta;
 	
-
+	RollTimer -= Time::dTimeDelta;
+	m_fLastHurt -= Time::dTimeDelta;
+	
 	if (RollTimer < 0.0f)
 	{
 		bHasDodged = false; 
@@ -278,6 +279,11 @@ void Player::Reset()
 	transform.Position = GotLevel->SpawnPos;
 	SetHealth(100);
 	SetScore(0);
+	for (auto& BulletIt : Bullets)
+	{
+		SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(BulletIt.BulletEntity);
+	}
+	Bullets.clear();
 }
 
 
@@ -345,6 +351,10 @@ void Player::PowerUpComplete()
 		break;
 	case FIRERATE:
 		FireRatePickup = false;
+	case HEATSEEK:
+	{
+		bSeeking = false;
+	}
 	default:
 		break;
 	}
@@ -361,24 +371,18 @@ void Player::HandleBullets()
 			it = Bullets.begin();
 			bBackToStart = false;
 		}
-		//if (bSeeking)
-		//{
-		//	std::shared_ptr<Entity> CurrentClosestEnt;
-		//	float fPreviousClosestDistance = 10000000.0f;
-		//	for (auto& Enemiesit : LevelManager::GetInstance()->GetCurrentActiveLevel()->CurrentEnemies)
-		//	{
-		//		glm::vec3 LocationDifference = it->BulletEntity->transform.Position - Enemiesit->transform.Position;
-		//		float fDistance = abs(glm::length(LocationDifference)); // Distance from current avoidable
-		//		if (fDistance < fPreviousClosestDistance)
-		//		{
-		//			CurrentClosestEnt = Enemiesit;
-		//			fPreviousClosestDistance = fDistance;
-
-		//		}
-		//	}
-		//	AI::SeekForce(it->BulletEntity->transform.Position, CurrentClosestEnt->transform.Position, 20, it->CurrentVelocity, 5);
-			
-		
+		if (it->bTracking)
+		{
+			if (!it->TrackingEntity)
+			{
+				SetTrackingClosetEnemy(*it);
+			}
+			if (it->TrackingEntity)
+			{
+				it->CurrentVelocity += AI::SeekWithArrival(it->BulletEntity->transform.Position, it->TrackingEntity->transform.Position, 20, it->CurrentVelocity, 1, BulletSpeed);
+			}
+		}
+				
 		it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
 		
 		it->Timer -= Time::dTimeDelta;
@@ -407,24 +411,55 @@ void Player::HandleBullets()
 			Bulletit = Bullets.begin();
 			bBackToStart = false;
 		}
-		for (auto& it : LevelRef->CurrentEnemies)
+		bool bEnemyKilled = true;
+		while (bEnemyKilled)
 		{
-			if (Bulletit->BulletEntity->EntityMesh->GetCollisionBounds()->isColliding(it))
+			bEnemyKilled = false;
+			auto EnemyEnd = LevelRef->CurrentEnemies.end();
+			for (auto Enemyit = LevelRef->CurrentEnemies.begin(); Enemyit != EnemyEnd; ++Enemyit)
 			{
-				std::shared_ptr<Boss> IsBoss = std::dynamic_pointer_cast<Boss>(it);
-				if (IsBoss)
+				if (Bulletit->BulletEntity->EntityMesh->GetCollisionBounds()->isColliding(*Enemyit))
 				{
-					IsBoss->OnBulletCollision();
-					if (IsBoss->BossHealth <= 0 && IsBoss->IsActive())
+					std::shared_ptr<Boss> IsBoss = std::dynamic_pointer_cast<Boss>(*Enemyit);
+					if (IsBoss)
 					{
-						it->SetVisible(false);
-						it->SetActive(false);
+						IsBoss->OnBulletCollision();
+						if (IsBoss->BossHealth <= 0 && IsBoss->IsActive())
+						{
+							/*(*Enemyit)->SetVisible(false);
+							(*Enemyit)->SetActive(false);*/
+							//Bulletit.BulletEntity->SetActive(false);
+							//Bulletit.BulletEntity->SetVisible(false);
+							LevelRef->DestroyCollidable(Bulletit->BulletEntity);
+							bEnemyKilled = true;
+							Bulletit->TrackingEntity = nullptr;
+							Bulletit = Bullets.erase(Bulletit);
+							BulletEnd = Bullets.end();
+							AddScore(50);
+							if (Bulletit == Bullets.begin())
+							{
+								bBackToStart = true;
+							}
+							else
+								Bulletit--;
+							if (Bullets.size() == 0) break;
+							if (bEnemyKilled) break;
+						}
+					}
+					else if ((*Enemyit)->IsActive())
+					{
+						// Temp bullet kill
+						//it->SetVisible(false);
+						//it->SetActive(false);
 						//Bulletit.BulletEntity->SetActive(false);
 						//Bulletit.BulletEntity->SetVisible(false);
 						LevelRef->DestroyCollidable(Bulletit->BulletEntity);
+						LevelRef->DestroyEnemy((*Enemyit));
+						bEnemyKilled = true;
+						Bulletit->TrackingEntity = nullptr;
 						Bulletit = Bullets.erase(Bulletit);
 						BulletEnd = Bullets.end();
-						AddScore(50);
+						AddScore(10);
 						if (Bulletit == Bullets.begin())
 						{
 							bBackToStart = true;
@@ -432,31 +467,32 @@ void Player::HandleBullets()
 						else
 							Bulletit--;
 						if (Bullets.size() == 0) break;
+						if (bEnemyKilled) break;
 					}
-				}
-				else if (it->IsActive())
-				{
-					// Temp bullet kill
-					it->SetVisible(false);
-					it->SetActive(false);
-					//Bulletit.BulletEntity->SetActive(false);
-					//Bulletit.BulletEntity->SetVisible(false);
-					LevelRef->DestroyCollidable(Bulletit->BulletEntity);
-					Bulletit = Bullets.erase(Bulletit);
-					BulletEnd = Bullets.end();
-					AddScore(10);
-					if (Bulletit == Bullets.begin())
-					{
-						bBackToStart = true;
-					}
-					else
-						Bulletit--;
-					if (Bullets.size() == 0) break;
 				}
 			}
 		}
+		
 		if (Bullets.size() == 0) break;
 	}
+}
+
+void Player::SetTrackingClosetEnemy(Bullet& _Bullet)
+{
+	std::shared_ptr<Entity> CurrentClosestEnt;
+	float fPreviousClosestDistance = 10000000.0f;
+	for (auto& Enemiesit : LevelManager::GetInstance()->GetCurrentActiveLevel()->CurrentEnemies)
+	{
+		glm::vec3 LocationDifference = _Bullet.BulletEntity->transform.Position - Enemiesit->transform.Position;
+		float fDistance = abs(glm::length(LocationDifference)); // Distance from current avoidable
+		if (fDistance < fPreviousClosestDistance)
+		{
+			CurrentClosestEnt = Enemiesit;
+			fPreviousClosestDistance = fDistance;
+		}
+	}
+	_Bullet.TrackingEntity = CurrentClosestEnt;
+	_Bullet.bTracking = true;
 }
 
 /************************************************************
@@ -536,6 +572,10 @@ void Player::MoveVertical(bool bUp)
 
 void Player::HurtPlayer(float Damage)
 {
-	ApplyHealth(-Damage);
+	if (m_fLastHurt <= 0)
+	{
+		ApplyHealth(-Damage);
+		m_fLastHurt = 0.5f;
+	}
 }
 

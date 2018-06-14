@@ -50,6 +50,7 @@ public:
 	
 	void AddEnemy(std::shared_ptr<Entity>);
 	void AddTempEnemy(std::shared_ptr<Entity> NewEnemy);
+	void DestroyEnemy(std::shared_ptr<Entity> _DeleteEnemy);
 
 	void DestroyAllEnemies();
 	void RespawnEnemies();

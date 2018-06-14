@@ -40,6 +40,7 @@ Enemy2::~Enemy2()
 
 void Enemy2::Update()
 {
+	if (!bActive) return;
 	Entity::Update();
 	std::shared_ptr<Level> LevelRef = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 	if (Target)
@@ -63,7 +64,8 @@ void Enemy2::Update()
 		return;
 
 
-	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer))
+	float fDistance = abs(glm::length(transform.Position - LevelRef->EPlayer->transform.Position));
+	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer) || fDistance <= 1.0f)
 	{
 		LevelRef->EPlayer->HurtPlayer(15);
 	}

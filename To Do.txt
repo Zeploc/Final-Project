@@ -7,8 +7,6 @@ A:
 	3 Pickups
 	Assertions
 	Documentation
-	Another option
-	Controls indentifiable (For controls and power ups)
 	
 	
 Programming practise:
@@ -16,3 +14,7 @@ Programming practise:
 	No memory leaks
 	
 	Debug and release builds
+	
+	Boss death
+	End condition on boss level
+	Pickups spawn?

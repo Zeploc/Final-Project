@@ -43,8 +43,10 @@ public:
 	struct Bullet
 	{
 		std::shared_ptr<Entity> BulletEntity;
+		std::shared_ptr<Entity> TrackingEntity;
 		glm::vec3 CurrentVelocity;
 		float Timer = 8.0f;
+		bool bTracking = false;
 	};
 
 	std::vector<Bullet> Bullets;
@@ -64,6 +66,7 @@ public:
 	void ApplyHealth(float _fmodify);
 	void AddScore(int _iAddScore);
 	void SetScore(int _iNewScore);
+	int GetScore() { return m_iScore; };
 
 	void ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime);
 	bool FireRatePickup = false;
@@ -72,7 +75,7 @@ private:
 	// Bullets	
 	float BulletSpeed = 30.0f;
 	void HandleBullets();
-	
+	void SetTrackingClosetEnemy(Bullet& _Bullet);
 
 	// Movement
 	void MoveHorizontally(bool bLeft);
@@ -88,6 +91,7 @@ private:
 	// Score and Health
 	float m_fHealth = 100;
 	int m_iScore = 0;
+	float m_fLastHurt = 0.0f;
 	
 
 	//Power Ups

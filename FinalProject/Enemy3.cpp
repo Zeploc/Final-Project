@@ -37,7 +37,8 @@ Enemy3::~Enemy3()
 }
 
 void Enemy3::Update()
-{	
+{
+	if (!bActive) return;
 	Entity::Update();
 	std::shared_ptr<Level> LevelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
 
@@ -53,9 +54,10 @@ void Enemy3::Update()
 	if (!EntityMesh->GetCollisionBounds()) // No collision Bounds added
 		return;
 
-
-	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer))
+	float fDistance = abs(glm::length(transform.Position - LevelRef->EPlayer->transform.Position));
+	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer) || fDistance <= 1.0f)
 	{
+		assert((IsVisible())); 
 		LevelRef->EPlayer->HurtPlayer(15);
 	}
 }

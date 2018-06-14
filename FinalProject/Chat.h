@@ -12,6 +12,7 @@
 // Mail         	:    alex.cou7417@mediadesign.school.nz
 //
 
+#pragma once
 // Engine Includes //
 #include "Engine\UIImage.h"
 #include "Engine\UIButton.h"
@@ -21,13 +22,13 @@
 #include <memory>
 #include <vector>
 
+
 struct ChatMessage
 {
 	std::string Username;
 	std::string Message;
 };
 
-#pragma once­­
 class Chat
 {
 public:

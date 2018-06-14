@@ -53,6 +53,7 @@ void AI::CleanUp()
 glm::vec3 AI::SeekForce(glm::vec3 Source, glm::vec3 Target, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed)
 {
 	glm::vec3 LookAtDirection =  Target - Source;
+	LookAtDirection.y = 0;
 	
 	if (glm::length(LookAtDirection) != 0) // In case vector is zero vector (Can't normalise zero vector)
 	{
@@ -110,9 +111,9 @@ glm::vec3 AI::SeekWithArrival(glm::vec3 Source, glm::vec3 Target, float fMass, g
 	float fDistanceToTarget = abs(glm::length((Target - Source)));
 	if (fDistanceToTarget < _fSlowingRange)
 	{
-		return v3SeekDirection * _fMaxSpeed * (fDistanceToTarget / _fSlowingRange);
+		return v3SeekDirection * (fDistanceToTarget / _fSlowingRange);
 	}
-	return v3SeekDirection * _fMaxSpeed;
+	return v3SeekDirection;
 }
 
 glm::vec3 AI::WanderForce(std::shared_ptr<Entity> Source, glm::vec3& TargetRef, glm::vec2 XRange, glm::vec2 ZRange, float& _fNextDecisionTime, float fMass, glm::vec3 CurrentVelocity, float MaxSpeed)
@@ -199,6 +200,7 @@ glm::vec3 AI::Seperation(std::shared_ptr<Entity> Source, float fCloseness, std::
 	{
 		float fDividend = 1.0f / (float)iCount;
 		AverageDirection = glm::normalize(AverageDirection * fDividend);
+		AverageDirection.y = 0;
 	}
 	else // None in range
 		return AverageDirection;

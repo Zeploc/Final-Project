@@ -68,6 +68,7 @@ void Enemy1::AddPathPoints()
 
 void Enemy1::Update()
 {
+	if (!bActive) return;
 	Entity::Update();
 	std::shared_ptr<Level> LevelRef = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 
@@ -76,7 +77,6 @@ void Enemy1::Update()
 	m_v3CurrentVelocity += AI::Cohesion(this->shared_from_this(), 10.0f, Avoidables, m_fSpeed) * 0.2f;
 	m_v3CurrentVelocity += AI::Seperation(this->shared_from_this(), 1.0f, Avoidables, m_fSpeed) * 10.0f;
 	m_v3CurrentVelocity += AI::pathFollowingForce(transform.Position, CurrentPath, m_v3CurrentVelocity, 10.0f, m_fSpeed) * 5.0f;
-
 	
 
 	if (!EntityMesh) // No mesh added
@@ -85,7 +85,8 @@ void Enemy1::Update()
 		return;
 	
 
-	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer))
+	float fDistance = abs(glm::length(transform.Position - LevelRef->EPlayer->transform.Position));
+	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer) || fDistance <= 1.0f)
 	{
 		LevelRef->EPlayer->HurtPlayer(15);
 	}
