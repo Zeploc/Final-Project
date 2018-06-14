@@ -14,7 +14,7 @@
 
 // This Includes //
 #include "PickUpBase.h"
-
+#include "GameSettings.h"
 // Library Includes //
 #include <iostream>
 
@@ -22,6 +22,7 @@
 #include "Engine\Time.h"
 #include "Engine\CollisionBounds.h"
 #include "Engine\LogManager.h"
+#include "Engine/SoundManager.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -87,6 +88,11 @@ void PickUpBase::Update()
 
 void PickUpBase::OnPickUp()
 {
+	SoundManager::GetInstance()->AddChannel("PickupChannel");
+	SoundManager::GetInstance()->AddAudio("Resources/Sound/162476__kastenfrosch__gotitem.mp3", false, "Pickup");
+	SoundManager::GetInstance()->PlayAudio("Pickup","PickupChannel");
+	SoundManager::GetInstance()->SetChannelVolume("PickupChannel", GameSettings::fVolumeLevel / 10);
+
 	LogManager::GetInstance()->DisplayLogMessage("Pick up Collectd | Function \"OnPickUp\" base called!|");
 	SetVisible(false);
 }

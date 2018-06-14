@@ -41,7 +41,7 @@ void Boss::Update()
 {
 	Entity::Update();
 	std::shared_ptr<Level> LevelRef = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
-<<<<<<< HEAD
+
 	HitCooldown -= Time::dTimeDelta;
 	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer))
 	{
@@ -53,9 +53,7 @@ void Boss::Update()
 		
 	}
 
-=======
-		
->>>>>>> 1dac37704edc2dc20280f3ad8dd3f762e27c8ebd
+
 	if (bActive = false)
 	{
 		return;
