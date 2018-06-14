@@ -16,11 +16,11 @@
 // Local Includes //
 #include "PickUpBase.h"
 
-class FireRatePickup : public PickUpBase
+class HeatSeekerPickUp : public PickUpBase
 {
 public:
-	FireRatePickup(Utils::Transform _Transform, Utils::EANCHOR _Anchor, std::shared_ptr<Entity> _CollidingEntity, float _fRespawnTime = 3.0f);
-	~FireRatePickup();
+	HeatSeekerPickUp(Utils::Transform _Transform, Utils::EANCHOR _Anchor, std::shared_ptr<Entity> _CollidingEntity, float _fRespawnTime = 3.0f);
+	~HeatSeekerPickUp();
 
 	void OnPickUp();
 };

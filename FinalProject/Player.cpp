@@ -36,6 +36,8 @@
 #include "Level.h"
 #include "Boss.h"
 #include "GameManager.h"
+#include "LevelManager.h"
+#include "AI.h"
 
 
 // This Includes //
@@ -139,9 +141,9 @@ void Player::Update()
 		if (BulletTimer <= 0)
 		{
 			Bullet NewBullet;
-			std::shared_ptr<Entity> Bullet = std::make_shared<Entity>(Entity({ this->transform.Position, this->transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::BOTTOM_CENTER));
+			std::shared_ptr<Entity> Bullet = std::make_shared<Entity>(Entity({ this->transform.Position, this->transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::CENTER));
 			std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
-			BulletCube->AddCollisionBounds(0.3f, 0.3f, 0.3f, Bullet);
+			BulletCube->AddCollisionBounds(0.3f, 10.0f, 0.3f, Bullet);
 			Bullet->AddMesh(BulletCube);
 			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(Bullet);
 			glm::vec3 BulletDirection = glm::normalize(VectorToMouseFromPlayer);
@@ -150,7 +152,7 @@ void Player::Update()
 			Bullets.push_back(NewBullet);
 			if (FireRatePickup)
 			{
-				BulletTimer = 0.5f;
+				BulletTimer = 0.05f;
 			}
 			else
 			{
@@ -325,6 +327,10 @@ void Player::ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime)
 		FireRatePickup = true;
 		break;
 	}
+	case HEATSEEK:
+	{
+		bSeeking = true;
+	}
 	default:
 		break;
 	}
@@ -355,7 +361,28 @@ void Player::HandleBullets()
 			it = Bullets.begin();
 			bBackToStart = false;
 		}
-		it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
+		if (bSeeking)
+		{
+			std::shared_ptr<Entity> CurrentClosestEnt;
+			float fPreviousClosestDistance = 10000000.0f;
+			for (auto& Enemiesit : LevelManager::GetInstance()->GetCurrentActiveLevel()->CurrentEnemies)
+			{
+				glm::vec3 LocationDifference = it->BulletEntity->transform.Position - Enemiesit->transform.Position;
+				float fDistance = abs(glm::length(LocationDifference)); // Distance from current avoidable
+				if (fDistance < fPreviousClosestDistance)
+				{
+					CurrentClosestEnt = Enemiesit;
+					fPreviousClosestDistance = fDistance;
+
+				}
+			}
+			AI::SeekForce(it->BulletEntity->transform.Position, CurrentClosestEnt->transform.Position, 20, it->CurrentVelocity, 5);
+			
+		}
+		else
+		{
+			it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
+		}
 		it->Timer -= Time::dTimeDelta;
 
 		if (it->Timer <= 0)

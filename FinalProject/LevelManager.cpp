@@ -34,6 +34,8 @@
 #include "Level.h"
 #include "Player.h"
 #include "SpeedBoostPickUp.h"
+#include "FireRatePickUp.h"
+#include "HeatSeekerPickUp.h"
 #include "Boss.h"
 
 // This Includes //
@@ -133,6 +135,24 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 			NewPickupMesh->SetLit(true);
 			_Scene->AddEntity(NewPickup);
 			NewPickupMesh->program = Shader::Programs["ReflectionProgram"];
+
+			
+			std::shared_ptr<FireRatePickup> FireRatePickupInstance = std::make_shared<FireRatePickup>(FireRatePickup(Utils::Transform{ { 5.5f, -2.0f, 10.0f },{ 45, 45, 45 },{ 1, 1, 1 } }, Utils::CENTER, _Scene->EPlayer));
+			std::shared_ptr<Cube> FireRateMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 0.4, 0.1, 0.6, 1.0f }, "Resources/Box.png"));
+			FireRatePickupInstance->AddMesh(FireRateMesh);
+			FireRateMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, FireRatePickupInstance);
+			FireRateMesh->SetLit(true);
+			_Scene->AddEntity(FireRatePickupInstance);
+			FireRateMesh->program = Shader::Programs["ReflectionProgram"];
+
+
+			std::shared_ptr<HeatSeekerPickUp> HeatSeekingPickupInstance = std::make_shared<HeatSeekerPickUp>(HeatSeekerPickUp(Utils::Transform{ { 2.5f, -2.0f, 10.0f },{ 45, 45, 45 },{ 1, 1, 1 } }, Utils::CENTER, _Scene->EPlayer));
+			std::shared_ptr<Cube> HeatSeekMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 0.4, 0.1, 0.6, 1.0f }, "Resources/Box.png"));
+			HeatSeekingPickupInstance->AddMesh(HeatSeekMesh);
+			HeatSeekMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, HeatSeekingPickupInstance);
+			HeatSeekMesh->SetLit(true);
+			_Scene->AddEntity(HeatSeekingPickupInstance);
+			HeatSeekMesh->program = Shader::Programs["ReflectionProgram"];
 
 			std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -1.0f, -10.0f },{ 0, 0, 0 },{ 0.5f, 0.5f, 0.5f } }, Utils::CENTER));
 			std::shared_ptr<Model> SkullMesh = std::make_shared<Model>(Model({ 0.7f, 0.1f, 0.1f, 1.0f }, "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/skull.obj"));
