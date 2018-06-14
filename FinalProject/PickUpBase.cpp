@@ -62,11 +62,11 @@ void PickUpBase::Update()
 		return;
 		
 	Rotate({ 0, 10.0f * Time::dTimeDelta, 0 });
-	transform.Position.y = m_fOscillatingHeight + sin(Time::dCurrentTime / 300) * 5.0f * Time::dTimeDelta;
+	transform.Position.y = (float)(m_fOscillatingHeight + sin(Time::dCurrentTime / 300) * 5.0f * Time::dTimeDelta);
 
 	if (m_fRespawnTimer > 0) // Is respawning
 	{
-		m_fRespawnTimer -= Time::dTimeDelta;
+		m_fRespawnTimer -= (float)Time::dTimeDelta;
 		if (m_fRespawnTimer <= 0)
 		{
 			m_fRespawnTimer = 0;

@@ -51,7 +51,7 @@ Enemy1::~Enemy1()
 
 void Enemy1::AddPathPoints()
 {
-	for (int i = 0; i < CurrentPath.v3Points.size(); i++)
+	for (unsigned int i = 0; i < CurrentPath.v3Points.size(); i++)
 	{
 		std::shared_ptr<Entity> NewPoint = std::make_shared<Entity>(Entity({ CurrentPath.v3Points[i] , glm::vec3(0, 0, 0), glm::vec3(1.0f, 1.0f, 1.0f) }, Utils::CENTER));
 		std::shared_ptr<Cube> CubeMesh = std::make_shared<Cube>(Cube(0.5f, 1.5f, 0.5f, glm::vec4(0.1f, 0.8f, 0.1f, 1.0f)));

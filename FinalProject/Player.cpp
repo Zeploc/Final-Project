@@ -132,8 +132,8 @@ void Player::Update()
 	VectorToMouseFromPlayer = glm::normalize(VectorToMouseFromPlayer);
 	float fDir = glm::dot(glm::cross(VectorToMouseFromPlayer, glm::vec3(0, 0, -1)), { 0, 1, 0 });
 	float AngleToMouse = acos(glm::dot(VectorToMouseFromPlayer, glm::vec3(0, 0, -1)));
-	if (fDir > 0) AngleToMouse = M_PI + ((2 * M_PI) - AngleToMouse + M_PI);
-	this->transform.Rotation.y = (AngleToMouse / (M_PI * 2)) * 360 + 180;
+	if (fDir > 0) AngleToMouse =(float)(M_PI + ((2 * M_PI) - AngleToMouse + M_PI));
+	this->transform.Rotation.y = (float)((AngleToMouse / (M_PI * 2)) * 360 + 180);
 	
 		
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD || Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
@@ -170,7 +170,7 @@ void Player::Update()
 		}
 	}
 
-	BulletTimer -= Time::dTimeDelta;
+	BulletTimer -= (float)Time::dTimeDelta;
 	if (Bullets.size() != 0)
 	{
 		HandleBullets();
@@ -218,15 +218,15 @@ void Player::Update()
 		RollTimer = 0.5f;		
 	}
 	
-	RollTimer -= Time::dTimeDelta;
-	m_fLastHurt -= Time::dTimeDelta;
+	RollTimer -= (float)Time::dTimeDelta;
+	m_fLastHurt -= (float)Time::dTimeDelta;
 	
 	if (RollTimer < 0.0f)
 	{
 		bHasDodged = false; 
 	}
 	
-	DodgeCooldown -= Time::dTimeDelta;
+	DodgeCooldown -= (float)Time::dTimeDelta;
 
 	bool bAddGrav = true;
 	for (auto it : GotLevel->Collidables)
@@ -254,7 +254,7 @@ void Player::Update()
 
 	if (CurrentPowerUp != NONE)
 	{
-		m_fPowerUpTimer -= Time::dTimeDelta;
+		m_fPowerUpTimer -= (float)Time::dTimeDelta;
 		if (m_fPowerUpTimer <= 0)
 		{
 			m_fPowerUpTimer = 0;
@@ -385,7 +385,7 @@ void Player::HandleBullets()
 				
 		it->BulletEntity->transform.Position += it->CurrentVelocity * (float)Time::dTimeDelta;
 		
-		it->Timer -= Time::dTimeDelta;
+		it->Timer -= (float)Time::dTimeDelta;
 
 		if (it->Timer <= 0)
 		{

@@ -18,7 +18,7 @@
 // Local Includes //
 #include "NetworkSystem.h"
 
-class ServerInfo;
+class ServerInfoProperties;
 
 #pragma once
 class NetworkManager
@@ -26,7 +26,7 @@ class NetworkManager
 public:
 	NetworkSystem m_Network;
 
-	void JoinServer(ServerInfo _ServerProperties);
+	void JoinServer(ServerInfoProperties _ServerProperties);
 
 
 	// Singleton

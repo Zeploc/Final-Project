@@ -77,15 +77,15 @@ void Client::Initialise()
 	ZeroMemory(&_cServerIPAddress, MAX_ADDRESS_LENGTH);
 	char _cServerPort[MAX_PORT_LENGTH];
 	ZeroMemory(&_cServerPort, MAX_PORT_LENGTH);
-	unsigned short _usServerPort;
+	//unsigned short _usServerPort;
 
 	//Local variable to hold the index of the server chosen to connect to
 	char _cServerChosen[5];
 	ZeroMemory(_cServerChosen, 5);
-	unsigned int _uiServerIndex;
+	/*unsigned int _uiServerIndex;*/
 
 	//Local variable to hold client's name
-	char _cUserName[MAX_USERNAME_LENGTH];
+	/*char _cUserName[MAX_USERNAME_LENGTH];*/
 	ZeroMemory(&m_cUserName, MAX_USERNAME_LENGTH);
 
 	//Zero out the memory for all the member variables.
@@ -232,7 +232,7 @@ void Client::ProcessData(std::string _DataReceived)
 			std::string Username;
 			std::string Address;
 
-			for (int i = 0; i < Result.size(); i++)
+			for (unsigned int i = 0; i < Result.size(); i++)
 			{
 				if (Result[i] != ' ')
 				{
@@ -256,7 +256,7 @@ void Client::ProcessData(std::string _DataReceived)
 		std::string Username;
 		std::string Message;
 
-			for (int i = 0; i < Result.size(); i++)
+			for (unsigned int i = 0; i < Result.size(); i++)
 			{
 				if (Result[i] != ' ')
 				{
@@ -403,7 +403,7 @@ void Client::ReceiveBroadcastMessages(char * _pcBufferToReceiveData)
 			m_ServerSocketAddress = _FromAddress;
 			std::string Message(_pcBufferToReceiveData);
 			Message = Message.substr(2);
-			ServerInfo NewServer;
+			ServerInfoProperties NewServer;
 			NewServer._IPAddress = m_ServerSocketAddress;
 			NewServer._iPlayers = Message[0] - '0';
 			Message = Message.substr(2);

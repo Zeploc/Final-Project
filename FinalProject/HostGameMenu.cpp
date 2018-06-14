@@ -114,7 +114,7 @@ void HostGameMenu::ShowElements()
 void StartHostBtn()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
-	ServerInfo NewProperties;
+	ServerInfoProperties NewProperties;
 	MenuRef->HostGameScreen.ShowElements();
 	//MenuRef->HostGameScreen.SetValues();
 	NewProperties._iPlayers = MenuRef->HostGameScreen.GetCurrentPlayersCounter();// (int)MenuRef->PlayersCountSlider->GetValue();

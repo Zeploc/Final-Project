@@ -88,14 +88,14 @@ void JoinGameMenu::ShowElements()
 	UIManager::GetInstance()->m_bDisplayChat = false;
 }
 
-void JoinGameMenu::AddServers(std::vector<ServerInfo> Servers)
+void JoinGameMenu::AddServers(std::vector<ServerInfoProperties> Servers)
 {
 	if (Servers.size() == 0)
 	{
 		UIManager::GetInstance()->ShowMessageBox("No Servers Found!");
 		return;
 	}
-	for (int i = 0; i < Servers.size(); i++)
+	for (unsigned int i = 0; i < Servers.size(); i++)
 	{
 		glm::vec2 NewPos = ServerListPos;
 		NewPos.y += i * 100;
@@ -129,7 +129,7 @@ void JoinGameMenu::JoinCurrentServer()
 	}
 }
 
-ServerItem::ServerItem(ServerInfo _ServerInfo, glm::vec2 _ItemPosition)
+ServerItem::ServerItem(ServerInfoProperties _ServerInfo, glm::vec2 _ItemPosition)
 {
 	CurrentServerInfo = _ServerInfo;
 	ServerButton = std::make_shared<UIButton>(UIButton(_ItemPosition, Utils::TOP_CENTER, 0, { 0.3f, 0.3f, 0.3f, 1.0f }, { 0.7f, 0.7f, 0.7f, 1.0f }, 1000, 60, JoinSerer));

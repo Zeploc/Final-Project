@@ -30,7 +30,7 @@ Boss::Boss(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 	CurrentVelocity = { 0, 0, 10 };
 	fMaxSpeed = glm::length(CurrentVelocity);
 	TargetRef = { 0, 0, 0 };
-	NextRushTime = Time::dCurrentTime/1000 + 15.0f;
+	NextRushTime = (float)Time::dCurrentTime/1000 + 15.0f;
 }
 
 Boss::~Boss()
@@ -42,7 +42,7 @@ void Boss::Update()
 	Entity::Update();
 	std::shared_ptr<Level> LevelRef = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 
-	HitCooldown -= Time::dTimeDelta;
+	HitCooldown -= (float)Time::dTimeDelta;
 	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer))
 	{
 		if (HitCooldown <= 0)
@@ -73,7 +73,7 @@ void Boss::Update()
 	//transform.Position.y = m_fOscillatingHeight + sin(Time::dCurrentTime / 200) * 20.0f * Time::dTimeDelta;
 	if (Time::dCurrentTime/1000 >= NextRushTime)
 	{
-		NextRushTime = Time::dCurrentTime/1000 + 15.0f;
+		NextRushTime = (float)Time::dCurrentTime/1000 + 15.0f;
 		BossState = RUSHSTATE;
 		LevelRef = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 		RushTarget = LevelRef->EPlayer->transform.Position;
@@ -82,7 +82,7 @@ void Boss::Update()
 
 	if (RushLength > 0)
 	{
-		RushLength -= Time::dTimeDelta;
+		RushLength -= (float)Time::dTimeDelta;
 	}
 	else
 	{
@@ -100,7 +100,7 @@ void Boss::Update()
 
 	if (BossState == RUSHSTATE)
 	{
-		RushTimer -= Time::dTimeDelta;
+		RushTimer -= (float)Time::dTimeDelta;
 		if (RushTimer <= 0)
 		{
 			CurrentVelocity += AI::SeekForce(transform.Position, RushTarget, 1, CurrentVelocity, fMaxSpeed);

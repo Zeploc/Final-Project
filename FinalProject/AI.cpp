@@ -121,7 +121,7 @@ glm::vec3 AI::WanderForce(std::shared_ptr<Entity> Source, glm::vec3& TargetRef, 
 	bool bIsAtTarget = abs(glm::length(Source->transform.Position - TargetRef)) < 0.2f;
 	if (Time::dCurrentTime >= _fNextDecisionTime || bIsAtTarget)
 	{
-		_fNextDecisionTime = Time::dCurrentTime + (rand() % 3000);
+		_fNextDecisionTime = (float)Time::dCurrentTime + (rand() % 3000);
 		float fXRangeSize = abs(XRange.x - XRange.y);
 		float fZRangeSize = abs(ZRange.x - ZRange.y);
 		float fNewPosX = (rand() % (int)(fXRangeSize * 100.0f)) / 100.0f;
@@ -146,10 +146,10 @@ glm::vec3 AI::pathFollowingForce(glm::vec3 Source, Path Currentpath, glm::vec3 C
 	glm::vec3 NormalPosition = FindNormal(PredictPosition, Currentpath.v3Points[0], Currentpath.v3Points[1]);
 	float Distance = 9999999999.0f;
 	glm::vec3 PathDirection = glm::normalize(Currentpath.v3Points[0] - Currentpath.v3Points.back());
-	for (int i = 0; i < Currentpath.v3Points.size(); i++)
+	for (unsigned int i = 0; i < Currentpath.v3Points.size(); i++)
 	{
 		int SecondPos = i + 1;
-		if (SecondPos > Currentpath.v3Points.size() - 1) SecondPos = 0;
+		if ((unsigned)(SecondPos) > Currentpath.v3Points.size() - 1) SecondPos = 0;
 		glm::vec3 StartPos = Currentpath.v3Points[i];
 		glm::vec3 EndPos = Currentpath.v3Points[SecondPos];
 		glm::vec3 CurrentNormalPosition = FindNormal(PredictPosition, StartPos, EndPos);

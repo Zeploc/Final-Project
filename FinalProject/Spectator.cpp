@@ -80,5 +80,5 @@ void Spectator::FPSControls()
 	else if (Input::GetInstance()->KeyState[(unsigned char)'q'] == Input::INPUT_HOLD)
 		Camera::GetInstance()->SetCameraPos(Camera::GetInstance()->GetCameraPosition() - Camera::GetInstance()->GetCameraUpVector() * cameraSpeed * (float)Time::dTimeDelta);
 		
-	glutWarpPointer((float)Camera::GetInstance()->SCR_WIDTH * 0.5f, (float)Camera::GetInstance()->SCR_HEIGHT * 0.5f);
+	glutWarpPointer((float)(Camera::GetInstance()->SCR_WIDTH * 0.5f), (float)(Camera::GetInstance()->SCR_HEIGHT * 0.5f));
 }

@@ -72,7 +72,7 @@ void UIManager::Update()
 		// Switch Options Displayed
 		m_bDisplayPauseOptions = !m_bDisplayPauseOptions;
 		// Move pointer to center before resuming play
-		glutWarpPointer((float)Camera::GetInstance()->SCR_WIDTH * 0.5f, (float)Camera::GetInstance()->SCR_HEIGHT * 0.5f);
+		glutWarpPointer((float)(Camera::GetInstance()->SCR_WIDTH * 0.5f), (float)(Camera::GetInstance()->SCR_HEIGHT * 0.5f));
 		// Switch UI Mode
 		SwitchUIMode(m_bDisplayPauseOptions);
 	}

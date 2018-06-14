@@ -61,7 +61,7 @@ private:
 	CWorkQueue<std::string>* m_pWorkQueue;
 
 	//A vector to hold all the servers found after broadcasting
-	std::vector<ServerInfo> m_vecServerAddr;
+	std::vector<ServerInfoProperties> m_vecServerAddr;
 	bool m_bDoBroadcast;
 };
 

@@ -40,7 +40,7 @@ public:
 	~Server();
 
 	void Initialise();
-	void Initialise(ServerInfo NewServerProperties);
+	void Initialise(ServerInfoProperties NewServerProperties);
 	void ReceiveData();
 	bool SendData(char* _pcDataToSend);
 	void ProcessData(std::string _DataReceived);
@@ -70,7 +70,7 @@ private:
 	//A username to associate with the server
 	char m_cUserName[50];
 
-	ServerInfo CurrentServerProperties;
+	ServerInfoProperties CurrentServerProperties;
 
 	//The structure maps client addresses to client details
 	std::map<std::string, TClientDetails>* m_pConnectedClients;

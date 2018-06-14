@@ -24,7 +24,7 @@
 #include "Engine\UIButton.h"
 #include "Engine\UITextField.h"
 
-struct ServerInfo
+struct ServerInfoProperties
 {
 	std::string _ServerName;
 	int _iPlayers;
@@ -35,10 +35,10 @@ struct ServerInfo
 class ServerItem
 {
 public:
-	ServerItem(ServerInfo _ServerInfo, glm::vec2 _ItemPosition);
+	ServerItem(ServerInfoProperties _ServerInfo, glm::vec2 _ItemPosition);
 	~ServerItem();
 
-	ServerInfo CurrentServerInfo;
+	ServerInfoProperties CurrentServerInfo;
 
 	std::shared_ptr<UIButton> ServerButton;
 };
@@ -56,7 +56,7 @@ public:
 	void ShowElements();
 
 	void ClearServerList() { v_ServerList.clear(); };
-	void AddServers(std::vector<ServerInfo> Servers);
+	void AddServers(std::vector<ServerInfoProperties> Servers);
 
 	void JoinCurrentServer();
 

@@ -31,7 +31,7 @@ NetworkManager::~NetworkManager()
 {
 }
 
-void NetworkManager::JoinServer(ServerInfo _ServerProperties)
+void NetworkManager::JoinServer(ServerInfoProperties _ServerProperties)
 {	
 	std::shared_ptr<Client> ClientRef = std::dynamic_pointer_cast<Client>(m_Network.m_pNetworkEntity);
 	ClientRef->ChangeServer(_ServerProperties._IPAddress);

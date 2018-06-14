@@ -71,7 +71,7 @@ void NetworkSystem::InitClient()
 #--Parameters--#:	Entity Type for network
 #--Return--#: 		NA
 ************************************************************/
-void NetworkSystem::InitServer(ServerInfo NewServerProperties)
+void NetworkSystem::InitServer(ServerInfoProperties NewServerProperties)
 {
 	m_pcPacketData = new char[MAX_MESSAGE_LENGTH];
 	strcpy_s(m_pcPacketData, strlen("") + 1, "");

@@ -72,7 +72,7 @@ Server::~Server()
 
 void Server::Initialise()
 {
-	ServerInfo DefaultServer;
+	ServerInfoProperties DefaultServer;
 	DefaultServer._ServerName = "Default Server";
 	DefaultServer._iPlayers = 2;
 	Initialise(DefaultServer);
@@ -84,7 +84,7 @@ void Server::Initialise()
 #--Parameters--#:	NA
 #--Return--#: 		NA
 ************************************************************/
-void Server::Initialise(ServerInfo NewServerProperties)
+void Server::Initialise(ServerInfoProperties NewServerProperties)
 {
 	m_bOnline = true;
 	m_pcPacketData = new char[MAX_MESSAGE_LENGTH];
@@ -113,7 +113,7 @@ void Server::ReceiveData()
 {
 	int iSizeOfAdd = sizeof(m_ClientAddress);
 	int _iNumOfBytesReceived;
-	int _iPacketSize;
+	/*int _iPacketSize;*/
 
 	//Receive data into a local buffer
 	char _buffer[MAX_MESSAGE_LENGTH];
@@ -348,7 +348,7 @@ void Server::ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _
 		std::string Username;
 		std::string Message;
 
-		for (int i = 0; i < Result.size(); i++)
+		for (unsigned int i = 0; i < Result.size(); i++)
 		{
 			if (Result[i] != ' ')
 			{

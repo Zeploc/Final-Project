@@ -122,9 +122,9 @@ void Sphere::BindSphere()
 
 		for (int j = 0; j < sections; j++)
 		{
-			float x = cos(phi) * sin(theta);
-			float y = cos(theta);
-			float z = sin(phi) * sin(theta);
+			float x = (float)(cos(phi)) *(float)(sin(theta));
+			float y = (float)(cos(theta));
+			float z = (float)(sin(phi)) *  (float)(sin(theta));
 
 			vertices[offset++] = x * m_fWidth;
 			vertices[offset++] = y * m_fHeight;

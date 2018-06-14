@@ -136,8 +136,8 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char * Text
 	SOIL_free_image_data(image);
 	float fImageRatio = (float)width / (float)height;
 	float fObjectRatio = _fHeight / _fWidth;
-	float hSize = iCount;
-	float vSize = iCount;
+	float hSize = (float)(iCount);
+	float vSize = (float)(iCount);
 	if (bHorizontal)
 	{
 		vSize = iCount * fObjectRatio * fImageRatio;

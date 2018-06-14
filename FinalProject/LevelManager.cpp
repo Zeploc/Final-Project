@@ -115,7 +115,7 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 		case 1:
 		{
 			CurrentRoundTime = WAVE1;
-			fCurrentRoundElapsed = CurrentRoundTime;
+			fCurrentRoundElapsed = (float)CurrentRoundTime;
 			float Width = 8.6f;
 			float Height = 7.5f;
 			int BoardSize = 5;
@@ -165,7 +165,7 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 		case 2:
 		{
 			CurrentRoundTime = WAVE2;
-			fCurrentRoundElapsed = CurrentRoundTime;
+			fCurrentRoundElapsed = (float)CurrentRoundTime;
 			float Width = 8.6f;
 			float Height = 7.5f;
 			int BoardSize = 5;
@@ -480,7 +480,7 @@ void LevelManager::EnemySpawner()
 
 void LevelManager::ResetWaveTimer()
 {
-	fCurrentRoundElapsed = CurrentRoundTime;
+	fCurrentRoundElapsed = (float)CurrentRoundTime;
 }
 
 /************************************************************
@@ -514,8 +514,8 @@ void LevelManager::Update()
 	if (!GameManager::GetInstance()->IsPlayerAlive()) return;
 	if (GetCurrentActiveLevel())
 	{
-		SpawnTimer -= Time::dTimeDelta;
-		fCurrentRoundElapsed -= Time::dTimeDelta;
+		SpawnTimer -= (float)Time::dTimeDelta;
+		fCurrentRoundElapsed -= (float)Time::dTimeDelta;
 		UIManager::GetInstance()->m_HUDInstance.SetWaveTimer(fCurrentRoundElapsed);
 		if (fCurrentRoundElapsed <= 0)
 		{

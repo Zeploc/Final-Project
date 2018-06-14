@@ -100,7 +100,7 @@ void LobbyMenu::ShowElements()
 
 void LobbyMenu::ClientConnected(std::string _UserName, std::string Address)
 {
-	float fYPos = v_PlayersConnected.size() * 50 + 300;
+	float fYPos = (float)(v_PlayersConnected.size() * 50 + 300);
 	std::shared_ptr<UIText> NewClient(new UIText(glm::vec2(100, fYPos), 0, glm::vec4(0.8f, 0.8f, 0.8f, 1.0f), _UserName + "      " + Address, "Resources/Fonts/Roboto-Bold.ttf", 30, Utils::CENTER_LEFT));
 	SceneManager::GetInstance()->GetCurrentScene()->AddUITextElement(NewClient);
 	v_ScreenElements.push_back(NewClient);

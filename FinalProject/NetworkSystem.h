@@ -50,7 +50,7 @@ public:
 	~NetworkSystem();
 
 	void InitClient();
-	void InitServer(ServerInfo NewServerProperties);
+	void InitServer(ServerInfoProperties NewServerProperties);
 	void Update();
 	void ShutDown();
 	bool IsServer();

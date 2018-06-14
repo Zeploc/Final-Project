@@ -80,7 +80,7 @@ void Scene::RenderScene()
 {
 	glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_CULL_FACE);
-	for (int i = 0; i < Entities.size(); i++)
+	for (unsigned int i = 0; i < Entities.size(); i++)
 	{
 		//if (it->transform.Scale.x < 0)	// || it->transform.Scale.y < 0 || it->transform.Scale.z < 0)
 		//{
