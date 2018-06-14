@@ -303,22 +303,22 @@ void LevelManager::EnemySpawner()
 				{
 				case 1:
 				{
-					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(0 + i, -2.5, 0 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(-20, -2.5, -20), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 2:
 				{
-					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(0 + i, -2.5, 30 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(-20, -2.5, 50), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 3:
 				{
-					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(30 + i, -2.5, 30 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(50, -2.5, 50), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 4:
 				{
-					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(30 + i, -2.5, 0 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					NewSeekEnemy = std::make_shared<EnemySeek>(EnemySeek({ glm::vec3(50, -2.5, -20), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				default:
@@ -330,7 +330,7 @@ void LevelManager::EnemySpawner()
 				NewSeekEnemy->AddMesh(SeekEnemyMesh);
 				NewSeekEnemy->Target = LevelRef->EPlayer;
 				SeekEnemyMesh->AddCollisionBounds(1, 1, 1, NewSeekEnemy);
-				LevelRef->AddEnemy(NewSeekEnemy);
+				LevelRef->AddTempEnemy(NewSeekEnemy);
 				int RandomSideNum = rand() % 4 + 1;
 			}
 			SpawnTimer += 3.0f;
@@ -346,22 +346,22 @@ void LevelManager::EnemySpawner()
 				{
 				case 1:
 				{
-					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(0 + i, -2.5, 0 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(-20, -2.5, -20), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 2:
 				{
-					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(0 + i, -2.5, 30 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(-20, -2.5, 50), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 3:
 				{
-					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(30 + i, -2.5, 30 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(50, -2.5, 50), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				case 4:
 				{
-					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(30 + i, -2.5, 0 + i), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
+					PersueEnemy = std::make_shared<Enemy3>(Enemy3({ glm::vec3(50, -2.5, -20), glm::vec3(0, 0, 0), glm::vec3(1, 1 ,1) }, Utils::BOTTOM_CENTER));
 					break;
 				}
 				default:
@@ -373,7 +373,7 @@ void LevelManager::EnemySpawner()
 				PersueEnemy->AddMesh(PersueEnemyMesh);
 				PersueEnemy->Target = LevelRef->EPlayer;
 				PersueEnemyMesh->AddCollisionBounds(1, 1, 1, PersueEnemy);
-				LevelRef->AddEnemy(PersueEnemy);
+				LevelRef->AddTempEnemy(PersueEnemy);
 			}
 			SpawnTimer += 3.0f;
 			break;
@@ -416,7 +416,7 @@ void LevelManager::EnemySpawner()
 				CrowdPathFollowingEnemeyMesh->SetLit(true);
 				CrowdPathFollowingEnemy->AddMesh(CrowdPathFollowingEnemeyMesh);
 				CrowdPathFollowingEnemeyMesh->AddCollisionBounds(1, 1, 1, CrowdPathFollowingEnemy);
-				LevelRef->AddEnemy(CrowdPathFollowingEnemy);
+				LevelRef->AddTempEnemy(CrowdPathFollowingEnemy);
 				//AddEntity(NewEnemy);
 			}
 			SpawnTimer += 3.0f;
@@ -459,7 +459,7 @@ void LevelManager::EnemySpawner()
 				EnemeyMesh->SetLit(true);
 				FlockingEnemy->AddMesh(EnemeyMesh);
 				EnemeyMesh->AddCollisionBounds(1, 1, 1, FlockingEnemy);
-				LevelRef->AddEnemy(FlockingEnemy);
+				LevelRef->AddTempEnemy(FlockingEnemy);
 				FlockingEnemy->SetTarget(LevelRef->EPlayer);
 			}
 			SpawnTimer += 3.0f;

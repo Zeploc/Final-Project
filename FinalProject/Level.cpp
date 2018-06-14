@@ -304,28 +304,33 @@ void Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 	bool bIsBoss = IsBoss != nullptr;
 	if (bIsEnemy1)
 	{
-		std::shared_ptr<Enemy1> NewEnemyCopy = std::make_shared<Enemy1>(*IsEnemy1);
+		std::shared_ptr<Enemy1> NewEnemyCopy = std::make_shared<Enemy1>(Enemy1(IsEnemy1->transform, IsEnemy1->EntityAnchor, { 0, 0, 0 }));
 		CurrentEnemies.push_back(NewEnemyCopy);
+		NewEnemyCopy->EntityMesh = IsEnemy1->EntityMesh;
 		AddEntity(NewEnemyCopy);
 	}
 	else if (IsEnemy2)
 	{
-		std::shared_ptr<Enemy2> NewEnemyCopy = std::make_shared<Enemy2>(*IsEnemy2);
+		std::shared_ptr<Enemy2> NewEnemyCopy = std::make_shared<Enemy2>(Enemy2(IsEnemy2->transform, IsEnemy2->EntityAnchor));
 		CurrentEnemies.push_back(NewEnemyCopy);
+		NewEnemyCopy->SetTarget(EPlayer);
+		NewEnemyCopy->EntityMesh = IsEnemy2->EntityMesh;
 		AddEntity(NewEnemyCopy);
 	}
 	else if (bIsEnemy3)
 	{
-		std::shared_ptr<Enemy3> NewEnemyCopy = std::make_shared<Enemy3>(*IsEnemy3);
+		std::shared_ptr<Enemy3> NewEnemyCopy = std::make_shared<Enemy3>(Enemy3(IsEnemy3->transform, IsEnemy3->EntityAnchor));
 		CurrentEnemies.push_back(NewEnemyCopy);
 		NewEnemyCopy->Target = EPlayer;
+		NewEnemyCopy->EntityMesh = IsEnemy3->EntityMesh;
 		AddEntity(NewEnemyCopy);
 	}
-	else if (IsEnemySeek)
+	else if (bIsEnemySeek)
 	{
-		std::shared_ptr<EnemySeek> NewEnemyCopy = std::make_shared<EnemySeek>(*IsEnemySeek);
+		std::shared_ptr<EnemySeek> NewEnemyCopy = std::make_shared<EnemySeek>(EnemySeek(IsEnemySeek->transform, IsEnemySeek->EntityAnchor));
 		CurrentEnemies.push_back(NewEnemyCopy);
-		NewEnemyCopy->Target = BossRef;
+		NewEnemyCopy->Target = EPlayer;
+		NewEnemyCopy->EntityMesh = IsEnemySeek->EntityMesh;
 		AddEntity(NewEnemyCopy);
 	}
 	else if (bIsBoss)
@@ -334,7 +339,7 @@ void Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 		NewEnemyCopy->AddMesh(IsBoss->EntityMesh);
 		CurrentEnemies.push_back(NewEnemyCopy);
 		AddEntity(NewEnemyCopy);
-		NewEnemyCopy->EntityMesh->GetCollisionBounds()->EntityRef = NewEnemyCopy;// dynamic_pointer_cast<Entity>(NewEnemyCopy);
+		NewEnemyCopy->EntityMesh->GetCollisionBounds()->EntityRef = NewEnemyCopy;
 		BossRef = NewEnemyCopy;
 	}
 }
