@@ -31,7 +31,9 @@
 enum POWERUPS
 {
 	NONE,
-	SPEEDBOOST
+	SPEEDBOOST,
+	FIRERATE,
+	HEATSEEK
 };
 
 #pragma once
@@ -64,7 +66,8 @@ public:
 	void SetScore(int _iNewScore);
 
 	void ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime);
-
+	bool FireRatePickup = false;
+	bool bSeeking = false;
 private:
 	// Bullets	
 	float BulletSpeed = 30.0f;
