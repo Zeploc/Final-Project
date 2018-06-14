@@ -29,7 +29,7 @@
 
 enum RoundTimes
 {
-	WAVE1 = 100,// 35,
+	WAVE1 = 10,// 35,
 	WAVE2 = 1000
 };
 
@@ -47,7 +47,7 @@ public:
 	void CheckHighscore();
 	void EnemySpawner();
 	void ResetWaveTimer();
-	void SwitchToFirstLevel() { iCurrentLevelID = 1; };
+	void SwitchToFirstLevel();
 
 	void Init();
 

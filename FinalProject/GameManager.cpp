@@ -94,7 +94,7 @@ void GameManager::ShowEndScreen(bool _bLost)
 void GameManager::PlayerDeath()
 {
 	bPlayerDead = true;
-	LogManager::GetInstance()->DisplayLogMessage("Player is Dead!");
+	//LogManager::GetInstance()->DisplayLogMessage("Player is Dead!");
 	ShowEndScreen(true);
 	std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());
 	CurrentLevel->DestroyAllEnemies();
@@ -105,6 +105,12 @@ void GameManager::RespawnPlayer()
 	bPlayerDead = false;
 	std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());
 	CurrentLevel->EPlayer->Reset();
+}
+
+std::shared_ptr<Player> GameManager::GetPlayer()
+{
+	
+	return LevelManager::GetInstance()->GetCurrentActiveLevel()->EPlayer;
 }
 
 /************************************************************

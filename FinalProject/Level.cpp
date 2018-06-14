@@ -339,7 +339,7 @@ void Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 		NewEnemyCopy->AddMesh(IsBoss->EntityMesh);
 		CurrentEnemies.push_back(NewEnemyCopy);
 		AddEntity(NewEnemyCopy);
-		NewEnemyCopy->EntityMesh->GetCollisionBounds()->EntityRef = NewEnemyCopy;
+		NewEnemyCopy->EntityMesh = NewEnemyCopy->EntityMesh;
 		BossRef = NewEnemyCopy;
 	}
 }
@@ -495,6 +495,7 @@ void Level::RestartLevel()
 	//Camera::GetInstance()->SetCameraPos(glm::vec3(0, 0, 3));
 	//iScore = iCoinsCollected * 5;
 	RespawnEnemies();
+	if (BossRef) std::dynamic_pointer_cast<Boss>(BossRef)->ResetHealth();
 	GameManager::GetInstance()->RespawnPlayer();
 	GameManager::GetInstance()->HideEndScreen();
 	for (auto& it : CurrentEnemies)
