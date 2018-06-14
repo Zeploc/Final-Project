@@ -194,14 +194,14 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 			std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -1.0f, -10.0f },{ 0, 0, 0 },{ 0.5f, 0.5f, 0.5f } }, Utils::CENTER));
 			std::shared_ptr<Model> SkullMesh = std::make_shared<Model>(Model({ 0.7f, 0.1f, 0.1f, 1.0f }, "Resources/Models/LowPoly_Pixel_RPG_Assets_DevilsGarage_v01/3D/skull.obj"));
 			BossObject->AddMesh(SkullMesh);
-			SkullMesh->AddCollisionBounds(3.0f, 5.0f, 3.0f, BossObject);
+			SkullMesh->AddCollisionBounds(5.0f, 7.0f, 5.0f, BossObject);
 			SkullMesh->SetLit(true);
 			SkullMesh->LightProperties.fShininess = 50.0f;
 			SkullMesh->LightProperties.fLightSpecStrength = 0.3f;
 			SkullMesh->LightProperties.fAmbientStrength = 0.05f;
 			_Scene->AddEnemy(BossObject);
 
-			_Scene->SetPlayerPosition({ 3, 2.0f, 0 });
+			_Scene->SetPlayerPosition({ 3.0f, 5.0f, 0 });
 			_Scene->AddEntity(_Scene->MouseAimTarget);
 			//At 0 player cant move/strafe//_Scene->AddCollidable(Utils::Transform{ glm::vec3(-7, -0.5f, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, 2, 1.5, Utils::CENTER, glm::vec4(0.8, 0.8, 0.8, 1.0), "Resources/Level/Block2.png", 4, true);
 			break;
@@ -220,6 +220,13 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 ************************************************************/
 void LevelManager::NextLevel()
 {
+	if (iCurrentLevelID < iNumberOfLevels)
+	{
+		iCurrentLevelID++;
+		SwitchToCurrentLevel();
+		ResetWaveTimer();
+		return;
+	}
 	std::shared_ptr<Level> LevelScene = std::shared_ptr<Level>(new Level("New Level"));
 	if (!AddLevel(LevelScene))
 	{
@@ -481,6 +488,15 @@ void LevelManager::EnemySpawner()
 void LevelManager::ResetWaveTimer()
 {
 	fCurrentRoundElapsed = CurrentRoundTime;
+}
+
+void LevelManager::SwitchToFirstLevel()
+{
+	if(GetCurrentActiveLevel()) GetCurrentActiveLevel()->RestartLevel();
+	iCurrentLevelID = 1;
+	CurrentRoundTime = WAVE1;
+	SwitchToCurrentLevel();
+	ResetWaveTimer();
 }
 
 /************************************************************

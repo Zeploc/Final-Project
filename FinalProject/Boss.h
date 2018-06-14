@@ -15,7 +15,9 @@ public:
 	~Boss();
 	void Update();
 	void OnBulletCollision();
-	float BossHealth = 10.0f;
+	void ResetHealth() { BossHealth = 10.0f; };
+
+	float BossHealth = 100.0f;
 private:
 	float m_fOscillatingHeight;
 	float OccillationSpeed = 300;
