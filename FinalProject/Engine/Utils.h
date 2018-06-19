@@ -76,8 +76,9 @@ public:
 		BOTTOM_RIGHT
 	};
 	
-	enum ESHAPE
+	enum EMESHTYPE
 	{
+		NONE,
 		PLANE,
 		PYRAMID,
 		CUBE,

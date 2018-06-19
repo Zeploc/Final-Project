@@ -111,13 +111,14 @@ void StartServer()
 {
 	if (!NetworkManager::GetInstance()->m_Network.IsServer()) return; // Client trying to start Server
 	std::shared_ptr<Server> ServerPointer = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
-	if (ServerPointer->ConnectedClientsCount() < 2)
+	if (ServerPointer->ConnectedClientsCount() < 1)
 	{
 		UIManager::GetInstance()->ShowMessageBox("Not enough players to start server!");
 		return;
 	}
 	// check if has 2 or more players
 	std::string LevelName = LevelManager::GetInstance()->GetCurrentLevelName();
-	ServerPointer->SendToAllClients(LevelName, LOADLEVEL); // Tell All CLients to Load Level
+	ServerPointer->SendToAllClients(LevelName, LOADLEVEL); // Tell All Clients to Load Level
 	SceneManager::GetInstance()->SwitchScene(LevelName);
+	ServerPointer->ServerPlayerRespondToMessage(LevelName, LOADLEVEL, "");
 }

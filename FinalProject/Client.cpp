@@ -270,6 +270,33 @@ void Client::ProcessData(std::string _DataReceived)
 			std::cout << "Chat Recieved: [" + Username + "]: " + Message << std::endl;
 			break;
 		}
+		case ENTITYUPDATE:
+		{
+			/*std::string Result = _packetRecvd.MessageContent;
+			std::cout << Result << std::endl;
+			glm::vec3 Vec3One;
+			glm::vec3 Vec3Two;
+			int iNetworkID;
+			ExtractTwoVec3WithNetworkID(Result, iNetworkID, Vec3One, Vec3Two);
+			std::cout << "Extraced ID: " + std::to_string(iNetworkID) + " with two Vec3's: " << glm::to_string(Vec3One) << " and " << glm::to_string(Vec3Two) << std::endl;
+			*/
+			std::string Result = _packetRecvd.MessageContent;
+			// Create entity from mesh type, and miss out the first number and space
+			UpdateNetworkEntity(Result);
+			break;
+		}
+		case CREATEENTITY:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			std::istringstream iss(Result);
+			int MeshType;
+			iss >> MeshType;
+			std::cout << Result << std::endl;
+			// Create entity from mesh type, and miss out the first number and space
+			std::shared_ptr<Entity> NewEntity = CreateNetworkEntity(Utils::EMESHTYPE(MeshType), Result.substr(2));
+			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
+			break;
+		}
 	}
 }
 

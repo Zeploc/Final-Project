@@ -48,6 +48,9 @@
 #include "Boss.h"
 #include "LevelManager.h"
 
+#include "NetworkManager.h"
+#include "Server.h"
+
 // This Includes //
 #include "Level.h"
 
@@ -252,6 +255,18 @@ void Level::Update()
 		}
 	}
 	FPSCounterText->sText = "FPS: " + std::to_string(Time::dFPS);
+
+	if (NetworkManager::GetInstance()->m_Network.IsServer()) // is Server
+	{
+		std::shared_ptr<Server> ServerPointer = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+		if (NetworkEntity)
+		{
+			NetworkEntity->transform = MouseAimTarget->transform;
+			NetworkEntity->transform.Position.y = 1.0f;
+			ServerPointer->UpdateNetworkEntity(NetworkEntity, 0);
+		}
+	}
+
 	Scene::Update(); // Call super/base Update
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'r'] == Input::INPUT_FIRST_PRESS)

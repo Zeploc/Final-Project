@@ -52,7 +52,7 @@ public:
 		return MeshCollisionBounds;
 	};
 
-	Utils::ESHAPE m_eShape;
+	Utils::EMESHTYPE m_eShape;
 	float m_fWidth;
 	float m_fHeight;
 	float m_fDepth = 0;
