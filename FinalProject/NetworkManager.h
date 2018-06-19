@@ -27,6 +27,17 @@ public:
 	NetworkSystem m_Network;
 
 	void JoinServer(ServerInfoProperties _ServerProperties);
+	void Update();
+	void DestroyNetworkEntity(std::shared_ptr<Entity> EntityToDestroy);
+
+	int iTickRate = 64;
+
+private:
+	void UpdateClientEntities();
+
+	float fTimeRateInterval;
+	float fCurrentTime = 0.0f;
+	float fNextTime = 0.0f;
 
 
 	// Singleton

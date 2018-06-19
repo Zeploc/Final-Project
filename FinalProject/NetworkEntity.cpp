@@ -101,11 +101,12 @@ std::shared_ptr<Entity> NetworkEntity::CreateNetworkEntity(Utils::EMESHTYPE Mesh
 		glm::vec3 Rot = { RotX, RotY, RotZ };
 		glm::vec3 Scale = { ScaleX, ScaleY, ScaleZ };
 		std::shared_ptr<Entity> NewEntity = std::make_shared<Entity>(Entity({ Pos, Rot, Scale }, Utils::CENTER));
-		if (NetworkEntities.size() < NetworkID - 1)
+		NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(NetworkID, NewEntity));
+		/*if (NetworkEntities.size() < NetworkID - 1)
 		{
 			NetworkEntities.push_back(nullptr);
 		}
-		NetworkEntities[NetworkID] = NewEntity;
+		NetworkEntities[NetworkID] = NewEntity;*/
 		return NewEntity;
 		break;
 	}
@@ -125,11 +126,12 @@ std::shared_ptr<Entity> NetworkEntity::CreateNetworkEntity(Utils::EMESHTYPE Mesh
 		std::shared_ptr<Entity> NewEntity = std::make_shared<Entity>(Entity({ Pos, Rot, Scale }, Utils::CENTER));
 		std::shared_ptr<Cube> CubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, Colour));
 		NewEntity->AddMesh(CubeMesh);
-		if (NetworkEntities.size() < NetworkID - 1)
+		NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(NetworkID, NewEntity));
+		/*if (NetworkEntities.size() < NetworkID - 1)
 		{
 			NetworkEntities.push_back(nullptr);
 		}
-		NetworkEntities[NetworkID] = NewEntity;
+		NetworkEntities[NetworkID] = NewEntity;*/
 		return NewEntity;
 		break;
 	}
@@ -163,9 +165,12 @@ std::string NetworkEntity::GetNetworkEntityString(std::shared_ptr<Entity> Networ
 	int iNetworkID = iNetworkIdentity;
 	if (iNetworkIdentity == -1)
 	{
-		iNetworkID = NetworkEntities.size();
+		iNetworkID = iLastID;
+		iLastID++;
+		NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(iNetworkID, NetworkEntity));
+		/*iNetworkID = NetworkEntities.size();
 		NetworkEntities.push_back(nullptr);
-		NetworkEntities[iNetworkID] = NetworkEntity;
+		NetworkEntities[iNetworkID] = NetworkEntity;*/
 	}
 	// No Mesh
 	if (!NetworkEntity->EntityMesh || bIsUpdate)

@@ -16,7 +16,7 @@
 #include <thread>
 #include <string>
 #include <sstream>
-#include <vector>
+#include <map>
 
 // OpenGL Includes //
 #include <glm\common.hpp>
@@ -35,7 +35,8 @@ enum EMessageType : unsigned char
 	CLIENTCONNECTED,
 	LOADLEVEL,
 	CREATEENTITY,
-	ENTITYUPDATE
+	ENTITYUPDATE,
+	DESTROYENTITY
 };
 
 struct TPacket
@@ -105,6 +106,8 @@ public:
 
 	virtual void ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message) = 0;
 
+	std::map<int, std::shared_ptr<Entity>> NetworkEntities;
+
 	void SetOffline()
 	{
 		m_bOnline = false;
@@ -114,7 +117,7 @@ public:
 protected:
 	//Additional state variable to indicate whether a network entity is online or not
 	bool m_bOnline = false;
+	int iLastID = 0;
 
-	std::vector<std::shared_ptr<Entity>> NetworkEntities;
 };
 

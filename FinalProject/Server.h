@@ -57,6 +57,7 @@ public:
 	};
 
 	void UpdateNetworkEntity(std::shared_ptr<Entity> Entity, int iNetworkID);
+	void DestroyNetworkEntity(int iNetworkID);
 
 private:
 	bool AddClient(std::string _strClientName);

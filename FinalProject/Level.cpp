@@ -258,14 +258,18 @@ void Level::Update()
 
 	if (NetworkManager::GetInstance()->m_Network.IsServer()) // is Server
 	{
-		std::shared_ptr<Server> ServerPointer = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
 		if (NetworkEntity)
 		{
 			NetworkEntity->transform = MouseAimTarget->transform;
 			NetworkEntity->transform.Position.y = 1.0f;
-			ServerPointer->UpdateNetworkEntity(NetworkEntity, 0);
+		}
+
+		if (Input::GetInstance()->KeyState[(unsigned int) 'f'] == Input::INPUT_FIRST_PRESS)
+		{
+			DestroyNetworkEntity(NetworkEntity);
 		}
 	}
+
 
 	Scene::Update(); // Call super/base Update
 
@@ -372,6 +376,12 @@ void Level::DestroyEnemy(std::shared_ptr<Entity> _DeleteEnemy)
 	}
 	DestroyEntity(_DeleteEnemy);
 	_DeleteEnemy = nullptr;
+}
+
+void Level::DestroyNetworkEntity(std::shared_ptr<Entity> EntityToDestroy)
+{
+	NetworkManager::GetInstance()->DestroyNetworkEntity(EntityToDestroy);
+	DestroyEntity(EntityToDestroy);
 }
 
 /************************************************************

@@ -208,17 +208,7 @@ void Server::ProcessData(std::string _DataReceived)
 				// Welcomes connected client by sending handshake message
 				_packetToSend.Serialize(HANDSHAKE, const_cast<char*>(CurrentServerProperties._ServerName.c_str()));
 				SendData(_packetToSend.PacketData);
-
-				/*glm::vec3 TestVec1 = { 12.56f, 4.93f, 6.47f };
-				glm::vec3 TestVec2 = { 3.0f, 90.0f, 0.02f };
-				int iNetworkID = 34;
-				std::string Message = std::to_string(iNetworkID) + " " + Vec3ToSendString(TestVec1) + " "+ Vec3ToSendString(TestVec2);
-				_packetToSend.Serialize(ENTITYUPDATE, const_cast<char*>(Message.c_str()));
-				SendData(_packetToSend.PacketData);
-				std::cout << Message << std::endl;*/
-						
-
-				
+								
 				// Tell sender Servers name and ip
 				std::string _strToSend = std::string(m_cUserName) + " " + m_pServerSocket->GetSocketAddress();
 				_packetToSend.Serialize(CLIENTCONNECTED, const_cast<char*>(_strToSend.c_str()));
@@ -311,6 +301,12 @@ void Server::UpdateNetworkEntity(std::shared_ptr<Entity> NewEntity, int iNetwork
 	SendToAllClients(GetNetworkEntityString(NewEntity, true, iNetworkID), ENTITYUPDATE);
 }
 
+void Server::DestroyNetworkEntity(int iNetworkID)
+{
+	SendToAllClients(std::to_string(iNetworkID), DESTROYENTITY);
+	NetworkEntities.erase(iNetworkID);
+}
+
 bool Server::AddClient(std::string _strClientName)
 {
 	for (auto it = m_pConnectedClients->begin(); it != m_pConnectedClients->end(); ++it)
@@ -389,18 +385,9 @@ void Server::ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _
 		std::shared_ptr<Cube> CubeMesh = std::make_shared<Cube>(Cube(1, 1, 1, { 0.0f, 1.0f, 0.0f, 1.0f }));
 		NewEntity->AddMesh(CubeMesh);
 		SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
-		LevelManager::GetInstance()->GetCurrentActiveLevel()->NetworkEntity = NewEntity;
-		/*glm::vec3 Position = { 12.56f, 3.93f, 6.47f };
-		glm::vec3 Rotation = { 0.0f, 90.0f, 0.0f };
-		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
-		int iNetworkID = 0;
-		Utils::EMESHTYPE MeshType = Utils::CUBE;
-		std::string Message = std::to_string(MeshType) + " " + std::to_string(iNetworkID) + " " + Vec3ToSendString(Position) + " " + Vec3ToSendString(Rotation) + " " + Vec3ToSendString(Scale);
-		Message += " " + std::to_string(1.0f) + " " + std::to_string(1.0f) + " " + std::to_string(1.0f) + " " + Vec4ToSendString(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
-		*///_packetToSend.Serialize(CREATEENTITY, const_cast<char*>(Message.c_str()));
-		//SendData(_packetToSend.PacketData);
+		LevelManager::GetInstance()->GetCurrentActiveLevel()->NetworkEntity = NewEntity;		
 		SendToAllClients(GetNetworkEntityString(NewEntity, false), CREATEENTITY);
-		std::cout << GetNetworkEntityString(NewEntity, false) << std::endl;
+		//std::cout << GetNetworkEntityString(NewEntity, false) << std::endl;
 		break;
 	}
 	default:

@@ -272,14 +272,6 @@ void Client::ProcessData(std::string _DataReceived)
 		}
 		case ENTITYUPDATE:
 		{
-			/*std::string Result = _packetRecvd.MessageContent;
-			std::cout << Result << std::endl;
-			glm::vec3 Vec3One;
-			glm::vec3 Vec3Two;
-			int iNetworkID;
-			ExtractTwoVec3WithNetworkID(Result, iNetworkID, Vec3One, Vec3Two);
-			std::cout << "Extraced ID: " + std::to_string(iNetworkID) + " with two Vec3's: " << glm::to_string(Vec3One) << " and " << glm::to_string(Vec3Two) << std::endl;
-			*/
 			std::string Result = _packetRecvd.MessageContent;
 			// Create entity from mesh type, and miss out the first number and space
 			UpdateNetworkEntity(Result);
@@ -295,6 +287,13 @@ void Client::ProcessData(std::string _DataReceived)
 			// Create entity from mesh type, and miss out the first number and space
 			std::shared_ptr<Entity> NewEntity = CreateNetworkEntity(Utils::EMESHTYPE(MeshType), Result.substr(2));
 			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
+			break;
+		}
+		case DESTROYENTITY:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			// Destroy Entity from ID
+			DestroyNetworkEntity(std::stoi(Result));
 			break;
 		}
 	}
@@ -316,6 +315,12 @@ void Client::Update()
 		m_pWorkQueue->pop(temp);
 		ProcessData(temp);
 	}
+}
+
+void Client::DestroyNetworkEntity(int iNetworkID)
+{
+	SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(NetworkEntities[iNetworkID]);
+	NetworkEntities.erase(iNetworkID);
 }
 
 void Client::ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message)
