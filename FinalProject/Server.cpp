@@ -275,10 +275,10 @@ void Server::ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Messag
 		UserAndMessage += " " + _pcMessage;
 		MessageToSend = UserAndMessage;
 	}
-	std::string SenderAddress = ToString(m_ClientAddress);
+	//std::string SenderAddress = ToString(m_ClientAddress);
 	std::cout << MessageToSend << std::endl;
-	SendToAllClients(MessageToSend, CHAT, SenderAddress);
-	ServerPlayerRespondToMessage(MessageToSend, CHAT, SenderAddress);
+	SendToAllClients(MessageToSend, CHAT);
+	ServerPlayerRespondToMessage(MessageToSend, CHAT, "");
 }
 
 void Server::SendToAllClients(std::string _pcMessage, EMessageType _MessageType, std::string ExcludeAddress)
