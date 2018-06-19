@@ -25,9 +25,14 @@
 #include "utils.h"
 #include "Menu.h"
 #include "UIManager.h"
+#include "LevelManager.h"
+#include "Level.h"
 
 // Engine Includes //
 #include "Engine\SceneManager.h"
+#include "Engine\Entity.h"
+#include "Engine\Cube.h"
+
 
 
 /************************************************************
@@ -198,18 +203,12 @@ void Server::ProcessData(std::string _DataReceived)
 		{
 			if (AddClient(_packetRecvd.MessageContent))
 			{
-				// Get string of all connected Users
-				//std::string ServerConnectedNames;
 				std::string SenderAddress = ToString(m_ClientAddress);
-				//for (auto it = m_pConnectedClients->begin(); it != m_pConnectedClients->end(); ++it)
-				//{
-				//	ServerConnectedNames += it->second.m_strName + " ";
-				//}
 
 				// Welcomes connected client by sending handshake message
 				_packetToSend.Serialize(HANDSHAKE, const_cast<char*>(CurrentServerProperties._ServerName.c_str()));
 				SendData(_packetToSend.PacketData);
-
+								
 				// Tell sender Servers name and ip
 				std::string _strToSend = std::string(m_cUserName) + " " + m_pServerSocket->GetSocketAddress();
 				_packetToSend.Serialize(CLIENTCONNECTED, const_cast<char*>(_strToSend.c_str()));
@@ -229,7 +228,6 @@ void Server::ProcessData(std::string _DataReceived)
 				
 				// Add new client to server's lobby
 				ServerPlayerRespondToMessage(_packetRecvd.MessageContent, CLIENTCONNECTED, SenderAddress);
-	
 			}
 			else
 			{
@@ -275,10 +273,10 @@ void Server::ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Messag
 		UserAndMessage += " " + _pcMessage;
 		MessageToSend = UserAndMessage;
 	}
-	std::string SenderAddress = ToString(m_ClientAddress);
+	//std::string SenderAddress = ToString(m_ClientAddress);
 	std::cout << MessageToSend << std::endl;
-	SendToAllClients(MessageToSend, CHAT, SenderAddress);
-	ServerPlayerRespondToMessage(MessageToSend, CHAT, SenderAddress);
+	SendToAllClients(MessageToSend, CHAT);
+	ServerPlayerRespondToMessage(MessageToSend, CHAT, "");
 }
 
 void Server::SendToAllClients(std::string _pcMessage, EMessageType _MessageType, std::string ExcludeAddress)
@@ -296,6 +294,17 @@ void Server::SendToAllClients(std::string _pcMessage, EMessageType _MessageType,
 		_packetToSend.Serialize(_MessageType, const_cast<char*>(NewMessage));
 		SendData(_packetToSend.PacketData);
 	}
+}
+
+void Server::UpdateNetworkEntity(std::shared_ptr<Entity> NewEntity, int iNetworkID)
+{
+	SendToAllClients(GetNetworkEntityString(NewEntity, true, iNetworkID), ENTITYUPDATE);
+}
+
+void Server::DestroyNetworkEntity(int iNetworkID)
+{
+	SendToAllClients(std::to_string(iNetworkID), DESTROYENTITY);
+	NetworkEntities.erase(iNetworkID);
 }
 
 bool Server::AddClient(std::string _strClientName)
@@ -369,7 +378,18 @@ void Server::ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _
 	}
 	break;
 	case LOADLEVEL:
+	{
+		TPacket _packetToSend;
+
+		std::shared_ptr<Entity> NewEntity = std::make_shared<Entity>(Entity({ { 12.56f, -1.6f, 6.47f },{ 0.0f, 90.0f, 0.0f },{ 1.0f, 1.0f, 1.0f } }, Utils::CENTER));
+		std::shared_ptr<Cube> CubeMesh = std::make_shared<Cube>(Cube(1, 1, 1, { 0.0f, 1.0f, 0.0f, 1.0f }));
+		NewEntity->AddMesh(CubeMesh);
+		SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
+		LevelManager::GetInstance()->GetCurrentActiveLevel()->NetworkEntity = NewEntity;		
+		SendToAllClients(GetNetworkEntityString(NewEntity, false), CREATEENTITY);
+		//std::cout << GetNetworkEntityString(NewEntity, false) << std::endl;
 		break;
+	}
 	default:
 		break;
 	}

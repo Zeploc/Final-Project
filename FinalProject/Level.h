@@ -52,6 +52,8 @@ public:
 	void AddTempEnemy(std::shared_ptr<Entity> NewEnemy);
 	void DestroyEnemy(std::shared_ptr<Entity> _DeleteEnemy);
 
+	void DestroyNetworkEntity(std::shared_ptr<Entity> EntityToDestroy);
+
 	void DestroyAllEnemies();
 	void RespawnEnemies();
 	void PlayRandomTrack();
@@ -68,6 +70,7 @@ public:
 	std::shared_ptr<Entity> MouseAimTarget;
 	std::shared_ptr<Entity> BossRef;
 
+	std::shared_ptr<Entity> NetworkEntity;
 
 	std::vector<std::shared_ptr<Entity>> Collidables;
 	std::vector<std::shared_ptr<Entity>> CurrentEnemies;

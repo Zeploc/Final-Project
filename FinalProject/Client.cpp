@@ -270,6 +270,32 @@ void Client::ProcessData(std::string _DataReceived)
 			std::cout << "Chat Recieved: [" + Username + "]: " + Message << std::endl;
 			break;
 		}
+		case ENTITYUPDATE:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			// Create entity from mesh type, and miss out the first number and space
+			UpdateNetworkEntity(Result);
+			break;
+		}
+		case CREATEENTITY:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			std::istringstream iss(Result);
+			int MeshType;
+			iss >> MeshType;
+			std::cout << Result << std::endl;
+			// Create entity from mesh type, and miss out the first number and space
+			std::shared_ptr<Entity> NewEntity = CreateNetworkEntity(Utils::EMESHTYPE(MeshType), Result.substr(2));
+			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
+			break;
+		}
+		case DESTROYENTITY:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			// Destroy Entity from ID
+			DestroyNetworkEntity(std::stoi(Result));
+			break;
+		}
 	}
 }
 
@@ -289,6 +315,12 @@ void Client::Update()
 		m_pWorkQueue->pop(temp);
 		ProcessData(temp);
 	}
+}
+
+void Client::DestroyNetworkEntity(int iNetworkID)
+{
+	SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(NetworkEntities[iNetworkID]);
+	NetworkEntities.erase(iNetworkID);
 }
 
 void Client::ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message)

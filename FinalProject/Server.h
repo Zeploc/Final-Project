@@ -51,13 +51,16 @@ public:
 
 	void ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message);
 	void SendToAllClients(std::string _pcMessage, EMessageType _Message, std::string ExcludeAddress = "");
+	void ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _Message, std::string SenderAddress);
 	int ConnectedClientsCount() {
 		return m_pConnectedClients->size();
 	};
 
+	void UpdateNetworkEntity(std::shared_ptr<Entity> Entity, int iNetworkID);
+	void DestroyNetworkEntity(int iNetworkID);
+
 private:
 	bool AddClient(std::string _strClientName);
-	void ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _Message, std::string SenderAddress);
 
 private:
 	//A Buffer to contain all packet data for the server

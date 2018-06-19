@@ -48,6 +48,9 @@
 #include "Boss.h"
 #include "LevelManager.h"
 
+#include "NetworkManager.h"
+#include "Server.h"
+
 // This Includes //
 #include "Level.h"
 
@@ -252,6 +255,22 @@ void Level::Update()
 		}
 	}
 	FPSCounterText->sText = "FPS: " + std::to_string(Time::dFPS);
+
+	if (NetworkManager::GetInstance()->m_Network.IsServer()) // is Server
+	{
+		if (NetworkEntity)
+		{
+			NetworkEntity->transform = MouseAimTarget->transform;
+			NetworkEntity->transform.Position.y = 1.0f;
+		}
+
+		if (Input::GetInstance()->KeyState[(unsigned int) 'f'] == Input::INPUT_FIRST_PRESS)
+		{
+			DestroyNetworkEntity(NetworkEntity);
+		}
+	}
+
+
 	Scene::Update(); // Call super/base Update
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'r'] == Input::INPUT_FIRST_PRESS)
@@ -357,6 +376,12 @@ void Level::DestroyEnemy(std::shared_ptr<Entity> _DeleteEnemy)
 	}
 	DestroyEntity(_DeleteEnemy);
 	_DeleteEnemy = nullptr;
+}
+
+void Level::DestroyNetworkEntity(std::shared_ptr<Entity> EntityToDestroy)
+{
+	NetworkManager::GetInstance()->DestroyNetworkEntity(EntityToDestroy);
+	DestroyEntity(EntityToDestroy);
 }
 
 /************************************************************

@@ -18,12 +18,17 @@
 // Local Includes //
 #include "JoinGameMenu.h"
 #include "Client.h"
+#include "Server.h"
+
+// Engine Includes //
+#include "Engine\Time.h"
 
 // Static Variables //
 std::shared_ptr<NetworkManager> NetworkManager::m_pNetworkManager;
 
 NetworkManager::NetworkManager()
 {
+	fTimeRateInterval = 1 / iTickRate;
 }
 
 
@@ -38,6 +43,49 @@ void NetworkManager::JoinServer(ServerInfoProperties _ServerProperties)
 	TPacket _packet;
 	_packet.Serialize(HANDSHAKE, const_cast<char *>(std::dynamic_pointer_cast<Client>(m_Network.m_pNetworkEntity)->GetClientUserName().c_str()));
 	ClientRef->SendData(_packet.PacketData);
+}
+
+void NetworkManager::Update()
+{
+	if (fCurrentTime >= fNextTime)
+	{
+		fNextTime += fTimeRateInterval;
+		UpdateClientEntities();
+	}
+
+	fCurrentTime += Time::dTimeDelta;
+}
+
+void NetworkManager::DestroyNetworkEntity(std::shared_ptr<Entity> EntityToDestroy)
+{
+	if (m_Network.IsServer())
+	{
+		int iDestroyID = -1;
+		std::shared_ptr<Server> ServerPointer = std::dynamic_pointer_cast<Server>(m_Network.m_pNetworkEntity);
+		for (auto& Ent : m_Network.m_pNetworkEntity->NetworkEntities)
+		{
+			if (Ent.second == EntityToDestroy)
+			{
+				iDestroyID = Ent.first;
+				break;
+			}
+		}
+		if (iDestroyID == -1) return; // Entity Not found, not network entity
+		ServerPointer->DestroyNetworkEntity(iDestroyID);
+	}
+
+}
+
+void NetworkManager::UpdateClientEntities()
+{
+	if (m_Network.IsServer())
+	{
+		std::shared_ptr<Server> ServerPointer = std::dynamic_pointer_cast<Server>(m_Network.m_pNetworkEntity);
+		for (auto& Ent : m_Network.m_pNetworkEntity->NetworkEntities)
+		{
+			ServerPointer->UpdateNetworkEntity(Ent.second, Ent.first);
+		}
+	}
 }
 
 /************************************************************
