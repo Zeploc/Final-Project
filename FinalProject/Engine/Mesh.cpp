@@ -74,7 +74,10 @@ void Mesh::Render(Utils::Transform Newtransform)
 	if (program == Shader::Programs["ReflectionProgram"])
 	{		
 		glActiveTexture(GL_TEXTURE1);
-		glUniform1i(glGetUniformLocation(program, "skybox"), 1);		glBindTexture(GL_TEXTURE_CUBE_MAP, Utils::WorldCubeMap->EntityMesh->texture);		glUniform1f(glGetUniformLocation(program, "ReflectionSize"), 0.1f);
+		glUniform1i(glGetUniformLocation(program, "skybox"), 1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, Utils::WorldCubeMap->EntityMesh->texture);
+		glUniform1f(glGetUniformLocation(program, "ReflectionSize"), 0.1f);
+
 	}
 	glEnable(GL_CULL_FACE);
 	Camera::GetInstance()->SetMVP(Newtransform, program);
