@@ -104,7 +104,7 @@ void GameManager::RespawnPlayer()
 {
 	bPlayerDead = false;
 	std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());
-	CurrentLevel->EPlayer->Reset();
+	if (CurrentLevel->EPlayer) CurrentLevel->EPlayer->Reset();
 }
 
 std::shared_ptr<Player> GameManager::GetPlayer()

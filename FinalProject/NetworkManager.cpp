@@ -19,6 +19,9 @@
 #include "JoinGameMenu.h"
 #include "Client.h"
 #include "Server.h"
+#include "Player.h"
+#include "LevelManager.h"
+#include "Level.h"
 
 // Engine Includes //
 #include "Engine\Time.h"
@@ -51,9 +54,12 @@ void NetworkManager::Update()
 	{
 		fNextTime += fTimeRateInterval;
 		UpdateClientEntities();
+		UpdatePlayers();
 	}
 
 	fCurrentTime += Time::dTimeDelta;
+
+
 }
 
 void NetworkManager::DestroyNetworkEntity(std::shared_ptr<Entity> EntityToDestroy)
@@ -88,6 +94,18 @@ void NetworkManager::UpdateClientEntities()
 	}
 }
 
+void NetworkManager::UpdatePlayers()
+{
+	if (m_Network.IsServer())
+	{
+		std::shared_ptr<Server> ServerPointer = std::dynamic_pointer_cast<Server>(m_Network.m_pNetworkEntity);
+		for (auto& Ent : m_Network.m_pNetworkEntity->PlayerEntities)
+		{
+			ServerPointer->UpdatePlayer(Ent.second);
+		}	
+	}
+
+}
 /************************************************************
 #--Description--#:  Retrieves static instance pointer to this class
 #--Author--#: 		Alex Coultas

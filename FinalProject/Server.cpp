@@ -300,11 +300,37 @@ void Server::UpdateNetworkEntity(std::shared_ptr<Entity> NewEntity, int iNetwork
 {
 	SendToAllClients(GetNetworkEntityString(NewEntity, true, iNetworkID), ENTITYUPDATE);
 }
+void Server::UpdatePlayer(std::shared_ptr<Player> PlayerEnt)
+{
+	std::string PlayerInfoMessage = PlayerEnt->m_UserName + " " + std::to_string(PlayerEnt->m_fHealth) + " " + std::to_string(PlayerEnt->GetScore()) + " " + Vec3ToSendString(PlayerEnt->transform.Position) + " " + Vec3ToSendString(PlayerEnt->transform.Rotation);
+
+	std::string PlayerAddress;
+	for (auto& itClient : *m_pConnectedClients)
+	{
+		if (itClient.second.m_strName == PlayerEnt->m_UserName)
+			PlayerAddress = itClient.first;
+	}
+	SendToAllClients(PlayerInfoMessage, PLAYERUPDATE, PlayerAddress);
+}
+
 
 void Server::DestroyNetworkEntity(int iNetworkID)
 {
 	SendToAllClients(std::to_string(iNetworkID), DESTROYENTITY);
 	NetworkEntities.erase(iNetworkID);
+}
+
+void Server::CreatePlayers()
+{
+	for (auto& Client : *m_pConnectedClients)
+	{
+		CreateNetworkPlayer(Client.second.m_strName);
+		CreatePlayerOnClients(Client.second.m_strName);
+	}
+	CreateNetworkPlayer(m_cUserName);
+	CreatePlayerOnClients(m_cUserName);
+
+	// Create and pass Server's player
 }
 
 bool Server::AddClient(std::string _strClientName)
@@ -337,6 +363,12 @@ bool Server::AddClient(std::string _strClientName)
 	std::string _strAddress = ToString(m_ClientAddress);
 	m_pConnectedClients->insert(std::pair < std::string, TClientDetails >(_strAddress, _clientToAdd));
 	return true;
+}
+
+void Server::CreatePlayerOnClients(std::string PlayerName)
+{
+	std::string PlayerMessage = PlayerName;
+	SendToAllClients(PlayerMessage, CREATEPLAYER);
 }
 
 void Server::ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _Message, std::string SenderAddress)
@@ -387,6 +419,7 @@ void Server::ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _
 		SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
 		LevelManager::GetInstance()->GetCurrentActiveLevel()->NetworkEntity = NewEntity;		
 		SendToAllClients(GetNetworkEntityString(NewEntity, false), CREATEENTITY);
+		CreatePlayers();
 		//std::cout << GetNetworkEntityString(NewEntity, false) << std::endl;
 		break;
 	}
