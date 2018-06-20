@@ -69,7 +69,7 @@ struct TPacket
 	TPacket Deserialize(std::string _PacketData)
 	{
 		std::istringstream iss(_PacketData);
-
+		
 		iss >> this->MessageType;
 
 		//iss >> this->MessageContent;

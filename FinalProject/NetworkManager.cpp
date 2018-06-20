@@ -51,6 +51,7 @@ void NetworkManager::Update()
 	{
 		fNextTime += fTimeRateInterval;
 		UpdateClientEntities();
+
 	}
 
 	fCurrentTime += Time::dTimeDelta;
