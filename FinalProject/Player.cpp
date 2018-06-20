@@ -38,7 +38,7 @@
 #include "GameManager.h"
 #include "LevelManager.h"
 #include "AI.h"
-
+#include "NetworkManager.h"
 
 // This Includes //
 #include "Player.h"
@@ -109,7 +109,7 @@ Player::~Player()
 void Player::Update()
 {
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
-	if (!GotLevel || !bActive || !UIManager::GetInstance()->m_bFPS || !GameManager::GetInstance()->IsPlayerAlive()) return;
+	if (!GotLevel || !bActive || !UIManager::GetInstance()->m_bFPS || !GameManager::GetInstance()->IsPlayerAlive() || NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->GetServerUsername() != m_UserName) return;
 	
 	if (transform.Position.y < -20.0f)
 	{		

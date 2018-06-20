@@ -42,6 +42,7 @@ CollisionBounds::~CollisionBounds()
 
 bool CollisionBounds::isColliding(std::shared_ptr<Entity> Entity2)
 {
+	if (!Entity2) return false;
 	std::shared_ptr<Mesh> Entity1Mesh = std::dynamic_pointer_cast<Mesh>(EntityRef->EntityMesh);
 	std::shared_ptr<Mesh> Entity2Mesh = std::dynamic_pointer_cast<Mesh>(Entity2->EntityMesh);
 	float HalfWidth1 = (fWidth) / 2;// * * abs(EntityRef->transform.Scale.x);

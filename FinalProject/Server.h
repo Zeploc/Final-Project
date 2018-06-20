@@ -57,10 +57,12 @@ public:
 	};
 
 	void UpdateNetworkEntity(std::shared_ptr<Entity> Entity, int iNetworkID);
+	void UpdatePlayer(std::shared_ptr<Player> PlayerEnt);
 	void DestroyNetworkEntity(int iNetworkID);
-
+	void CreatePlayers();
 private:
 	bool AddClient(std::string _strClientName);
+	void CreatePlayerOnClients(std::string PlayerName);
 
 private:
 	//A Buffer to contain all packet data for the server
@@ -70,8 +72,6 @@ private:
 	// Make a member variable to extract the IP and port number of the sender from whom we are receiving
 	//Since it is a UDP socket capable of receiving from multiple clients; these details will change depending on who has sent the packet we are currently processing.
 	sockaddr_in m_ClientAddress;
-	//A username to associate with the server
-	char m_cUserName[50];
 
 	ServerInfoProperties CurrentServerProperties;
 

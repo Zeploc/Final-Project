@@ -296,6 +296,36 @@ void Client::ProcessData(std::string _DataReceived)
 			DestroyNetworkEntity(std::stoi(Result));
 			break;
 		}
+		case PLAYERUPDATE:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			std::stringstream ss(Result);
+			std::string Username;
+			int Score;
+			float Health, PosX, PosY, PosZ, RotX, RotY, RotZ;
+
+			ss >> Username >> Health >> Score >> PosX >> PosY >> PosZ >> RotX >> RotY >> RotZ;
+
+			glm::vec3 position = { PosX, PosY, PosZ };
+			glm::vec3 rotation = { RotX, RotY, RotZ };
+
+			PlayerEntities[Username]->SetScore(Score);
+			PlayerEntities[Username]->SetHealth(Health);
+			PlayerEntities[Username]->transform.Position = position;
+			PlayerEntities[Username]->transform.Rotation = rotation;
+
+			break;
+		}
+		case CREATEPLAYER:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			std::stringstream ss(Result);
+			std::string Username;
+
+			ss >> Username;
+			CreateNetworkPlayer(Username);
+			break;
+		}
 	}
 }
 

@@ -22,6 +22,9 @@
 #include "Engine\Entity.h"
 #include "Engine\Cube.h"
 
+// Local Includes //
+#include "LevelManager.h"
+
 /************************************************************
 #--Description--#:  Constructor function
 #--Author--#: 		Alex Coultas
@@ -127,11 +130,6 @@ std::shared_ptr<Entity> NetworkEntity::CreateNetworkEntity(Utils::EMESHTYPE Mesh
 		std::shared_ptr<Cube> CubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, Colour));
 		NewEntity->AddMesh(CubeMesh);
 		NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(NetworkID, NewEntity));
-		/*if (NetworkEntities.size() < NetworkID - 1)
-		{
-			NetworkEntities.push_back(nullptr);
-		}
-		NetworkEntities[NetworkID] = NewEntity;*/
 		return NewEntity;
 		break;
 	}
@@ -143,6 +141,22 @@ std::shared_ptr<Entity> NetworkEntity::CreateNetworkEntity(Utils::EMESHTYPE Mesh
 		break;
 	}
 	return nullptr;
+}
+
+void NetworkEntity::CreateNetworkPlayer(std::string UserName)
+{
+	std::shared_ptr<Level> levelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
+	glm::vec3 SpawnPlayerPos = levelRef->SpawnPos;
+	std::shared_ptr<Player> NewPlayer = std::make_shared<Player>(Player({ SpawnPlayerPos, {0, 0, 0}, {0.01f, 0.01f, 0.01f} }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
+	NewPlayer->EntityMesh->AddCollisionBounds(0.6f, 1.0f, 0.6f, NewPlayer);
+	NewPlayer->m_UserName = UserName;
+	PlayerEntities.insert(std::pair<std::string, std::shared_ptr<Player>>(UserName, NewPlayer));
+	//NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(iNetworkID, NewPlayer));
+	levelRef->AddEntity(NewPlayer);
+	if (m_cUserName == UserName) // If the player being added is the same as the current player/client/server, set level Eplayer to this
+		levelRef->EPlayer = NewPlayer;
+
+	return;
 }
 
 void NetworkEntity::UpdateNetworkEntity(std::string UpdateInfo)
@@ -168,9 +182,6 @@ std::string NetworkEntity::GetNetworkEntityString(std::shared_ptr<Entity> Networ
 		iNetworkID = iLastID;
 		iLastID++;
 		NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(iNetworkID, NetworkEntity));
-		/*iNetworkID = NetworkEntities.size();
-		NetworkEntities.push_back(nullptr);
-		NetworkEntities[iNetworkID] = NetworkEntity;*/
 	}
 	// No Mesh
 	if (!NetworkEntity->EntityMesh || bIsUpdate)

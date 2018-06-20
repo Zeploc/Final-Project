@@ -80,18 +80,18 @@ Level::Level(std::string sSceneName)
 
 	SpawnPos = glm::vec3(17, 1.0f, 20);
 	// Add cube map first so transpancy works
-	std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
+	/*std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
 	AddEntity(Player);
 	Player->EntityMesh->AddCollisionBounds(0.6f, 1.0f, 0.6f, Player);
 	EPlayer = Player;
-	EPlayer->SetActive(true);
+	EPlayer->SetActive(true);*/
 
 	std::shared_ptr<Spectator> Spec = std::make_shared<Spectator>(Spectator(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, Utils::CENTER));
 	ESpectator = Spec;
 	AddEntity(ESpectator);
 	ESpectator->SetActive(false);
 
-	CurrentController = Player;
+	CurrentController = EPlayer;
 
 	//std::shared_ptr<SpeedBoostPickUp> NewPickup = std::make_shared<SpeedBoostPickUp>(SpeedBoostPickUp(Utils::Transform{ { 7.5f, -2.0f, 10.0f }, { 45, 45, 45 }, {1, 1, 1} }, Utils::CENTER, EPlayer));
 	//std::shared_ptr<Cube> NewPickupMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 0.4, 0.1, 0.6, 1.0f }, "Resources/Box.png"));
@@ -217,7 +217,7 @@ Level::~Level()
 ************************************************************/
 void Level::Update()
 {
-	LevelManager::GetInstance()->EnemySpawner();
+	//LevelManager::GetInstance()->EnemySpawner();
 	MouseAimTarget->transform.Rotation.z += 10.0f *  (float)Time::dTimeDelta;
 	float fDotProductDirections = glm::dot(Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos), glm::vec3(0, 1, 0));
 	if (fDotProductDirections == 0) // Perpendicular
@@ -550,19 +550,20 @@ void Level::SetPlayerPosition(glm::vec3 Pos)
 
 void Level::CameraMovement()
 {
+
 	glm::vec3 CurrentCamPos = Camera::GetInstance()->GetCameraPosition();
 	float fCamHeight = 15;
 	float fBackDistance = 15;
 
 	glm::vec3 Difference = glm::vec3();
-	if (BossRef)
+	if (BossRef && EPlayer)
 		Difference = BossRef->transform.Position - EPlayer->transform.Position;
 	float fDistance = abs(glm::length(Difference));
 	glm::vec3 Direction = fDistance != 0 ? glm::normalize(Difference) : Difference;
 
 	float fBackMultiplier = fDistance / 20;
 
-	glm::vec3 CenterPosition = EPlayer->transform.Position + Direction * (fDistance / 2);
+	glm::vec3 CenterPosition = EPlayer ? EPlayer->transform.Position + Direction * (fDistance / 2) : SpawnPos;
 	glm::vec3 NewCameraTargetPostion = CenterPosition;
 	NewCameraTargetPostion.y += max(fCamHeight * fBackMultiplier, 12.0f);
 	NewCameraTargetPostion.z += max(fBackDistance * fBackMultiplier, 12.0f);

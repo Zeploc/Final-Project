@@ -25,6 +25,9 @@
 // Engine Includes //
 #include "Engine\Utils.h"
 
+// Local Includes //
+#include "Player.h"
+
 enum EMessageType : unsigned char
 {
 	HANDSHAKE,
@@ -36,7 +39,9 @@ enum EMessageType : unsigned char
 	LOADLEVEL,
 	CREATEENTITY,
 	ENTITYUPDATE,
-	DESTROYENTITY
+	DESTROYENTITY,
+	PLAYERUPDATE,
+	CREATEPLAYER
 };
 
 struct TPacket
@@ -97,6 +102,7 @@ public:
 	static void ExtractTwoVec3(std::string _vec3String, glm::vec3& Vec1, glm::vec3& Vec2);
 	static void ExtractTwoVec3WithNetworkID(std::string _vec3String, int& NetworkID, glm::vec3& Vec1, glm::vec3& Vec2);
 	std::shared_ptr<Entity> CreateNetworkEntity(Utils::EMESHTYPE MeshType, std::string EntityInfo);
+	void CreateNetworkPlayer(std::string UserName);
 	void UpdateNetworkEntity(std::string UpdateInfo);
 	std::string GetNetworkEntityString(std::shared_ptr<Entity> Entity, bool bIsUpdate, int iNetworkIdentity = -1);
 
@@ -107,6 +113,9 @@ public:
 	virtual void ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message) = 0;
 
 	std::map<int, std::shared_ptr<Entity>> NetworkEntities;
+	std::map<std::string, std::shared_ptr<Player>> PlayerEntities;
+	
+	std::string GetServerUsername() { return std::string(m_cUserName); };
 
 	void SetOffline()
 	{
@@ -119,5 +128,7 @@ protected:
 	bool m_bOnline = false;
 	int iLastID = 0;
 
+	//A username to associate with the player
+	char m_cUserName[50];
 };
 

@@ -71,6 +71,14 @@ public:
 	void ApplyPowerUp(POWERUPS _PowerUp, float _fPowerUpTime);
 	bool FireRatePickup = false;
 	bool bSeeking = false;
+
+	// Score and Health
+	float m_fHealth = 100;
+	int m_iScore = 0;
+	float m_fLastHurt = 0.0f;
+
+	std::string m_UserName;
+
 private:
 	// Bullets	
 	float BulletSpeed = 30.0f;
@@ -88,10 +96,6 @@ private:
 	bool bHasDodged = false;
 	bool bJump = false;
 
-	// Score and Health
-	float m_fHealth = 100;
-	int m_iScore = 0;
-	float m_fLastHurt = 0.0f;
 	
 
 	//Power Ups
