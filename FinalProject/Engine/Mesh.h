@@ -45,6 +45,10 @@ public:
 
 	virtual void Rebind() {}; // Will replace if texture exists
 	virtual void SetLit(bool _bIsLit) { bIsLit = _bIsLit; };
+	bool IsLit() { return bIsLit; };
+
+	void SetReflection();
+	bool IsReflecting() { return bReflection; };
 
 	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, std::shared_ptr<Entity> _EntityRef);
 	void AddCollisionBounds(std::shared_ptr<CollisionBounds> NewCollision);
@@ -69,6 +73,7 @@ public:
 protected:
 	std::shared_ptr<CollisionBounds> MeshCollisionBounds;
 	bool bIsLit = false;
+	bool bReflection = false;
 };
 
 #endif

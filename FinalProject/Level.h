@@ -49,7 +49,7 @@ public:
 	void AddHexPlatform(std::string _ModelPath, glm::vec3 _v3Postion, glm::vec3 Rotation);
 	
 	void AddEnemy(std::shared_ptr<Entity>);
-	void AddTempEnemy(std::shared_ptr<Entity> NewEnemy);
+	std::shared_ptr<Entity> AddTempEnemy(std::shared_ptr<Entity> NewEnemy);
 	void DestroyEnemy(std::shared_ptr<Entity> _DeleteEnemy);
 
 	void DestroyNetworkEntity(std::shared_ptr<Entity> EntityToDestroy);

@@ -71,7 +71,7 @@ void Mesh::Render(Utils::Transform Newtransform)
 		glBindTexture(GL_TEXTURE_2D, texture);
 	
 	}
-	if (program == Shader::Programs["ReflectionProgram"])
+	if (bReflection)
 	{		
 		glActiveTexture(GL_TEXTURE1);
 		glUniform1i(glGetUniformLocation(program, "skybox"), 1);
@@ -85,6 +85,12 @@ void Mesh::Render(Utils::Transform Newtransform)
 	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Mesh::SetReflection()
+{
+	bReflection = true;
+	program = Shader::Programs["ReflectionProgram"];
 }
 
 void Mesh::AddCollisionBounds(float fWidth, float fHeight, float fDepth, std::shared_ptr<Entity> _EntityRef)

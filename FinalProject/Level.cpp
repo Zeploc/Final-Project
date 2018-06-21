@@ -312,7 +312,7 @@ void Level::AddEnemy(std::shared_ptr<Entity> Enemy)
 	AddTempEnemy(Enemy);
 }
 
-void Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
+std::shared_ptr<Entity> Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 {
 	std::shared_ptr<Enemy1> IsEnemy1 = std::dynamic_pointer_cast<Enemy1>(NewEnemy);
 	std::shared_ptr<Enemy2> IsEnemy2 = std::dynamic_pointer_cast<Enemy2>(NewEnemy);
@@ -330,6 +330,7 @@ void Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 		CurrentEnemies.push_back(NewEnemyCopy);
 		NewEnemyCopy->EntityMesh = IsEnemy1->EntityMesh;
 		AddEntity(NewEnemyCopy);
+		return NewEnemyCopy;
 	}
 	else if (IsEnemy2)
 	{
@@ -338,6 +339,7 @@ void Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 		NewEnemyCopy->SetTarget(EPlayer);
 		NewEnemyCopy->EntityMesh = IsEnemy2->EntityMesh;
 		AddEntity(NewEnemyCopy);
+		return NewEnemyCopy;
 	}
 	else if (bIsEnemy3)
 	{
@@ -346,6 +348,7 @@ void Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 		NewEnemyCopy->Target = EPlayer;
 		NewEnemyCopy->EntityMesh = IsEnemy3->EntityMesh;
 		AddEntity(NewEnemyCopy);
+		return NewEnemyCopy;
 	}
 	else if (bIsEnemySeek)
 	{
@@ -354,6 +357,7 @@ void Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 		NewEnemyCopy->Target = EPlayer;
 		NewEnemyCopy->EntityMesh = IsEnemySeek->EntityMesh;
 		AddEntity(NewEnemyCopy);
+		return NewEnemyCopy;
 	}
 	else if (bIsBoss)
 	{
@@ -363,6 +367,7 @@ void Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 		AddEntity(NewEnemyCopy);
 		NewEnemyCopy->EntityMesh = NewEnemyCopy->EntityMesh;
 		BossRef = NewEnemyCopy;
+		return NewEnemyCopy;
 	}
 }
 
