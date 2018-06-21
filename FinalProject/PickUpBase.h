@@ -36,6 +36,7 @@ protected:
 	float m_fRespawnTimer;
 	float m_fOscillatingHeight;
 
-	std::shared_ptr<Entity> CollidingEntity;
+	std::vector<std::shared_ptr<Entity>> CollidingEntities;
+	
 };
 

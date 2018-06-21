@@ -24,6 +24,11 @@
 #include "Engine\LogManager.h"
 #include "Engine/SoundManager.h"
 
+// Local Includes //
+#include "LevelManager.h"
+#include "NetworkManager.h"
+#include "Level.h"
+
 /************************************************************
 #--Description--#:  Constructor function
 #--Author--#: 		Alex Coultas
@@ -31,9 +36,25 @@
 #--Return--#: 		NA
 ************************************************************/
 PickUpBase::PickUpBase(Utils::Transform _Transform, Utils::EANCHOR _Anchor, std::shared_ptr<Entity> _CollidingEntity, float _fRespawnTime)
-	: Entity(_Transform, _Anchor), m_fRespawnTime(_fRespawnTime), m_fRespawnTimer(_fRespawnTime), CollidingEntity(_CollidingEntity)
+	: Entity(_Transform, _Anchor), m_fRespawnTime(_fRespawnTime), m_fRespawnTimer(_fRespawnTime)
 {
+	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+	{
+		if (NetworkManager::GetInstance()->m_Network.IsServer())
+		{
+			for (auto& PlayerIt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities)
+			{
+				CollidingEntities.push_back(PlayerIt.second);
+			}
+		}
+	}
+	else
+	{
+		std::shared_ptr<Level> levelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
+		CollidingEntities.push_back(levelRef->EPlayer);
+	}
 	m_fOscillatingHeight = _Transform.Position.y;
+
 }
 
 /************************************************************
@@ -78,11 +99,16 @@ void PickUpBase::Update()
 		if (!bVisible) // Not visible when checking for collisons
 			SetVisible(true); // Turns visible to show it is collectable
 		// Check if colliding
-		if (EntityMesh->GetCollisionBounds()->isColliding(CollidingEntity))
+		for (auto& CurrentCollidingPlayer : CollidingEntities)
 		{
-			m_fRespawnTimer = m_fRespawnTime;
-			OnPickUp();
+			if (EntityMesh->GetCollisionBounds()->isColliding(CurrentCollidingPlayer))
+			{
+				m_fRespawnTimer = m_fRespawnTime;
+				OnPickUp();
+				break;
+			}
 		}
+		
 	}
 }
 
