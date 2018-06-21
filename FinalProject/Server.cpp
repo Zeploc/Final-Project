@@ -348,13 +348,7 @@ void Server::UpdatePlayer(std::shared_ptr<Player> PlayerEnt)
 {
 	std::string PlayerInfoMessage = PlayerEnt->m_UserName + " " + std::to_string(PlayerEnt->m_fHealth) + " " + std::to_string(PlayerEnt->GetScore()) + " " + Vec3ToSendString(PlayerEnt->transform.Position) + " " + Vec3ToSendString(PlayerEnt->transform.Rotation);
 
-	std::string PlayerAddress;
-	for (auto& itClient : *m_pConnectedClients)
-	{
-		if (itClient.second.m_strName == PlayerEnt->m_UserName)
-			PlayerAddress = itClient.first;
-	}
-	SendToAllClients(PlayerInfoMessage, PLAYERUPDATE, PlayerAddress);
+	SendToAllClients(PlayerInfoMessage, PLAYERUPDATE);
 }
 
 
@@ -370,6 +364,7 @@ void Server::CreatePlayers()
 	{
 		CreateNetworkPlayer(Client.second.m_strName);
 		CreatePlayerOnClients(Client.second.m_strName);
+		UIManager::GetInstance()->m_HUDInstance.AddPlayer(Client.second.m_strName);
 	}
 	CreateNetworkPlayer(m_cUserName);
 	CreatePlayerOnClients(m_cUserName);

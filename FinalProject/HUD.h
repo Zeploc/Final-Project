@@ -19,6 +19,7 @@
 
 // Library Includes //
 #include <memory>
+#include <vector>
 
 #pragma once
 class HUD
@@ -34,10 +35,15 @@ public:
 	void SetHealth(float _fHealth);
 	void SetWaveTimer(float _fCurrentTime);
 
+	void AddPlayer(std::string UserName);
+
 private:
 	std::shared_ptr<UIText> m_pWaveTime;
 	std::shared_ptr<UIImage> m_pBackImage;
 	std::shared_ptr<UIText> m_pScore;
 	std::shared_ptr<UIText> m_pHealth;
+	std::vector<std::shared_ptr<UIText>> m_vpPlayerName;
+	std::vector<std::shared_ptr<UIText>> m_vpPlayerScore;
+	std::vector<std::shared_ptr<UIText>> m_vpPlayerHealth;
 };
 

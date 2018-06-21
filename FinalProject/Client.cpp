@@ -317,8 +317,12 @@ void Client::ProcessData(std::string _DataReceived)
 
 			PlayerEntities[Username]->SetScore(Score);
 			PlayerEntities[Username]->SetHealth(Health);
-			PlayerEntities[Username]->transform.Position = position;
-			PlayerEntities[Username]->transform.Rotation = rotation;
+			// Don't update current players position, only other players
+			if (Username != m_cUserName)
+			{
+				PlayerEntities[Username]->transform.Position = position;
+				PlayerEntities[Username]->transform.Rotation = rotation;
+			}
 
 			break;
 		}
@@ -330,6 +334,7 @@ void Client::ProcessData(std::string _DataReceived)
 
 			ss >> Username;
 			CreateNetworkPlayer(Username);
+			if (Username != m_cUserName) UIManager::GetInstance()->m_HUDInstance.AddPlayer(Username);
 			break;
 		}
 		case CREATEBULLET:
