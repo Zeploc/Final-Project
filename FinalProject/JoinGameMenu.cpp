@@ -46,6 +46,11 @@ JoinGameMenu::~JoinGameMenu()
 
 void JoinGameMenu::Init(std::shared_ptr<Scene> _Scene)
 {
+	if (bInitialised)
+	{
+		HideElements();
+		return;
+	}
 	// Add Join Elements
 	std::shared_ptr<UIText> JoinText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.9, 0.9, 0.9, 1.0f), "Join Game:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
 	JoinText->SetActive(false);
@@ -71,7 +76,7 @@ void JoinGameMenu::Init(std::shared_ptr<Scene> _Scene)
 	v_ScreenElements.push_back(PlayerName);
 
 	ServerListPos = { Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT - 400 };
-
+	bInitialised = true;
 }
 
 void JoinGameMenu::HideElements()

@@ -198,8 +198,7 @@ void NetworkEntity::UpdateNetworkEntity(std::string UpdateInfo)
 	glm::vec3 Rot = { RotX, RotY, RotZ };
 	glm::vec3 Scale = { ScaleX, ScaleY, ScaleZ };	
 	
-	NetworkEntities[NetworkID]->transform = { Pos , Rot , Scale };
-
+	if (NetworkEntities[NetworkID]) NetworkEntities[NetworkID]->transform = { Pos , Rot , Scale };
 	return;
 }
 

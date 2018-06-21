@@ -43,5 +43,7 @@ private:
 	std::shared_ptr<UISlider> PlayersCountSlider;
 	std::shared_ptr<UITextField> ServerName;
 	std::shared_ptr<UITextField> PlayerName;
+	
+	bool bInitialised = false;
 };
 

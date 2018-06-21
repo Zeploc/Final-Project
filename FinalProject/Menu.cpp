@@ -183,11 +183,13 @@ void Menu::OnLoadScene()
 {
 	UIManager::GetInstance()->m_bDisplayChat = false;
 	UIManager::GetInstance()->m_bDisplayHUD = false;
-	UIManager::GetInstance()->SwitchUIMode(true);
 	UIManager::GetInstance()->m_bLoadingScreen = false;
+	UIManager::GetInstance()->m_bEndScreen = false;
+	UIManager::GetInstance()->SwitchUIMode(true);
 	LobbyScreen.Init(this->shared_from_this());
 	JoinGameScreen.Init(this->shared_from_this());
 	HostGameScreen.Init(this->shared_from_this());
+	ToggleMenuSection(MAIN);
 	//Camera::GetInstance()->m_bFPS = false;
 	SoundManager::GetInstance()->StopAudio("BackgroundC");
 	PlayRandomTrack();

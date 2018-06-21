@@ -239,6 +239,15 @@ void Server::ProcessData(std::string _DataReceived)
 			}
 			break;
 		}
+		case CLIENTDISCONNECT:
+		{
+			// [TO ADD]
+			// tell all users the player has disconnected (Clients remove player instance)
+			// Remove from server players map
+			// remove from connected clients
+			// remove Player from UI HUD
+			break;
+		}
 		case CHAT:
 		{
 			std::string SenderAddress = ToString(m_ClientAddress);
@@ -309,7 +318,7 @@ void Server::Update()
 	}
 }
 
-void Server::ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message)
+void Server::SendMessageNE(std::string _pcMessage, EMessageType _Message)
 {
 	std::string MessageToSend = _pcMessage;
 	if (_Message == CHAT)

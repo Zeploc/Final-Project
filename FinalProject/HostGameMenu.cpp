@@ -39,6 +39,11 @@ HostGameMenu::~HostGameMenu()
 
 void HostGameMenu::Init(std::shared_ptr<Scene> _Scene)
 {
+	if (bInitialised)
+	{
+		HideElements();
+		return;
+	}
 	// Add Host Elements
 	std::shared_ptr<UIText> HostText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.9, 0.9, 0.9, 1.0f), "Host Game:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
 	HostText->SetActive(false);
@@ -83,6 +88,7 @@ void HostGameMenu::Init(std::shared_ptr<Scene> _Scene)
 	v_ScreenElements.push_back(ServerNameTxt);
 	v_ScreenElements.push_back(PlayerNameTxt);
 
+	bInitialised = true;
 }
 
 void HostGameMenu::HideElements()

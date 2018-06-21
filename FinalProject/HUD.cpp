@@ -26,7 +26,7 @@
 ************************************************************/
 HUD::HUD()
 {
-	m_pWaveTime = std::make_shared<UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH / 2, 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Time Remaining: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::TOP_CENTER));;
+	m_pWaveTime = std::make_shared<UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH - 10, 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Time Remaining: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::TOP_RIGHT));;
 	m_pBackImage = std::make_shared<UIImage>(UIImage({ 0, Camera::GetInstance()->SCR_HEIGHT }, Utils::BOTTOM_LEFT, 0, { 0.5f, 0.5f, 0.5f, 1.0f }, 360, 60));
 	m_pScore = std::make_shared<UIText>(UIText({ 10, Camera::GetInstance()->SCR_HEIGHT - 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Score: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::BOTTOM_LEFT));
 	m_pHealth = std::make_shared<UIText>(UIText({ 190, Camera::GetInstance()->SCR_HEIGHT - 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Health: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::BOTTOM_LEFT));
@@ -52,8 +52,8 @@ void HUD::Update()
 
 	for (int i = 0; i < m_vpPlayerScore.size(); i++)
 	{
-		m_vpPlayerScore[i]->sText = "S: " + std::to_string(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities[m_vpPlayerName[i]->sText]->GetScore());
-		m_vpPlayerHealth[i]->sText = "H: " + std::to_string((int)NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities[m_vpPlayerName[i]->sText]->m_fHealth);
+		m_vpPlayerScore[i]->sText = "$: " + std::to_string(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities[m_vpPlayerName[i]->sText]->GetScore());
+		m_vpPlayerHealth[i]->sText = "+: " + std::to_string((int)NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities[m_vpPlayerName[i]->sText]->m_fHealth);
 		m_vpPlayerScore[i]->Update();
 		m_vpPlayerHealth[i]->Update();
 	}
@@ -92,7 +92,23 @@ void HUD::SetWaveTimer(float _fCurrentTime)
 
 void HUD::AddPlayer(std::string UserName)
 {
-	m_vpPlayerName.push_back(std::make_shared<UIText>(UIText({ -180 + (m_vpPlayerName.size() + 1) * 300, 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, UserName, "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::TOP_LEFT)));
-	m_vpPlayerScore.push_back(std::make_shared<UIText>(UIText({ -20 + (m_vpPlayerScore.size() + 1) * 300, 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Score: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::TOP_LEFT)));
-	m_vpPlayerHealth.push_back(std::make_shared<UIText>(UIText({ 50 + (m_vpPlayerHealth.size() + 1) * 300, 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Health: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::TOP_LEFT)));
+	float fxPosition;
+	if (m_vpPlayerName.size() > 0)
+	{
+		fxPosition = m_vpPlayerHealth.back()->GetPosition().x + 150;
+	}
+	else
+		fxPosition = 10;
+
+	m_vpPlayerName.push_back(std::make_shared<UIText>(UIText({ fxPosition, 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, UserName, "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::TOP_LEFT)));
+	fxPosition += UserName.size() * 15 + 30;
+	m_vpPlayerScore.push_back(std::make_shared<UIText>(UIText({ fxPosition, 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Score: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::TOP_LEFT)));
+	m_vpPlayerHealth.push_back(std::make_shared<UIText>(UIText({ fxPosition + 60, 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Health: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::TOP_LEFT)));
+}
+
+void HUD::ClearPlayersHUD()
+{
+	m_vpPlayerName.clear();
+	m_vpPlayerScore.clear();
+	m_vpPlayerHealth.clear();
 }

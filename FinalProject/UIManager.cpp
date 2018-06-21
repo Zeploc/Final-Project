@@ -101,7 +101,7 @@ void UIManager::Update()
 	m_ChatInstance.Update();
 	if (m_bEndScreen) m_EndScreen.Update();
 	m_HUDInstance.Update();
-	if (m_bDisplayPauseOptions)m_OptionsScreenInstance.Update();
+	if (m_bDisplayPauseOptions) m_OptionsScreenInstance.Update();
 	if (m_bDisplayMessageBox) m_MessageBoxInstance.Update();
 }
 

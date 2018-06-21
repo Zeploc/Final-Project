@@ -104,7 +104,7 @@ void Chat::SetChatMaximised(bool _bIsMaximied)
 
 void Chat::SendChatMessage()
 {
-	NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->ServerSendToAllPlayers(m_pTypingField->FieldText.sText, CHAT);
+	NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->SendMessageNE(m_pTypingField->FieldText.sText, CHAT);
 	m_pTypingField->ResetField();
 	SetChatMaximised(false);
 }

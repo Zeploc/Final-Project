@@ -50,6 +50,11 @@ LobbyMenu::~LobbyMenu()
 
 void LobbyMenu::Init(std::shared_ptr<Scene> _Scene)
 {
+	if (bInitialised)
+	{
+		HideElements();
+		return;
+	}
 	// Add Lobby Elements
 	std::shared_ptr<UIText> LobbyText(new UIText(glm::vec2(Camera::GetInstance()->SCR_WIDTH / 2, 100.0f), 0, glm::vec4(0.9, 0.9, 0.9, 1.0f), "Game Lobby:", "Resources/Fonts/Roboto-Bold.ttf", 80, Utils::CENTER));
 	LobbyText->SetActive(false);
@@ -72,7 +77,7 @@ void LobbyMenu::Init(std::shared_ptr<Scene> _Scene)
 	v_ScreenElements.push_back(PlayerName);
 	v_ScreenElements.push_back(StartServerBtn);
 	v_ScreenElements.push_back(ServerName);
-
+	bInitialised = true;
 }
 
 void LobbyMenu::HideElements()

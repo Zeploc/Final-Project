@@ -50,7 +50,7 @@ public:
 	std::string CurrentServerAddress() { return m_pServerSocket->GetSocketAddress(); };
 	void SetServerUserName(std::string _NewName) { strncpy_s(m_cUserName, _NewName.c_str(), sizeof(_NewName) - 1); };
 
-	void ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message);
+	void SendMessageNE(std::string _pcMessage, EMessageType _Message);
 	void SendToAllClients(std::string _pcMessage, EMessageType _Message, std::string ExcludeAddress = "");
 	void ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _Message, std::string SenderAddress);
 	int ConnectedClientsCount() {

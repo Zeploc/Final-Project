@@ -68,5 +68,7 @@ private:
 	glm::vec2 ServerListPos;
 
 	std::vector<ServerItem> v_ServerList;
+
+	bool bInitialised = false;
 };
 

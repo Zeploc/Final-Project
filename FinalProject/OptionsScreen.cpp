@@ -20,6 +20,8 @@
 
 // Local Includes //
 #include "UIManager.h"
+#include "NetworkManager.h"
+#include "Client.h"
 
 // Local Functions //
 void QuitButton();
@@ -60,6 +62,9 @@ OptionsScreen::~OptionsScreen()
 ************************************************************/
 void OptionsScreen::Update()
 {
+	if (NetworkManager::GetInstance()->m_Network.IsServer() && m_pQuitButton->TextComponent.sText != "Disconnect")
+		m_pQuitButton->TextComponent.sText = "Disconnect";
+
 	m_pBackImage->Update();
 	m_pOptionsTitle->Update();
 	m_pQuitButton->Update();
@@ -82,6 +87,19 @@ void OptionsScreen::Render()
 
 void QuitButton()
 {
+	if (NetworkManager::GetInstance()->m_Network.IsServer())
+	{
+		// Disconnect all clients
+		// clear connected clients
+		// clear players map
+	}
+	else
+	{
+		std::shared_ptr<Client> ClientRef = std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+		ClientRef->SendMessageNE(ClientRef->GetUsername(), CLIENTDISCONNECT);
+		NetworkManager::GetInstance()->m_Network.ShutDown();
+	}
+	UIManager::GetInstance()->m_HUDInstance.ClearPlayersHUD();
 	SceneManager::GetInstance()->SwitchScene("MainMenu");
 }
 

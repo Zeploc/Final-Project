@@ -36,6 +36,8 @@ public:
 	void SetWaveTimer(float _fCurrentTime);
 
 	void AddPlayer(std::string UserName);
+	// remove player - Removes from hud and vectors
+	void ClearPlayersHUD();
 
 private:
 	std::shared_ptr<UIText> m_pWaveTime;

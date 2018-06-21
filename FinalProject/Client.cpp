@@ -249,6 +249,15 @@ void Client::ProcessData(std::string _DataReceived)
 			MenuRef->LobbyScreen.ClientConnected(Username, Address);
 			break;
 		}
+		case CLIENTDISCONNECT:
+		{
+			// [TO ADD]
+			// remove from players map
+			// destroy player instance
+			// remove player from UI Hud
+
+			break;
+		}
 		case LOADLEVEL:
 		{
 			LevelManager::GetInstance()->NextLevel();
@@ -288,7 +297,6 @@ void Client::ProcessData(std::string _DataReceived)
 			std::istringstream iss(Result);
 			int MeshType;
 			iss >> MeshType;
-			std::cout << Result << std::endl;
 			// Create entity from mesh type, and miss out the first number and space
 			std::shared_ptr<Entity> NewEntity = CreateNetworkEntity(Utils::EMESHTYPE(MeshType), Result.substr(2));
 
@@ -411,7 +419,7 @@ void Client::DestroyNetworkEntity(int iNetworkID)
 	NetworkEntities.erase(iNetworkID);
 }
 
-void Client::ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message)
+void Client::SendMessageNE(std::string _pcMessage, EMessageType _Message)
 {
 	std::string MessageToSend = _pcMessage;
 	if (_Message == CHAT)

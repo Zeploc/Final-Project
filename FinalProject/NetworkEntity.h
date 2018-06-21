@@ -37,6 +37,7 @@ enum EMessageType : unsigned char
 	BROADCAST,
 	CHAT,
 	CLIENTCONNECTED,
+	CLIENTDISCONNECT,
 	LOADLEVEL,
 	CREATEENTITY,
 	ENTITYUPDATE,
@@ -116,7 +117,7 @@ public:
 	//virtual void ReceiveData(char* _pcBufferToReceiveData) = 0;
 	virtual void Update() = 0;
 
-	virtual void ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Message) = 0;
+	virtual void SendMessageNE(std::string _pcMessage, EMessageType _Message) = 0;
 
 	std::map<int, std::shared_ptr<Entity>> NetworkEntities;
 	std::map<std::string, std::shared_ptr<Player>> PlayerEntities;

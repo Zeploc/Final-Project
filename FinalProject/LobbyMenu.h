@@ -49,5 +49,7 @@ private:
 	std::shared_ptr<UIText> ServerName;
 
 	std::vector<std::shared_ptr<UIElement>> v_PlayersConnected;
+
+	bool bInitialised = false;
 };
 

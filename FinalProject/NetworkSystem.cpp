@@ -113,6 +113,7 @@ void NetworkSystem::Update()
 void NetworkSystem::ShutDown()
 {
 	m_bOnline = false;
+	m_pNetworkEntity.reset();
 }
 
 bool NetworkSystem::IsServer()
