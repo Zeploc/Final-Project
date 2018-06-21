@@ -220,7 +220,7 @@ Level::~Level()
 ************************************************************/
 void Level::Update()
 {
-	//LevelManager::GetInstance()->EnemySpawner();
+	LevelManager::GetInstance()->EnemySpawner();
 	MouseAimTarget->transform.Rotation.z += 10.0f *  (float)Time::dTimeDelta;
 	float fDotProductDirections = glm::dot(Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos), glm::vec3(0, 1, 0));
 	if (fDotProductDirections == 0) // Perpendicular
