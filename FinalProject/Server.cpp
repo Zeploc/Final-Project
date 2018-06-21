@@ -490,6 +490,19 @@ void Server::ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _
 		SendToAllClients(Result, CREATEBULLET);
 		break;
 	}
+	case CREATEPOWERUP:
+	{
+		std::string Result = _pcMessage;
+		std::stringstream ss(Result);
+		std::string Username;
+		float PosX, PosY, PosZ, RotX, RotY, RotZ;
+
+		ss >> PosX >> PosY >> PosZ >> RotX >> RotY >> RotZ;
+
+		glm::vec3 position = { PosX, PosY, PosZ };
+		glm::vec3 rotation = { RotX, RotY, RotZ };
+
+	}
 	default:
 		break;
 	}

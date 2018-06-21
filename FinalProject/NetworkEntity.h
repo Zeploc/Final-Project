@@ -42,7 +42,8 @@ enum EMessageType : unsigned char
 	DESTROYENTITY,
 	PLAYERUPDATE,
 	CREATEPLAYER,
-	CREATEBULLET
+	CREATEBULLET,
+	CREATEPOWERUP
 };
 
 struct TPacket
