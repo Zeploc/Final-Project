@@ -17,6 +17,7 @@
 
 // Engine Includes //
 #include "Engine\SceneManager.h"
+#include "Engine\Cube.h"
 
 // Library Includes //
 #include <Windows.h>
@@ -26,9 +27,12 @@
 #include "NetworkSystem.h"
 #include "utils.h"
 #include "UIManager.h"
+#include "Bullet.h"
 
 #include "Menu.h"
 
+// OpenGL Include //
+#include <glm\gtx\rotate_vector.hpp>
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -326,6 +330,29 @@ void Client::ProcessData(std::string _DataReceived)
 			CreateNetworkPlayer(Username);
 			break;
 		}
+		case CREATEBULLET:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			std::stringstream ss(Result);
+			std::string Username;
+			float PosX, PosY, PosZ, RotX, RotY, RotZ;
+			int iNetworkID;
+
+			ss >> Username >> PosX >> PosY >> PosZ >> RotX >> RotY >> RotZ >> iNetworkID;
+
+			glm::vec3 position = { PosX, PosY, PosZ };
+			glm::vec3 rotation = { RotX, RotY, RotZ };
+
+			glm::vec3 Direction = glm::rotateY(glm::vec3( 0, 0, 1 ), glm::radians(RotY));
+
+			std::shared_ptr<PlayerBullet> NewBullet = std::make_shared<PlayerBullet>(PlayerBullet({ position, rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::CENTER, Direction));
+			std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
+			BulletCube->AddCollisionBounds(0.3f, 10.0f, 0.3f, NewBullet);
+			NewBullet->AddMesh(BulletCube);
+			NewBullet->UserOwner = Username;
+			CreateNetworkEntity(NewBullet, iNetworkID);
+			break;
+		}
 	}
 }
 
@@ -338,7 +365,7 @@ void Client::ProcessData(std::string _DataReceived)
 void Client::Update()
 {
 	//If the message queue is empty 
-	if (!m_pWorkQueue->empty())
+	while (!m_pWorkQueue->empty())
 	{
 		//Retrieve off a message from the queue and process it
 		std::string temp;

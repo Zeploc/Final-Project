@@ -27,12 +27,15 @@
 #include "UIManager.h"
 #include "LevelManager.h"
 #include "Level.h"
+#include "Bullet.h"
 
 // Engine Includes //
 #include "Engine\SceneManager.h"
 #include "Engine\Entity.h"
 #include "Engine\Cube.h"
 
+// OpenGL Include //
+#include <glm\gtx\rotate_vector.hpp>
 
 
 /************************************************************
@@ -244,6 +247,48 @@ void Server::ProcessData(std::string _DataReceived)
 			ServerPlayerRespondToMessage(_packetRecvd.MessageContent, CHAT, SenderAddress);
 			break;
 		}
+		case PLAYERUPDATE:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+
+			std::stringstream ss(Result);
+			std::string Username;
+			float PosX, PosY, PosZ, RotX, RotY, RotZ;
+
+			ss >> Username >> PosX >> PosY >> PosZ >> RotX >> RotY >> RotZ;
+
+			glm::vec3 position = { PosX, PosY, PosZ };
+			glm::vec3 rotation = { RotX, RotY, RotZ };
+
+			PlayerEntities[Username]->transform.Position = position;
+			PlayerEntities[Username]->transform.Rotation = rotation;
+
+			break;
+		}
+		case CREATEBULLET:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			std::stringstream ss(Result);
+			std::string Username;
+			float PosX, PosY, PosZ, RotX, RotY, RotZ;
+
+			ss >> Username >> PosX >> PosY >> PosZ >> RotX >> RotY >> RotZ;
+
+			glm::vec3 position = { PosX, PosY, PosZ };
+			glm::vec3 rotation = { RotX, RotY, RotZ };
+
+			glm::vec3 Direction = glm::rotateY(glm::vec3( 0, 0, 1 ), glm::radians(RotY));
+
+			std::shared_ptr<PlayerBullet> NewBullet = std::make_shared<PlayerBullet>(PlayerBullet({ position, rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::CENTER, Direction));
+			std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
+			BulletCube->AddCollisionBounds(0.3f, 10.0f, 0.3f, NewBullet);
+			NewBullet->AddMesh(BulletCube);
+			NewBullet->UserOwner = Username;
+			
+			Result += " " + std::to_string(CreateNetworkEntity(NewBullet));
+			SendToAllClients(Result, CREATEBULLET);
+			break;
+		}
 	}
 }
 
@@ -255,7 +300,7 @@ void Server::ProcessData(std::string _DataReceived)
 ************************************************************/
 void Server::Update()
 {
-	if (!m_pWorkQueue->empty())
+	while (!m_pWorkQueue->empty())
 	{
 		std::string temp;
 		//Retrieve off a message from the queue and process it
@@ -274,7 +319,6 @@ void Server::ServerSendToAllPlayers(std::string _pcMessage, EMessageType _Messag
 		MessageToSend = UserAndMessage;
 	}
 	//std::string SenderAddress = ToString(m_ClientAddress);
-	std::cout << MessageToSend << std::endl;
 	SendToAllClients(MessageToSend, CHAT);
 	ServerPlayerRespondToMessage(MessageToSend, CHAT, "");
 }
@@ -420,7 +464,30 @@ void Server::ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _
 		LevelManager::GetInstance()->GetCurrentActiveLevel()->NetworkEntity = NewEntity;		
 		SendToAllClients(GetNetworkEntityString(NewEntity, false), CREATEENTITY);
 		CreatePlayers();
-		//std::cout << GetNetworkEntityString(NewEntity, false) << std::endl;
+		break;
+	}
+	case CREATEBULLET:
+	{
+		std::string Result = _pcMessage;
+		std::stringstream ss(Result);
+		std::string Username;
+		float PosX, PosY, PosZ, RotX, RotY, RotZ;
+
+		ss >> Username >> PosX >> PosY >> PosZ >> RotX >> RotY >> RotZ;
+
+		glm::vec3 position = { PosX, PosY, PosZ };
+		glm::vec3 rotation = { RotX, RotY, RotZ };
+
+		glm::vec3 Direction = glm::rotateY(glm::vec3(0, 0, 1), glm::radians(RotY));
+
+		std::shared_ptr<PlayerBullet> NewBullet = std::make_shared<PlayerBullet>(PlayerBullet({ position, rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::CENTER, Direction));
+		std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
+		BulletCube->AddCollisionBounds(0.3f, 10.0f, 0.3f, NewBullet);
+		NewBullet->AddMesh(BulletCube);
+		NewBullet->UserOwner = Username;
+
+		Result += " " + std::to_string(CreateNetworkEntity(NewBullet));
+		SendToAllClients(Result, CREATEBULLET);
 		break;
 	}
 	default:

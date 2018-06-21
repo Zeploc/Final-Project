@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Chat.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="EnemySeek.cpp" />
@@ -202,6 +203,7 @@
   <ItemGroup>
     <ClInclude Include="AI.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Chat.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="EnemySeek.h" />

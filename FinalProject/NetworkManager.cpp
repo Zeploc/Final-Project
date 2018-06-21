@@ -53,8 +53,11 @@ void NetworkManager::Update()
 	if (fCurrentTime >= fNextTime)
 	{
 		fNextTime += fTimeRateInterval;
-		UpdateClientEntities();
-		UpdatePlayers();
+		if (m_Network.m_pNetworkEntity)
+		{
+			UpdateClientEntities();
+			UpdatePlayers();
+		}
 	}
 
 	fCurrentTime += Time::dTimeDelta;
@@ -103,6 +106,16 @@ void NetworkManager::UpdatePlayers()
 		{
 			ServerPointer->UpdatePlayer(Ent.second);
 		}	
+	}
+	else
+	{
+		if (!LevelManager::GetInstance()->GetCurrentActiveLevel()) return;
+		std::shared_ptr<Player> PlayerRef = LevelManager::GetInstance()->GetCurrentActiveLevel()->EPlayer;
+		if (!PlayerRef) return;
+		std::string PlayerUpdate = PlayerRef->m_UserName + " " + NetworkEntity::Vec3ToSendString(PlayerRef->transform.Position) + " " + NetworkEntity::Vec3ToSendString(PlayerRef->transform.Rotation);
+		TPacket _packet;
+		_packet.Serialize(PLAYERUPDATE, const_cast<char *>(PlayerUpdate.c_str()));
+		std::dynamic_pointer_cast<Client>(m_Network.m_pNetworkEntity)->SendData(_packet.PacketData);
 	}
 
 }

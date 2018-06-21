@@ -254,6 +254,9 @@
     <ClCompile Include="HeatSeekerPickUp.cpp">
       <Filter>Game\Pickups</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Game\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -453,6 +456,9 @@
     </ClInclude>
     <ClInclude Include="HeatSeekerPickUp.h">
       <Filter>Game\Pickups</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Game\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

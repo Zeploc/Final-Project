@@ -41,9 +41,10 @@ public:
 
 	void Initialise();
 	void Initialise(ServerInfoProperties NewServerProperties);
-	void ReceiveData();
+	void ReceiveData(); // Receive data thread
 	bool SendData(char* _pcDataToSend);
 	void ProcessData(std::string _DataReceived);
+
 	void Update();
 
 	std::string CurrentServerAddress() { return m_pServerSocket->GetSocketAddress(); };

@@ -31,7 +31,8 @@ public:
 	void DestroyNetworkEntity(std::shared_ptr<Entity> EntityToDestroy);
 
 	int iTickRate = 64;
-
+
+
 	void UpdatePlayers();
 private:
 	void UpdateClientEntities();

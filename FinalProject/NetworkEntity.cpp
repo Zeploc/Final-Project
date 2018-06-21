@@ -143,6 +143,21 @@ std::shared_ptr<Entity> NetworkEntity::CreateNetworkEntity(Utils::EMESHTYPE Mesh
 	return nullptr;
 }
 
+int NetworkEntity::CreateNetworkEntity(std::shared_ptr<Entity> _Entity, int iNetworkIdentity)
+{
+	std::shared_ptr<Level> levelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
+	int iNetworkID = iNetworkIdentity;
+	if (iNetworkIdentity == -1)
+	{
+		iNetworkID = iLastID;
+		iLastID++;
+	}
+
+	NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(iNetworkID, _Entity));
+	levelRef->AddEntity(_Entity);
+	return iNetworkID;
+}
+
 void NetworkEntity::CreateNetworkPlayer(std::string UserName)
 {
 	std::shared_ptr<Level> levelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();

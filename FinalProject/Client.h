@@ -29,7 +29,7 @@ public:
 
 	void Initialise();
 	bool SendData(char* _pcDataToSend);
-	void ReceiveData();
+	void ReceiveData(); // Receive data thread
 	void ProcessData(std::string _DataReceived);
 	void Update();
 

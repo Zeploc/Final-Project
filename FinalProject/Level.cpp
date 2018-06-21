@@ -80,11 +80,14 @@ Level::Level(std::string sSceneName)
 
 	SpawnPos = glm::vec3(17, 1.0f, 20);
 	// Add cube map first so transpancy works
-	/*std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
-	AddEntity(Player);
-	Player->EntityMesh->AddCollisionBounds(0.6f, 1.0f, 0.6f, Player);
-	EPlayer = Player;
-	EPlayer->SetActive(true);*/
+	/*if (!NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+	{
+		std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
+		AddEntity(Player);
+		Player->EntityMesh->AddCollisionBounds(0.6f, 1.0f, 0.6f, Player);
+		EPlayer = Player;
+		EPlayer->SetActive(true);
+	}*/
 
 	std::shared_ptr<Spectator> Spec = std::make_shared<Spectator>(Spectator(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, Utils::CENTER));
 	ESpectator = Spec;

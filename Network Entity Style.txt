@@ -1,3 +1,4 @@
+ENTITYUPDATE
 MeshType NetworkID Vec3Pos Vec3Rot Vec3Scale
 
 MeshType NetworkID Vec3Pos Vec3Rot Vec3Scale fWidth fHeight fDepth Vec4Colour
@@ -6,8 +7,17 @@ MeshType NetworkID Vec3Pos Vec3Rot Vec3Scale Vec4Colour StringPath
 
 0 34 12.560000 4.930000 6.470000 0.000000 90.000000 0.000000 0.000000 90.000000 0.000000
 
-UPDATEPLAYER
+PLAYERUPDATE - Client Receive
 stringUsername fHealth iScore Vec3Pos Vec3Rot
+
+PLAYERUPDATE - Server Receive
+stringUsername Vec3Pos Vec3Rot
 
 CEATEPLAYER
 stringUsername NetworkID
+
+CREATEBULLET - Server Receive
+stringUsername Vec3Pos Vec3Rot
+
+CREATEBULLET - Client Receive
+stringUsername Vec3Pos Vec3Rot NetworkID
