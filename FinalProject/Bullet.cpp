@@ -116,8 +116,18 @@ void PlayerBullet::Update()
 				}
 				else if ((*Enemyit)->IsActive())
 				{
+					
+					for (auto& NetworkEnt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->NetworkEntities)
+					{
+						if (NetworkEnt.second == this->shared_from_this() || NetworkEnt.second == *Enemyit)
+						{
+							NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->SendMessageNE(std::to_string(NetworkEnt.first), DESTROYENTITY);
+						}
+					}
 					LevelRef->DestroyCollidable(this->shared_from_this());
+					// Send Destroy Bullet entity message to all clients
 					LevelRef->DestroyEnemy((*Enemyit));
+					// Send Destroy enemy message to all clients
 					bEnemyKilled = true;
 					TrackingEntity = nullptr;
 					LevelRef->EPlayer->AddScore(10);
