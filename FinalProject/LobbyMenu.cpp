@@ -119,6 +119,6 @@ void StartServer()
 	// check if has 2 or more players
 	std::string LevelName = LevelManager::GetInstance()->GetCurrentLevelName();
 	ServerPointer->SendToAllClients(LevelName, LOADLEVEL); // Tell All Clients to Load Level
-	SceneManager::GetInstance()->SwitchScene(LevelName);
+	LevelManager::GetInstance()->NextLevel();
 	ServerPointer->ServerPlayerRespondToMessage(LevelName, LOADLEVEL, "");
 }

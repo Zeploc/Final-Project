@@ -69,7 +69,7 @@ void FireRatePickup::OnPickUp(std::shared_ptr<Entity> CollidingEntity)
 			{
 				if (PlayerIt.second.m_strName == IsPlayer->m_UserName)
 				{
-					std::string PowerupString = std::to_string(FIRERATE) + " " + std::to_string(4.0f);
+					std::string PowerupString = std::to_string(FIRERATE) + " " + std::to_string(4.0f); // also pass network id
 					std::shared_ptr<Client> ClientRef = std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
 					TPacket _packetToSend;
 					_packetToSend.Serialize(APPLYPOWERUP, const_cast<char*>(PowerupString.c_str()));

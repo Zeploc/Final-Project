@@ -41,12 +41,12 @@
 #include "HUD.h"
 #include "GameManager.h"
 #include "NetworkManager.h"
+#include "Server.h"
 
 // This Includes //
 #include "LevelManager.h"
 
 // Static Variables //
-
 std::shared_ptr<LevelManager> LevelManager::m_pLevelManager;
 
 /************************************************************
@@ -57,7 +57,7 @@ std::shared_ptr<LevelManager> LevelManager::m_pLevelManager;
 ************************************************************/
 LevelManager::LevelManager()
 {
-	iCurrentLevelID = 1;
+
 }
 
 /************************************************************
@@ -144,7 +144,11 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 					NewPickup->AddMesh(NewPickupMesh);
 					NewPickupMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, NewPickup);
 					NewPickupMesh->SetLit(true);
-					_Scene->AddEntity(NewPickup);
+					std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+					int PowerUpId1 = ServerRef->CreateNetworkEntity(NewPickup, -1, _Scene);
+					std::string NewPickUpString = ServerRef->GetNetworkEntityString(NewPickup, false, PowerUpId1);
+					ServerRef->SendToAllClients(const_cast<char *>(NewPickUpString.c_str()), CREATEENTITY);
+
 					NewPickupMesh->program = Shader::Programs["ReflectionProgram"];
 
 
@@ -153,7 +157,9 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 					HeatSeekingPickupInstance->AddMesh(HeatSeekMesh);
 					HeatSeekMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, HeatSeekingPickupInstance);
 					HeatSeekMesh->SetLit(true);
-					_Scene->AddEntity(HeatSeekingPickupInstance);
+					int PowerUpId2 = NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->CreateNetworkEntity(HeatSeekingPickupInstance, -1, _Scene);
+					std::string HeatSeekerPickUpString = ServerRef->GetNetworkEntityString(HeatSeekingPickupInstance, false, PowerUpId2);
+					ServerRef->SendToAllClients(const_cast<char *>(NewPickUpString.c_str()), CREATEENTITY);
 					HeatSeekMesh->program = Shader::Programs["ReflectionProgram"];
 
 					std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 0.0f, -2.5f, 20.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
@@ -161,8 +167,10 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 					CubeCollision->AddMesh(CubeCollisionMesh);
 					CubeCollisionMesh->AddCollisionBounds(2.0f, 2.0f, 2.0f, CubeCollision);
 					CubeCollisionMesh->SetLit(true);
+					int PowerUpId3 = NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->CreateNetworkEntity(CubeCollision, -1, _Scene);
+					std::string CubePickUpString = ServerRef->GetNetworkEntityString(CubeCollision, false, PowerUpId3);
+					ServerRef->SendToAllClients(const_cast<char *>(NewPickUpString.c_str()), CREATEENTITY);
 					CubeCollisionMesh->program = Shader::Programs["ReflectionProgram"];
-					_Scene->AddCollidable(CubeCollision);
 				}
 			}
 

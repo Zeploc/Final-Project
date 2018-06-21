@@ -28,7 +28,7 @@
 #include "utils.h"
 #include "UIManager.h"
 #include "Bullet.h"
-
+#include "LevelManager.h"
 #include "Menu.h"
 
 // OpenGL Include //
@@ -251,7 +251,8 @@ void Client::ProcessData(std::string _DataReceived)
 		}
 		case LOADLEVEL:
 		{
-			SceneManager::GetInstance()->SwitchScene(_packetRecvd.MessageContent);
+			LevelManager::GetInstance()->NextLevel();
+			//SceneManager::GetInstance()->SwitchScene(_packetRecvd.MessageContent);
 			break;
 		}
 		case CHAT:
@@ -290,6 +291,7 @@ void Client::ProcessData(std::string _DataReceived)
 			std::cout << Result << std::endl;
 			// Create entity from mesh type, and miss out the first number and space
 			std::shared_ptr<Entity> NewEntity = CreateNetworkEntity(Utils::EMESHTYPE(MeshType), Result.substr(2));
+
 			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
 			break;
 		}

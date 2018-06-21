@@ -143,8 +143,9 @@ std::shared_ptr<Entity> NetworkEntity::CreateNetworkEntity(Utils::EMESHTYPE Mesh
 	return nullptr;
 }
 
-int NetworkEntity::CreateNetworkEntity(std::shared_ptr<Entity> _Entity, int iNetworkIdentity)
+int NetworkEntity::CreateNetworkEntity(std::shared_ptr<Entity> _Entity, int iNetworkIdentity, std::shared_ptr<Scene> SceneToAddTo)
 {
+
 	std::shared_ptr<Level> levelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
 	int iNetworkID = iNetworkIdentity;
 	if (iNetworkIdentity == -1)
@@ -154,7 +155,8 @@ int NetworkEntity::CreateNetworkEntity(std::shared_ptr<Entity> _Entity, int iNet
 	}
 
 	NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(iNetworkID, _Entity));
-	levelRef->AddEntity(_Entity);
+	if (!SceneToAddTo) levelRef->AddEntity(_Entity);
+	SceneToAddTo->AddEntity(_Entity);
 	return iNetworkID;
 }
 
