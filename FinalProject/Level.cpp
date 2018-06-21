@@ -272,8 +272,7 @@ void Level::Update()
 			DestroyNetworkEntity(NetworkEntity);
 		}
 	}
-
-
+	
 	Scene::Update(); // Call super/base Update
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'r'] == Input::INPUT_FIRST_PRESS)

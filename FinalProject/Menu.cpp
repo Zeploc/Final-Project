@@ -190,6 +190,7 @@ void Menu::OnLoadScene()
 	JoinGameScreen.Init(this->shared_from_this());
 	HostGameScreen.Init(this->shared_from_this());
 	ToggleMenuSection(MAIN);
+	NetworkManager::GetInstance()->m_Network.ShutDown();
 	//Camera::GetInstance()->m_bFPS = false;
 	SoundManager::GetInstance()->StopAudio("BackgroundC");
 	PlayRandomTrack();
@@ -322,6 +323,7 @@ void MenuScreenBtn()
 {
 	std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 	MenuRef->ToggleMenuSection(MAIN);
+	NetworkManager::GetInstance()->m_Network.ShutDown();
 }
 
 /************************************************************

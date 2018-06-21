@@ -23,6 +23,7 @@
 // Local Includes //
 #include "LevelManager.h"
 #include "UIManager.h"
+#include "NetworkManager.h"
 
 // This Includes //
 #include "GameManager.h"
@@ -91,25 +92,33 @@ void GameManager::ShowEndScreen(bool _bLost)
 #--Parameters--#:	NA
 #--Return--#: 		NA
 ************************************************************/
-void GameManager::PlayerDeath()
+void GameManager::PlayerDeath(std::shared_ptr<Player> PlayerDied)
 {
-	bPlayerDead = true;
+	PlayerDied->bPlayerDead = true;
 	//LogManager::GetInstance()->DisplayLogMessage("Player is Dead!");
-	ShowEndScreen(true);
 	std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());
-	CurrentLevel->DestroyAllEnemies();
+	if (!NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+	{
+		ShowEndScreen(true);
+		CurrentLevel->DestroyAllEnemies();
+	}
+	else if (NetworkManager::GetInstance()->m_Network.IsServer())
+	{
+		PlayerDied->SetVisible(false);
+		std::shared_ptr<NetworkEntity> NetworkEntityRef = NetworkManager::GetInstance()->m_Network.m_pNetworkEntity;
+		NetworkEntityRef->SendMessageNE(PlayerDied->m_UserName, PLAYERDEATH);
+	}
 }
 
 void GameManager::RespawnPlayer()
 {
-	bPlayerDead = false;
 	std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());
+	//bPlayerDead = false;
 	if (CurrentLevel->EPlayer) CurrentLevel->EPlayer->Reset();
 }
 
 std::shared_ptr<Player> GameManager::GetPlayer()
-{
-	
+{	
 	return LevelManager::GetInstance()->GetCurrentActiveLevel()->EPlayer;
 }
 
@@ -121,7 +130,8 @@ std::shared_ptr<Player> GameManager::GetPlayer()
 ************************************************************/
 void GameManager::LevelWon()
 {
-	bPlayerDead = true;
+	LevelManager::GetInstance()->GetCurrentActiveLevel()->EPlayer->bPlayerDead = true;
+	//bPlayerDead = true;
 	//LevelManager::GetInstance()->CheckHighscore();
 	ShowEndScreen(false);
 }

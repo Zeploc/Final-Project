@@ -30,6 +30,7 @@
 #include "Bullet.h"
 #include "LevelManager.h"
 #include "Menu.h"
+#include "NetworkManager.h"
 
 // OpenGL Include //
 #include <glm\gtx\rotate_vector.hpp>
@@ -222,6 +223,11 @@ void Client::ProcessData(std::string _DataReceived)
 				// User name taken Display
 				break;
 			}
+			else if (Result == "Started")
+			{
+				// Game already in session
+				UIManager::GetInstance()->ShowMessageBox("The Server selected is already in session!");
+			}
 
 			std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());
 			MenuRef->LobbyScreen.SetServerNameText(Result);
@@ -251,16 +257,31 @@ void Client::ProcessData(std::string _DataReceived)
 		}
 		case CLIENTDISCONNECT:
 		{
-			// [TO ADD]
-			// remove from players map
-			// destroy player instance
-			// remove player from UI Hud
+			std::string Username = _packetRecvd.MessageContent;
+			// Destroy player instance
+			SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(PlayerEntities[Username]);
+			// Remove from players map
+			PlayerEntities.erase(Username);
+			// Remove player from UI Hud
+			UIManager::GetInstance()->m_HUDInstance.RemovePlayer(Username);
 
+			break;
+		}
+		case SERVERCLOSED:
+		{
+			NetworkManager::GetInstance()->m_Network.ShutDown();
+			UIManager::GetInstance()->m_HUDInstance.ClearPlayersHUD();
+			SceneManager::GetInstance()->SwitchScene("MainMenu");
+			UIManager::GetInstance()->ShowMessageBox("Server Closed");
 			break;
 		}
 		case LOADLEVEL:
 		{
 			LevelManager::GetInstance()->NextLevel();
+			for (auto& player : PlayerEntities)
+			{
+				player.second->SetVisible(true);
+			}
 			//SceneManager::GetInstance()->SwitchScene(_packetRecvd.MessageContent);
 			break;
 		}
@@ -343,6 +364,12 @@ void Client::ProcessData(std::string _DataReceived)
 			ss >> Username;
 			CreateNetworkPlayer(Username);
 			if (Username != m_cUserName) UIManager::GetInstance()->m_HUDInstance.AddPlayer(Username);
+			break;
+		}
+		case PLAYERDEATH:
+		{
+			std::string Username = _packetRecvd.MessageContent;
+			PlayerEntities[Username]->SetVisible(false);
 			break;
 		}
 		case CREATEBULLET:

@@ -99,9 +99,11 @@ void NetworkSystem::Update()
 {
 	if (m_bOnline)
 	{
-		m_pNetworkEntity->Update();
+		if (m_pNetworkEntity) m_pNetworkEntity->Update();
 		// Main Network Step
 	}
+	else if (m_pNetworkEntity)
+		m_pNetworkEntity.reset();
 }
 
 /************************************************************
@@ -113,7 +115,6 @@ void NetworkSystem::Update()
 void NetworkSystem::ShutDown()
 {
 	m_bOnline = false;
-	m_pNetworkEntity.reset();
 }
 
 bool NetworkSystem::IsServer()

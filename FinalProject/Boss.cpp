@@ -129,7 +129,7 @@ void Boss::OnBulletCollision()
 	if (BossHealth <= 0)
 	{
 		GameManager::GetInstance()->GetPlayer()->AddScore(50);
-		GameManager::GetInstance()->PlayerDeath();
+		GameManager::GetInstance()->PlayerDeath(GameManager::GetInstance()->GetPlayer());
 		UIManager::GetInstance()->m_EndScreen.SetEndText("Boss defeated!");
 	}
 }

@@ -106,9 +106,56 @@ void HUD::AddPlayer(std::string UserName)
 	m_vpPlayerHealth.push_back(std::make_shared<UIText>(UIText({ fxPosition + 60, 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Health: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::TOP_LEFT)));
 }
 
+void HUD::RemovePlayer(std::string UserName)
+{
+	int iCount = 0;
+	for (auto it = m_vpPlayerName.begin(); it != m_vpPlayerName.end(); it++)
+	{
+		if ((*it)->sText == UserName)
+		{
+			m_vpPlayerName.erase(it);
+			break;
+		}
+		iCount++;
+	}
+	int Current = 0;
+	for (auto it = m_vpPlayerScore.begin(); it != m_vpPlayerScore.end(); it++)
+	{
+		if (Current == iCount)
+		{
+			m_vpPlayerScore.erase(it);
+			break;
+		}
+	}
+	Current = 0;
+	for (auto it = m_vpPlayerHealth.begin(); it != m_vpPlayerHealth.end(); it++)
+	{
+		if (Current == iCount)
+		{
+			m_vpPlayerHealth.erase(it);
+			break;
+		}
+	}
+	RepositionPlayersHUD();
+}
+
 void HUD::ClearPlayersHUD()
 {
 	m_vpPlayerName.clear();
 	m_vpPlayerScore.clear();
 	m_vpPlayerHealth.clear();
+}
+
+void HUD::RepositionPlayersHUD()
+{
+	float fxPosition = 10;
+
+	for (int i = 0; i < m_vpPlayerScore.size(); i++)
+	{
+		if (i != 0) fxPosition = m_vpPlayerHealth[i - 1]->GetPosition().x + 150;
+		m_vpPlayerName[i]->SetPosition({ fxPosition, 10 });
+		fxPosition += m_vpPlayerName[i]->sText.size() * 15 + 30;
+		m_vpPlayerScore[i]->SetPosition({ fxPosition, 10 });
+		m_vpPlayerHealth[i]->SetPosition({ fxPosition + 60, 10 });
+	}
 }

@@ -78,6 +78,7 @@ public:
 	float m_fLastHurt = 0.0f;
 
 	std::string m_UserName;
+	bool bPlayerDead = false;
 
 private:
 	// Bullets	

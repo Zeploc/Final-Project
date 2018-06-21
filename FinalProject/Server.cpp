@@ -151,18 +151,8 @@ void Server::ReceiveData()
 
 			std::cout << "Server Received \"" << NewData << "\" from " <<
 				_IPAddress << ":" << ntohs(m_ClientAddress.sin_port) << std::endl;
-			/*if (int(_pcBufferToReceiveData[0] - '0') == KEEPALIVE)
-			{
-				KeepAlivePacket NewPacket;
-				NewPacket._sMessage = std::string(_pcBufferToReceiveData);
-				NewPacket._sClientAddress = ToString(m_ClientAddress);
-				m_pKeepAliveWorkQueue->push(NewPacket);
-			}
-			else
-			{*/
-				//Push this packet data into the WorkQ
-				m_pWorkQueue->push(NewData);
-			//}
+
+			m_pWorkQueue->push(NewData);
 		}
 	}
 }
@@ -206,6 +196,12 @@ void Server::ProcessData(std::string _DataReceived)
 		{
 			if (AddClient(_packetRecvd.MessageContent))
 			{
+				// If server started (in a level)
+				if (LevelManager::GetInstance()->GetCurrentActiveLevel())
+				{
+					_packetToSend.Serialize(HANDSHAKE, "Started");
+					SendData(_packetToSend.PacketData);
+				}
 				std::string SenderAddress = ToString(m_ClientAddress);
 
 				// Welcomes connected client by sending handshake message
@@ -241,11 +237,13 @@ void Server::ProcessData(std::string _DataReceived)
 		}
 		case CLIENTDISCONNECT:
 		{
-			// [TO ADD]
-			// tell all users the player has disconnected (Clients remove player instance)
-			// Remove from server players map
-			// remove from connected clients
-			// remove Player from UI HUD
+			std::string Username = _packetRecvd.MessageContent;
+			// Remove from server players map and connected clients
+			RemoveClientUser(Username);
+			// Tell all users the player has disconnected (Clients removes player instance)
+			SendToAllClients(Username, CLIENTDISCONNECT);
+			// Remove Player from UI HUD
+			UIManager::GetInstance()->m_HUDInstance.RemovePlayer(Username);
 			break;
 		}
 		case CHAT:
@@ -328,8 +326,8 @@ void Server::SendMessageNE(std::string _pcMessage, EMessageType _Message)
 		MessageToSend = UserAndMessage;
 	}
 	//std::string SenderAddress = ToString(m_ClientAddress);
-	SendToAllClients(MessageToSend, CHAT);
-	ServerPlayerRespondToMessage(MessageToSend, CHAT, "");
+	SendToAllClients(MessageToSend, _Message);
+	ServerPlayerRespondToMessage(MessageToSend, _Message, "");
 }
 
 void Server::SendToAllClients(std::string _pcMessage, EMessageType _MessageType, std::string ExcludeAddress)
@@ -347,6 +345,35 @@ void Server::SendToAllClients(std::string _pcMessage, EMessageType _MessageType,
 		_packetToSend.Serialize(_MessageType, const_cast<char*>(NewMessage));
 		SendData(_packetToSend.PacketData);
 	}
+}
+
+void Server::RemoveClientUser(std::string Username)
+{
+	// Destroy player instance
+	SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(PlayerEntities[Username]);
+	// Remove Player from entites
+	PlayerEntities.erase(Username);
+	// Remove user from connected clients
+	for (auto& Client : *m_pConnectedClients)
+	{
+		if (Client.second.m_strName == Username)
+		{
+			m_pConnectedClients->erase(Client.first);
+			break;
+		}
+	}
+}
+
+void Server::CloseServer()
+{
+	SendToAllClients("", SERVERCLOSED);
+	for (auto& Player : PlayerEntities)
+	{
+		// Destroy player instance
+		SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(Player.second);
+	}
+	PlayerEntities.clear();
+	m_pConnectedClients->clear();
 }
 
 void Server::UpdateNetworkEntity(std::shared_ptr<Entity> NewEntity, int iNetworkID)

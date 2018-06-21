@@ -578,12 +578,16 @@ void LevelManager::DestoryInstance()
 
 void LevelManager::Update()
 {
-	if (!GameManager::GetInstance()->IsPlayerAlive()) return;
 	if (GetCurrentActiveLevel())
 	{
-		SpawnTimer -= (float)Time::dTimeDelta;
+		//if (!GameManager::GetInstance()->IsPlayerAlive()) return;
 		fCurrentRoundElapsed -= (float)Time::dTimeDelta;
 		UIManager::GetInstance()->m_HUDInstance.SetWaveTimer(fCurrentRoundElapsed);
+
+		if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+			if (!NetworkManager::GetInstance()->m_Network.IsServer()) return;
+		// Don't do following if client
+		SpawnTimer -= (float)Time::dTimeDelta;
 		if (fCurrentRoundElapsed <= 0)
 		{
 			NextLevel();

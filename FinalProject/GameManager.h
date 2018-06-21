@@ -22,6 +22,7 @@
 
 // Local Includes //
 #include "Level.h"
+#include "Player.h"
 
 // Static Variables //
 
@@ -35,18 +36,17 @@ public:
 	void HideEndScreen();
 
 	void LevelWon();
-	void PlayerDeath();
+	void PlayerDeath(std::shared_ptr<Player> PlayerDied);
 	void RespawnPlayer();
 
 	bool IsPlayerAlive() {
-		return !bPlayerDead;
+		return !(GetPlayer() ? GetPlayer()->bPlayerDead : true);
 	}
 
 	std::shared_ptr<Player> GetPlayer();
 
 private:
 
-	bool bPlayerDead = false;
 	
 
 	// Singleton

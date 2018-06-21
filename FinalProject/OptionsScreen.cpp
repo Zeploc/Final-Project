@@ -22,6 +22,7 @@
 #include "UIManager.h"
 #include "NetworkManager.h"
 #include "Client.h"
+#include "Server.h"
 
 // Local Functions //
 void QuitButton();
@@ -62,8 +63,14 @@ OptionsScreen::~OptionsScreen()
 ************************************************************/
 void OptionsScreen::Update()
 {
-	if (NetworkManager::GetInstance()->m_Network.IsServer() && m_pQuitButton->TextComponent.sText != "Disconnect")
-		m_pQuitButton->TextComponent.sText = "Disconnect";
+	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+	{
+		bool bIsServer = NetworkManager::GetInstance()->m_Network.IsServer();
+		if (bIsServer && m_pQuitButton->TextComponent.sText != "Close Server")
+			m_pQuitButton->TextComponent.sText = "Close Server";
+		else if (!bIsServer && m_pQuitButton->TextComponent.sText != "Disconnect")
+			m_pQuitButton->TextComponent.sText = "Disconnect";
+	}
 
 	m_pBackImage->Update();
 	m_pOptionsTitle->Update();
@@ -89,16 +96,15 @@ void QuitButton()
 {
 	if (NetworkManager::GetInstance()->m_Network.IsServer())
 	{
-		// Disconnect all clients
-		// clear connected clients
-		// clear players map
+		std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+		ServerRef->CloseServer();
 	}
 	else
 	{
 		std::shared_ptr<Client> ClientRef = std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
 		ClientRef->SendMessageNE(ClientRef->GetUsername(), CLIENTDISCONNECT);
-		NetworkManager::GetInstance()->m_Network.ShutDown();
 	}
+	NetworkManager::GetInstance()->m_Network.ShutDown();
 	UIManager::GetInstance()->m_HUDInstance.ClearPlayersHUD();
 	SceneManager::GetInstance()->SwitchScene("MainMenu");
 }

@@ -112,17 +112,27 @@ Player::~Player()
 void Player::Update()
 {
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
+	if (!GotLevel || !bActive || !UIManager::GetInstance()->m_bFPS || !GameManager::GetInstance()->IsPlayerAlive()) return;
+	
+	bool bIsServer = false;
+
+	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity) // If multiplayer
+		if (NetworkManager::GetInstance()->m_Network.IsServer()) bIsServer = true;
+
+	// If Server or if singleplayer
+	if ((NetworkManager::GetInstance()->m_Network.m_pNetworkEntity && bIsServer) || !NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+	{
+		if (transform.Position.y < -20.0f)
+		{
+			GameManager::GetInstance()->PlayerDeath(std::dynamic_pointer_cast<Player>(this->shared_from_this()));
+			return;
+		}
+	}
+
 	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity) // If multiplayer
 	{
 		// If name is not the current network user name
 		if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->GetUsername() != m_UserName) return;
-	}
-	if (!GotLevel || !bActive || !UIManager::GetInstance()->m_bFPS || !GameManager::GetInstance()->IsPlayerAlive()) return;
-	
-	if (transform.Position.y < -20.0f)
-	{		
-		GameManager::GetInstance()->PlayerDeath();
-		return;
 	}
 
 	glm::vec3 MouseWorldPosition = { 0,0,0 };
@@ -161,29 +171,6 @@ void Player::Update()
 				_packet.Serialize(CREATEBULLET, const_cast<char *>(BulletCreateMessage.c_str()));
 				std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)->SendData(_packet.PacketData);
 			}
-
-			/*glm::vec3 BulletDirection = glm::normalize(VectorToMouseFromPlayer);
-			std::shared_ptr<PlayerBullet> NewBullet = std::make_shared<PlayerBullet>(PlayerBullet({ transform.Position, transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::CENTER, BulletDirection));
-			std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
-			BulletCube->AddCollisionBounds(0.3f, 10.0f, 0.3f, NewBullet);
-			NewBullet->AddMesh(BulletCube);*/
-
-			/*Bullet NewBullet;
-			std::shared_ptr<Entity> Bullet = std::make_shared<Entity>(Entity({ this->transform.Position, this->transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::CENTER));
-			std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
-			BulletCube->AddCollisionBounds(0.3f, 10.0f, 0.3f, Bullet);
-			Bullet->AddMesh(BulletCube);
-			Bullet->transform.Position.y = -2.0f;*/
-			//SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewBullet);
-			/*NewBullet.CurrentVelocity = (BulletDirection*BulletSpeed);
-			NewBullet.CurrentVelocity.y = 0.0f;
-			NewBullet.BulletEntity = Bullet;*/
-			/*if (bSeeking)
-			{
-				SetTrackingClosetEnemy(NewBullet);
-			}
-
-			Bullets.push_back(NewBullet);*/
 			
 			if (FireRatePickup)
 			{
@@ -198,10 +185,6 @@ void Player::Update()
 	}
 
 	BulletTimer -= (float)Time::dTimeDelta;
-	/*if (Bullets.size() != 0)
-	{
-		HandleBullets();
-	}*/
 	
 	if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD || Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_FIRST_PRESS)
 	{
@@ -314,6 +297,8 @@ void Player::Reset()
 			GotLevel->DestroyEntity(IsBulet);
 		}
 	}
+	SetVisible(true);
+	bPlayerDead = false;
 	/*for (auto& BulletIt : Bullets)
 	{
 		SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(BulletIt.BulletEntity);
@@ -325,9 +310,13 @@ void Player::Reset()
 void Player::SetHealth(float _fNewHealth)
 {
 	m_fHealth = _fNewHealth;
+	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity) // If multiplayer
+		// If name is not the current network user name
+		if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->GetUsername() != m_UserName) return;
+
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
 	if (m_fHealth <= 0)
-		GameManager::GetInstance()->PlayerDeath();
+		GameManager::GetInstance()->PlayerDeath(std::dynamic_pointer_cast<Player>(this->shared_from_this()));
 }
 
 void Player::ApplyHealth(float _fmodify)
@@ -335,20 +324,30 @@ void Player::ApplyHealth(float _fmodify)
 	m_fHealth += _fmodify;
 	m_fHealth = max(m_fHealth, 0.0f);
 	m_fHealth = min(m_fHealth, 100.0f);
+	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity) // If multiplayer
+		// If name is not the current network user name
+		if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->GetUsername() != m_UserName) return;
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
 	if (m_fHealth <= 0)
-		GameManager::GetInstance()->PlayerDeath();
+		GameManager::GetInstance()->PlayerDeath(std::dynamic_pointer_cast<Player>(this->shared_from_this()));
 }
 
 void Player::AddScore(int _iAddScore)
 {
 	m_iScore += _iAddScore;
+	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity) // If multiplayer
+		// If name is not the current network user name
+		if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->GetUsername() != m_UserName) return;
+
 	UIManager::GetInstance()->m_HUDInstance.SetScore(m_iScore);
 }
 
 void Player::SetScore(int _iNewScore)
 {
 	m_iScore = _iNewScore;
+	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity) // If multiplayer
+																   // If name is not the current network user name
+		if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->GetUsername() != m_UserName) return;
 	UIManager::GetInstance()->m_HUDInstance.SetScore(m_iScore);
 }
 
