@@ -22,6 +22,6 @@ public:
 	SpeedBoostPickUp(Utils::Transform _Transform, Utils::EANCHOR _Anchor, std::shared_ptr<Entity> _CollidingEntity, float _fRespawnTime = 3.0f);
 	~SpeedBoostPickUp();
 
-	void OnPickUp();
+	void OnPickUp(std::shared_ptr<Entity> CollidingEntity);
 };
 

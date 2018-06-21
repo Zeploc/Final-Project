@@ -40,9 +40,9 @@ HeatSeekerPickUp::~HeatSeekerPickUp()
 {
 }
 
-void HeatSeekerPickUp::OnPickUp()
+void HeatSeekerPickUp::OnPickUp(std::shared_ptr<Entity> CollidingEntity)
 {
-	PickUpBase::OnPickUp();
+	PickUpBase::OnPickUp(CollidingEntity);
 
 	std::shared_ptr<Player> IsPlayer = std::dynamic_pointer_cast<Player>(CollidingEntity);
 	if (IsPlayer)

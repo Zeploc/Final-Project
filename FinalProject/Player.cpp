@@ -115,7 +115,7 @@ void Player::Update()
 	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity) // If multiplayer
 	{
 		// If name is not the current network user name
-		if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->GetServerUsername() != m_UserName) return;
+		if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->GetUsername() != m_UserName) return;
 	}
 	if (!GotLevel || !bActive || !UIManager::GetInstance()->m_bFPS || !GameManager::GetInstance()->IsPlayerAlive()) return;
 	

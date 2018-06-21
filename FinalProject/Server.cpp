@@ -464,6 +464,7 @@ void Server::ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _
 		LevelManager::GetInstance()->GetCurrentActiveLevel()->NetworkEntity = NewEntity;		
 		SendToAllClients(GetNetworkEntityString(NewEntity, false), CREATEENTITY);
 		CreatePlayers();
+		LevelManager::GetInstance()->GetCurrentActiveLevel()->RestartLevel();
 		break;
 	}
 	case CREATEBULLET:

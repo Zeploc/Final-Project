@@ -43,7 +43,8 @@ enum EMessageType : unsigned char
 	PLAYERUPDATE,
 	CREATEPLAYER,
 	CREATEBULLET,
-	CREATEPOWERUP
+	CREATEPOWERUP,
+	APPLYPOWERUP
 };
 
 struct TPacket
@@ -118,7 +119,7 @@ public:
 	std::map<int, std::shared_ptr<Entity>> NetworkEntities;
 	std::map<std::string, std::shared_ptr<Player>> PlayerEntities;
 	
-	std::string GetServerUsername() { return std::string(m_cUserName); };
+	std::string GetUsername() { return std::string(m_cUserName); };
 
 	void SetOffline()
 	{

@@ -56,6 +56,7 @@ public:
 	int ConnectedClientsCount() {
 		return m_pConnectedClients->size();
 	};
+	std::map<std::string, TClientDetails>* GetConnectedClients() { return m_pConnectedClients; };
 
 	void UpdateNetworkEntity(std::shared_ptr<Entity> Entity, int iNetworkID);
 	void UpdatePlayer(std::shared_ptr<Player> PlayerEnt);

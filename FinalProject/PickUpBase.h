@@ -18,16 +18,19 @@
 // Library Includes //
 #include <memory>
 
+// Library Includes //
+#include <vector>
 #pragma once
 class PickUpBase : public Entity
 {
 public:
 	PickUpBase(Utils::Transform _Transform, Utils::EANCHOR _Anchor, std::shared_ptr<Entity> _CollidingEntity, float _fRespawnTime = 3.0f);
 	~PickUpBase();
-
+	
 	void Update();
+	void Init();
 
-	virtual void OnPickUp();
+	virtual void OnPickUp(std::shared_ptr<Entity> CollidingEntity);
 	void RespawnPickup();
 
 	float m_fRespawnTime;

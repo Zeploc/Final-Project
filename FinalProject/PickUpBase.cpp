@@ -18,6 +18,7 @@
 // Library Includes //
 #include <iostream>
 
+
 // Engine Includes //
 #include "Engine\Time.h"
 #include "Engine\CollisionBounds.h"
@@ -37,7 +38,24 @@
 ************************************************************/
 PickUpBase::PickUpBase(Utils::Transform _Transform, Utils::EANCHOR _Anchor, std::shared_ptr<Entity> _CollidingEntity, float _fRespawnTime)
 	: Entity(_Transform, _Anchor), m_fRespawnTime(_fRespawnTime), m_fRespawnTimer(_fRespawnTime)
+{	
+	m_fOscillatingHeight = _Transform.Position.y;
+
+}
+
+/************************************************************
+#--Description--#:  Destructor function
+#--Author--#: 		Alex Coultas
+#--Parameters--#:	NA
+#--Return--#: 		NA
+************************************************************/
+PickUpBase::~PickUpBase()
 {
+}
+
+void PickUpBase::Init()
+{
+	CollidingEntities.clear();
 	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
 	{
 		if (NetworkManager::GetInstance()->m_Network.IsServer())
@@ -53,18 +71,6 @@ PickUpBase::PickUpBase(Utils::Transform _Transform, Utils::EANCHOR _Anchor, std:
 		std::shared_ptr<Level> levelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
 		CollidingEntities.push_back(levelRef->EPlayer);
 	}
-	m_fOscillatingHeight = _Transform.Position.y;
-
-}
-
-/************************************************************
-#--Description--#:  Destructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		NA
-************************************************************/
-PickUpBase::~PickUpBase()
-{
 }
 
 /************************************************************
@@ -98,13 +104,23 @@ void PickUpBase::Update()
 	{
 		if (!bVisible) // Not visible when checking for collisons
 			SetVisible(true); // Turns visible to show it is collectable
+
+		// If is network but not a server, don't check collisions
+		if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+		{
+			if (!NetworkManager::GetInstance()->m_Network.IsServer())
+			{
+				return;
+			}
+		}
+
 		// Check if colliding
 		for (auto& CurrentCollidingPlayer : CollidingEntities)
 		{
 			if (EntityMesh->GetCollisionBounds()->isColliding(CurrentCollidingPlayer))
 			{
 				m_fRespawnTimer = m_fRespawnTime;
-				OnPickUp();
+				OnPickUp(CurrentCollidingPlayer);
 				break;
 			}
 		}
@@ -112,7 +128,7 @@ void PickUpBase::Update()
 	}
 }
 
-void PickUpBase::OnPickUp()
+void PickUpBase::OnPickUp(std::shared_ptr<Entity> CollidingEntity)
 {
 	SoundManager::GetInstance()->AddChannel("PickupChannel");
 	SoundManager::GetInstance()->AddAudio("Resources/Sound/162476__kastenfrosch__gotitem.mp3", false, "Pickup");

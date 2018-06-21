@@ -534,9 +534,16 @@ void Level::RestartLevel()
 			IsEnemy1->AddPathPoints();
 			break;
 		}
-
 	}
 
+	for (auto& it : Entities)
+	{
+		std::shared_ptr<PickUpBase> IsPickup = std::dynamic_pointer_cast<PickUpBase>(it);
+		if (IsPickup)
+		{
+			IsPickup->Init();
+		}
+	}
 }
 
 /************************************************************

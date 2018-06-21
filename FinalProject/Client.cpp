@@ -353,6 +353,21 @@ void Client::ProcessData(std::string _DataReceived)
 			CreateNetworkEntity(NewBullet, iNetworkID);
 			break;
 		}
+		case APPLYPOWERUP:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			std::stringstream ss(Result);
+
+			int PowerupType;
+			float Duration;
+			ss >> PowerupType >> Duration;
+			
+			PlayerEntities[m_cUserName]->ApplyPowerUp((POWERUPS)PowerupType, Duration);
+				
+			// SS to get power up type and duration
+			// find player in playerentities by using current network username
+			// use ApplyPowerUP on that player
+		}
 	}
 }
 
