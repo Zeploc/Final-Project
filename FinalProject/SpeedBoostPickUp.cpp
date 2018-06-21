@@ -18,7 +18,6 @@
 // Local Includes //
 #include "Player.h"
 
-
 /************************************************************
 #--Description--#:  Constructor function
 #--Author--#: 		Alex Coultas
@@ -44,9 +43,6 @@ void SpeedBoostPickUp::OnPickUp(std::shared_ptr<Entity> CollidingEntity)
 {
 	PickUpBase::OnPickUp(CollidingEntity);
 
-	std::shared_ptr<Player> IsPlayer = std::dynamic_pointer_cast<Player>(CollidingEntity);
-	if (IsPlayer)
-	{
-		IsPlayer->ApplyPowerUp(SPEEDBOOST, 5.0f);
-	}
+	ApplyPowerUpToPlayer(CollidingEntity, SPEEDBOOST, 5.0f);
+	
 }

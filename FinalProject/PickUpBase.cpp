@@ -29,6 +29,8 @@
 #include "LevelManager.h"
 #include "NetworkManager.h"
 #include "Level.h"
+#include "NetworkManager.h"
+#include "Server.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -128,6 +130,52 @@ void PickUpBase::Update()
 	}
 }
 
+void PickUpBase::ApplyPowerUpToPlayer(std::shared_ptr<Entity> CollidingEntity, POWERUPS PowerUpType, float fDuration)
+{
+	std::shared_ptr<Player> IsPlayer = std::dynamic_pointer_cast<Player>(CollidingEntity);
+	if (IsPlayer)
+	{
+		// If is network but not a server, don't check collisions
+		if (!NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+		{
+			IsPlayer->ApplyPowerUp(PowerUpType, fDuration);
+
+		}
+		else if (IsPlayer->m_UserName == NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->GetUsername())
+		{
+			// Is still server, since not single player (Check done in base), and also the player is the server, so apply
+			IsPlayer->ApplyPowerUp(PowerUpType, fDuration);
+			return;
+		}
+		else
+		{
+			std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+			// Tell the client to apply powerup
+			for (auto& PlayerIt : *ServerRef->GetConnectedClients())
+			{
+				if (PlayerIt.second.m_strName == IsPlayer->m_UserName)
+				{
+					std::string PowerupString = std::to_string(PowerUpType) + " " + std::to_string(fDuration); // also pass network id
+					ServerRef->SetSender(PlayerIt.second.m_ClientAddress);
+					TPacket _packetToSend;
+					_packetToSend.Serialize(APPLYPOWERUP, const_cast<char*>(PowerupString.c_str()));
+					ServerRef->SendData(_packetToSend.PacketData);
+					for (auto& NetworkEnt : ServerRef->NetworkEntities)
+					{
+						if (NetworkEnt.second == this->shared_from_this())
+						{
+							std::string SetInvisibleText = std::to_string(NetworkEnt.first) + " " + std::to_string(false);
+							ServerRef->SendToAllClients(SetInvisibleText, SETENTITYVISIBLE);
+							break;
+						}
+					}
+					break;
+				}
+			}
+		}
+	}
+}
+
 void PickUpBase::OnPickUp(std::shared_ptr<Entity> CollidingEntity)
 {
 	SoundManager::GetInstance()->AddChannel("PickupChannel");
@@ -141,5 +189,22 @@ void PickUpBase::OnPickUp(std::shared_ptr<Entity> CollidingEntity)
 
 void PickUpBase::RespawnPickup()
 {
-	SetVisible(true);
+	if (!NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+	{
+		SetVisible(true);
+	}
+	else if (NetworkManager::GetInstance()->m_Network.IsServer())
+	{
+		SetVisible(true);
+		std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+		for (auto& NetworkEnt : ServerRef->NetworkEntities)
+		{
+			if (NetworkEnt.second == this->shared_from_this())
+			{
+				std::string SetInvisibleText = std::to_string(NetworkEnt.first) + " " + std::to_string(true);
+				ServerRef->SendToAllClients(SetInvisibleText, SETENTITYVISIBLE);
+				break;
+			}
+		}
+	}
 }

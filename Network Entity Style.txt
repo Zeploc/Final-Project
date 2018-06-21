@@ -1,6 +1,7 @@
 ENTITYUPDATE
 MeshType NetworkID Vec3Pos Vec3Rot Vec3Scale
 
+CREATEENTITY
 MeshType NetworkID Vec3Pos Vec3Rot Vec3Scale fWidth fHeight fDepth Vec4Colour
 MeshType NetworkID Vec3Pos Vec3Rot Vec3Scale Vec4Colour StringPath
 
@@ -21,3 +22,6 @@ stringUsername Vec3Pos Vec3Rot
 
 CREATEBULLET - Client Receive
 stringUsername Vec3Pos Vec3Rot NetworkID
+
+SETENTITYVISIBLE
+NetworkID iVisible

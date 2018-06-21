@@ -45,7 +45,8 @@ enum EMessageType : unsigned char
 	CREATEPLAYER,
 	CREATEBULLET,
 	CREATEPOWERUP,
-	APPLYPOWERUP
+	APPLYPOWERUP,
+	SETENTITYVISIBLE
 };
 
 struct TPacket
@@ -106,7 +107,7 @@ public:
 	static void ExtractTwoVec3(std::string _vec3String, glm::vec3& Vec1, glm::vec3& Vec2);
 	static void ExtractTwoVec3WithNetworkID(std::string _vec3String, int& NetworkID, glm::vec3& Vec1, glm::vec3& Vec2);
 	std::shared_ptr<Entity> CreateNetworkEntity(Utils::EMESHTYPE MeshType, std::string EntityInfo);
-	int CreateNetworkEntity(std::shared_ptr<Entity> Entity, int iNetworkIdentity = -1, std::shared_ptr<Scene> SceneToAddTo = nullptr);
+	int CreateNetworkEntity(std::shared_ptr<Entity> Entity, int iNetworkIdentity = -1, bool bAddToScene = true, std::shared_ptr<Scene> SceneToAddTo = nullptr);
 	void CreateNetworkPlayer(std::string UserName);
 	void UpdateNetworkEntity(std::string UpdateInfo);
 	std::string GetNetworkEntityString(std::shared_ptr<Entity> Entity, bool bIsUpdate, int iNetworkIdentity = -1);

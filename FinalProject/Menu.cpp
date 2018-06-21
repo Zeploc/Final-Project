@@ -295,7 +295,7 @@ void StartGameBtn()
 	LogManager::GetInstance()->DisplayLogMessage("Start Game (Switch to Level)");
 	SoundManager::GetInstance()->StopAudio("BackgroundC");
 	LevelManager::GetInstance()->SwitchToFirstLevel();
-	LevelManager::GetInstance()->SwitchToCurrentLevel();
+	//LevelManager::GetInstance()->SwitchToCurrentLevel();
 	LevelManager::GetInstance()->GetCurrentActiveLevel()->PlayRandomTrack();
 }
 

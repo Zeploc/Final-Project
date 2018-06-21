@@ -365,10 +365,19 @@ void Client::ProcessData(std::string _DataReceived)
 			ss >> PowerupType >> Duration;
 			
 			PlayerEntities[m_cUserName]->ApplyPowerUp((POWERUPS)PowerupType, Duration);
-				
-			// SS to get power up type and duration
-			// find player in playerentities by using current network username
-			// use ApplyPowerUP on that player
+			break;
+		}
+		case SETENTITYVISIBLE:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			std::stringstream ss(Result);
+
+			int NetworkID;
+			bool Visible;
+			ss >> NetworkID >> Visible;
+
+			NetworkEntities[NetworkID]->SetVisible(Visible);
+			break;
 		}
 	}
 }

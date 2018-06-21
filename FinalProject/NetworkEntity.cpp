@@ -143,9 +143,8 @@ std::shared_ptr<Entity> NetworkEntity::CreateNetworkEntity(Utils::EMESHTYPE Mesh
 	return nullptr;
 }
 
-int NetworkEntity::CreateNetworkEntity(std::shared_ptr<Entity> _Entity, int iNetworkIdentity, std::shared_ptr<Scene> SceneToAddTo)
+int NetworkEntity::CreateNetworkEntity(std::shared_ptr<Entity> _Entity, int iNetworkIdentity, bool bAddToScene, std::shared_ptr<Scene> SceneToAddTo)
 {
-
 	std::shared_ptr<Level> levelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
 	int iNetworkID = iNetworkIdentity;
 	if (iNetworkIdentity == -1)
@@ -155,8 +154,13 @@ int NetworkEntity::CreateNetworkEntity(std::shared_ptr<Entity> _Entity, int iNet
 	}
 
 	NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(iNetworkID, _Entity));
-	if (!SceneToAddTo) levelRef->AddEntity(_Entity);
-	SceneToAddTo->AddEntity(_Entity);
+	if (bAddToScene)
+	{
+		if (!SceneToAddTo)
+			levelRef->AddEntity(_Entity);
+		else
+			SceneToAddTo->AddEntity(_Entity);
+	}
 	return iNetworkID;
 }
 
@@ -186,6 +190,8 @@ void NetworkEntity::UpdateNetworkEntity(std::string UpdateInfo)
 	glm::vec3 Rot = { RotX, RotY, RotZ };
 	glm::vec3 Scale = { ScaleX, ScaleY, ScaleZ };
 	
+	if (NetworkID == 2)
+		std::cout << "Ent 2 Updating\n";
 	NetworkEntities[NetworkID]->transform = { Pos , Rot , Scale };
 
 	return;

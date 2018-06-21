@@ -145,21 +145,20 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 					NewPickupMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, NewPickup);
 					NewPickupMesh->SetLit(true);
 					std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
-					int PowerUpId1 = ServerRef->CreateNetworkEntity(NewPickup, -1, _Scene);
+					int PowerUpId1 = ServerRef->CreateNetworkEntity(NewPickup, -1, true, _Scene);
 					std::string NewPickUpString = ServerRef->GetNetworkEntityString(NewPickup, false, PowerUpId1);
 					ServerRef->SendToAllClients(const_cast<char *>(NewPickUpString.c_str()), CREATEENTITY);
 
 					NewPickupMesh->program = Shader::Programs["ReflectionProgram"];
-
-
+					
 					std::shared_ptr<HeatSeekerPickUp> HeatSeekingPickupInstance = std::make_shared<HeatSeekerPickUp>(HeatSeekerPickUp(Utils::Transform{ { 2.5f, -2.0f, 10.0f },{ 45, 45, 45 },{ 1, 1, 1 } }, Utils::CENTER, _Scene->EPlayer));
 					std::shared_ptr<Cube> HeatSeekMesh = std::make_shared<Cube>(Cube(0.5f, 0.5f, 0.5f, { 0.4, 0.1, 0.6, 1.0f }, "Resources/Box.png"));
 					HeatSeekingPickupInstance->AddMesh(HeatSeekMesh);
 					HeatSeekMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, HeatSeekingPickupInstance);
 					HeatSeekMesh->SetLit(true);
-					int PowerUpId2 = NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->CreateNetworkEntity(HeatSeekingPickupInstance, -1, _Scene);
+					int PowerUpId2 = NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->CreateNetworkEntity(HeatSeekingPickupInstance, -1, true, _Scene);
 					std::string HeatSeekerPickUpString = ServerRef->GetNetworkEntityString(HeatSeekingPickupInstance, false, PowerUpId2);
-					ServerRef->SendToAllClients(const_cast<char *>(NewPickUpString.c_str()), CREATEENTITY);
+					ServerRef->SendToAllClients(const_cast<char *>(HeatSeekerPickUpString.c_str()), CREATEENTITY);
 					HeatSeekMesh->program = Shader::Programs["ReflectionProgram"];
 
 					std::shared_ptr<Entity> CubeCollision = std::make_shared<Entity>(Entity(Utils::Transform{ { 0.0f, -2.5f, 20.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::BOTTOM_CENTER));
@@ -167,9 +166,9 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 					CubeCollision->AddMesh(CubeCollisionMesh);
 					CubeCollisionMesh->AddCollisionBounds(2.0f, 2.0f, 2.0f, CubeCollision);
 					CubeCollisionMesh->SetLit(true);
-					int PowerUpId3 = NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->CreateNetworkEntity(CubeCollision, -1, _Scene);
+					int PowerUpId3 = NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->CreateNetworkEntity(CubeCollision, -1, true, _Scene);
 					std::string CubePickUpString = ServerRef->GetNetworkEntityString(CubeCollision, false, PowerUpId3);
-					ServerRef->SendToAllClients(const_cast<char *>(NewPickUpString.c_str()), CREATEENTITY);
+					ServerRef->SendToAllClients(const_cast<char *>(CubePickUpString.c_str()), CREATEENTITY);
 					CubeCollisionMesh->program = Shader::Programs["ReflectionProgram"];
 				}
 			}
@@ -211,7 +210,10 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 					FireRatePickupInstance->AddMesh(FireRateMesh);
 					FireRateMesh->AddCollisionBounds(0.5f, 0.5f, 0.5f, FireRatePickupInstance);
 					FireRateMesh->SetLit(true);
-					_Scene->AddEntity(FireRatePickupInstance);
+					std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+					int PowerUpId1 = ServerRef->CreateNetworkEntity(FireRatePickupInstance, -1, true, _Scene);
+					std::string NewPickUpString = ServerRef->GetNetworkEntityString(FireRatePickupInstance, false, PowerUpId1);
+					ServerRef->SendToAllClients(const_cast<char *>(NewPickUpString.c_str()), CREATEENTITY);
 					FireRateMesh->program = Shader::Programs["ReflectionProgram"];
 
 					std::shared_ptr<Boss> BossObject = std::make_shared<Boss>(Boss(Utils::Transform{ { 20.5f, -1.0f, -10.0f },{ 0, 0, 0 },{ 0.5f, 0.5f, 0.5f } }, Utils::CENTER));
@@ -222,7 +224,9 @@ bool LevelManager::PopulateLevel(std::shared_ptr<Level> _Scene, int _iLevel)
 					SkullMesh->LightProperties.fShininess = 50.0f;
 					SkullMesh->LightProperties.fLightSpecStrength = 0.3f;
 					SkullMesh->LightProperties.fAmbientStrength = 0.05f;
-					_Scene->AddEnemy(BossObject);
+					int PowerUpId2 = ServerRef->CreateNetworkEntity(BossObject, -1, true, _Scene);
+					std::string NewPickUpString2 = ServerRef->GetNetworkEntityString(BossObject, false, PowerUpId2);
+					ServerRef->SendToAllClients(const_cast<char *>(NewPickUpString2.c_str()), CREATEENTITY);
 				}
 			}
 			
@@ -368,6 +372,10 @@ void LevelManager::EnemySpawner()
 						NewSeekEnemy->Target = LevelRef->EPlayer;
 						SeekEnemyMesh->AddCollisionBounds(1, 1, 1, NewSeekEnemy);
 						LevelRef->AddTempEnemy(NewSeekEnemy);
+						std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+						int NewEnemyID = ServerRef->CreateNetworkEntity(NewSeekEnemy, -1, false);
+						std::string NewEnemyString = ServerRef->GetNetworkEntityString(NewSeekEnemy, false, NewEnemyID);
+						ServerRef->SendToAllClients(const_cast<char *>(NewEnemyString.c_str()), CREATEENTITY);
 						int RandomSideNum = rand() % 4 + 1;
 					}
 					SpawnTimer += 3.0f;
@@ -411,6 +419,10 @@ void LevelManager::EnemySpawner()
 						PersueEnemy->Target = LevelRef->EPlayer;
 						PersueEnemyMesh->AddCollisionBounds(1, 1, 1, PersueEnemy);
 						LevelRef->AddTempEnemy(PersueEnemy);
+						std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+						int NewEnemyID = ServerRef->CreateNetworkEntity(PersueEnemy, -1, false);
+						std::string NewEnemyString = ServerRef->GetNetworkEntityString(PersueEnemy, false, NewEnemyID);
+						ServerRef->SendToAllClients(const_cast<char *>(NewEnemyString.c_str()), CREATEENTITY);
 					}
 					SpawnTimer += 3.0f;
 					break;
@@ -454,6 +466,10 @@ void LevelManager::EnemySpawner()
 						CrowdPathFollowingEnemy->AddMesh(CrowdPathFollowingEnemeyMesh);
 						CrowdPathFollowingEnemeyMesh->AddCollisionBounds(1, 1, 1, CrowdPathFollowingEnemy);
 						LevelRef->AddTempEnemy(CrowdPathFollowingEnemy);
+						std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+						int NewEnemyID = ServerRef->CreateNetworkEntity(CrowdPathFollowingEnemy, -1, false);
+						std::string NewEnemyString = ServerRef->GetNetworkEntityString(CrowdPathFollowingEnemy, false, NewEnemyID);
+						ServerRef->SendToAllClients(const_cast<char *>(NewEnemyString.c_str()), CREATEENTITY);
 						//AddEntity(NewEnemy);
 					}
 					SpawnTimer += 3.0f;
@@ -498,6 +514,10 @@ void LevelManager::EnemySpawner()
 						EnemeyMesh->AddCollisionBounds(1, 1, 1, FlockingEnemy);
 						LevelRef->AddTempEnemy(FlockingEnemy);
 						FlockingEnemy->SetTarget(LevelRef->EPlayer);
+						std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+						int NewEnemyID = ServerRef->CreateNetworkEntity(FlockingEnemy, -1, false);
+						std::string NewEnemyString = ServerRef->GetNetworkEntityString(FlockingEnemy, false, NewEnemyID);
+						ServerRef->SendToAllClients(const_cast<char *>(NewEnemyString.c_str()), CREATEENTITY);
 					}
 					SpawnTimer += 3.0f;
 					break;

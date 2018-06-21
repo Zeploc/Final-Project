@@ -17,9 +17,11 @@
 
 // Library Includes //
 #include <memory>
-
-// Library Includes //
 #include <vector>
+
+// Local Includes//
+#include "Player.h"
+
 #pragma once
 class PickUpBase : public Entity
 {
@@ -32,6 +34,8 @@ public:
 
 	virtual void OnPickUp(std::shared_ptr<Entity> CollidingEntity);
 	void RespawnPickup();
+
+	void ApplyPowerUpToPlayer(std::shared_ptr<Entity> CollidingEntity, POWERUPS PowerUpType, float fDuration);
 
 	float m_fRespawnTime;
 

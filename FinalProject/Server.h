@@ -62,6 +62,8 @@ public:
 	void UpdatePlayer(std::shared_ptr<Player> PlayerEnt);
 	void DestroyNetworkEntity(int iNetworkID);
 	void CreatePlayers();
+
+	void SetSender(sockaddr_in NewAddress) { m_ClientAddress = NewAddress; };
 private:
 	bool AddClient(std::string _strClientName);
 	void CreatePlayerOnClients(std::string PlayerName);
