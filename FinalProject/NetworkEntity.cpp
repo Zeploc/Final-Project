@@ -21,6 +21,7 @@
 // Engine Includes //
 #include "Engine\Entity.h"
 #include "Engine\Cube.h"
+#include "Engine\Model.h"
 
 // Local Includes //
 #include "LevelManager.h"
@@ -144,7 +145,23 @@ std::shared_ptr<Entity> NetworkEntity::CreateNetworkEntity(Utils::EMESHTYPE Mesh
 	case Utils::SPHERE:
 		break;
 	case Utils::MODEL:
+	{
+		std::stringstream ss(EntityInfo);
+		float fWidth, fHeight, fDepth, ColourR, ColourG, ColourB, ColourA;
+		std::string TexturePath = "";
+		ss >> NetworkID >> PosX >> PosY >> PosZ >> RotX >> RotY >> RotZ >> ScaleX >> ScaleY >> ScaleZ >> ColourR >> ColourG >> ColourB >> ColourA >> TexturePath;
+		glm::vec3 Pos = { PosX, PosY, PosZ };
+		glm::vec3 Rot = { RotX, RotY, RotZ };
+		glm::vec3 Scale = { ScaleX, ScaleY, ScaleZ };
+		glm::vec4 Colour = { ColourR , ColourG, ColourB, ColourA };
+		std::shared_ptr<Entity> NewEntity = std::make_shared<Entity>(Entity({ Pos, Rot, Scale }, Utils::CENTER));
+		std::shared_ptr<Model> ModelMesh = std::make_shared<Model>(Model(Colour,TexturePath.c_str()));
+		NewEntity->AddMesh(ModelMesh);
+		NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(NetworkID, NewEntity));
+		return NewEntity;
 		break;
+	}
+		
 	default:
 		break;
 	}
@@ -240,7 +257,13 @@ std::string NetworkEntity::GetNetworkEntityString(std::shared_ptr<Entity> Networ
 	case Utils::SPHERE:
 		break;
 	case Utils::MODEL:
+	{
+		std::string EntityMessage = std::to_string(Utils::MODEL) + " " + std::to_string(iNetworkID) + " " +
+			Vec3ToSendString(NetworkEntity->transform.Position) + " " + Vec3ToSendString(NetworkEntity->transform.Rotation) + " " + Vec3ToSendString(NetworkEntity->transform.Scale)
+			+ " " + Vec4ToSendString(NetworkEntity->EntityMesh->Colour) + " " + std::string(NetworkEntity->EntityMesh->TextureSource);
+		return EntityMessage;
 		break;
+	}
 	default:
 		break;
 	}
