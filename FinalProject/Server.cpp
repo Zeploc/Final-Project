@@ -194,15 +194,15 @@ void Server::ProcessData(std::string _DataReceived)
 		}
 		case HANDSHAKE:
 		{
+			// If server started (in a level)
+			if (LevelManager::GetInstance()->GetCurrentActiveLevel())
+			{
+				_packetToSend.Serialize(HANDSHAKE, "Started");
+				SendData(_packetToSend.PacketData);
+				break;
+			}
 			if (AddClient(_packetRecvd.MessageContent))
 			{
-				// If server started (in a level)
-				if (LevelManager::GetInstance()->GetCurrentActiveLevel())
-				{
-					_packetToSend.Serialize(HANDSHAKE, "Started");
-					SendData(_packetToSend.PacketData);
-					break;
-				}
 				std::string SenderAddress = ToString(m_ClientAddress);
 
 				// Welcomes connected client by sending handshake message
