@@ -52,6 +52,11 @@ void LobbyMenu::Init(std::shared_ptr<Scene> _Scene)
 {
 	if (bInitialised)
 	{
+		for (auto& PlayerIt : v_PlayersConnected)
+		{
+			SceneManager::GetInstance()->GetCurrentScene()->DestroyUIElement(PlayerIt);
+		}
+		v_PlayersConnected.clear();
 		HideElements();
 		return;
 	}
@@ -90,13 +95,7 @@ void LobbyMenu::ShowElements()
 {
 	for (auto it : v_ScreenElements)
 		it->SetActive(true);
-
-
-	for (auto& PlayerIt : v_PlayersConnected)
-	{
-		SceneManager::GetInstance()->GetCurrentScene()->DestroyUIElement(PlayerIt);
-	}
-	v_PlayersConnected.clear();
+	
 	//Check if Server, if not, set start server button to inactive
 
 	UIManager::GetInstance()->m_bDisplayChat = true;
