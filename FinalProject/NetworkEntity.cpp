@@ -148,14 +148,16 @@ std::shared_ptr<Entity> NetworkEntity::CreateNetworkEntity(Utils::EMESHTYPE Mesh
 	{
 		std::stringstream ss(EntityInfo);
 		float fWidth, fHeight, fDepth, ColourR, ColourG, ColourB, ColourA;
+		bool bIsLit;
 		std::string TexturePath = "";
-		ss >> NetworkID >> PosX >> PosY >> PosZ >> RotX >> RotY >> RotZ >> ScaleX >> ScaleY >> ScaleZ >> ColourR >> ColourG >> ColourB >> ColourA >> TexturePath;
+		ss >> NetworkID >> PosX >> PosY >> PosZ >> RotX >> RotY >> RotZ >> ScaleX >> ScaleY >> ScaleZ >> ColourR >> ColourG >> ColourB >> ColourA >> bIsLit >> TexturePath;
 		glm::vec3 Pos = { PosX, PosY, PosZ };
 		glm::vec3 Rot = { RotX, RotY, RotZ };
 		glm::vec3 Scale = { ScaleX, ScaleY, ScaleZ };
 		glm::vec4 Colour = { ColourR , ColourG, ColourB, ColourA };
 		std::shared_ptr<Entity> NewEntity = std::make_shared<Entity>(Entity({ Pos, Rot, Scale }, Utils::CENTER));
-		std::shared_ptr<Model> ModelMesh = std::make_shared<Model>(Model(Colour,TexturePath.c_str()));
+		std::shared_ptr<Model> ModelMesh = std::make_shared<Model>(Model(Colour, TexturePath.c_str()));
+		ModelMesh->SetLit(bIsLit);
 		NewEntity->AddMesh(ModelMesh);
 		NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(NetworkID, NewEntity));
 		return NewEntity;
@@ -260,7 +262,7 @@ std::string NetworkEntity::GetNetworkEntityString(std::shared_ptr<Entity> Networ
 	{
 		std::string EntityMessage = std::to_string(Utils::MODEL) + " " + std::to_string(iNetworkID) + " " +
 			Vec3ToSendString(NetworkEntity->transform.Position) + " " + Vec3ToSendString(NetworkEntity->transform.Rotation) + " " + Vec3ToSendString(NetworkEntity->transform.Scale)
-			+ " " + Vec4ToSendString(NetworkEntity->EntityMesh->Colour) + " " + std::string(NetworkEntity->EntityMesh->TextureSource);
+			+ " " + Vec4ToSendString(NetworkEntity->EntityMesh->Colour) + " " + std::to_string(NetworkEntity->EntityMesh->IsLit()) + " " + std::string(NetworkEntity->EntityMesh->TextureSource);
 		return EntityMessage;
 		break;
 	}
