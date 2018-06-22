@@ -227,6 +227,7 @@ void Client::ProcessData(std::string _DataReceived)
 			{
 				// Game already in session
 				UIManager::GetInstance()->ShowMessageBox("The Server selected is already in session!");
+				break;
 			}
 
 			std::shared_ptr<Menu> MenuRef = std::dynamic_pointer_cast<Menu>(SceneManager::GetInstance()->GetCurrentScene());

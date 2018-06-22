@@ -201,6 +201,7 @@ void Server::ProcessData(std::string _DataReceived)
 				{
 					_packetToSend.Serialize(HANDSHAKE, "Started");
 					SendData(_packetToSend.PacketData);
+					break;
 				}
 				std::string SenderAddress = ToString(m_ClientAddress);
 
