@@ -126,6 +126,7 @@ void HUD::RemovePlayer(std::string UserName)
 			m_vpPlayerScore.erase(it);
 			break;
 		}
+		Current++;
 	}
 	Current = 0;
 	for (auto it = m_vpPlayerHealth.begin(); it != m_vpPlayerHealth.end(); it++)
@@ -135,6 +136,7 @@ void HUD::RemovePlayer(std::string UserName)
 			m_vpPlayerHealth.erase(it);
 			break;
 		}
+		Current++;
 	}
 	RepositionPlayersHUD();
 }
