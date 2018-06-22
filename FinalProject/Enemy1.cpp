@@ -74,12 +74,11 @@ void Enemy1::Update()
 	std::shared_ptr<Level> LevelRef = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene());
 
 	std::vector<std::shared_ptr<Entity>> Avoidables = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->GetCurrentScene())->CurrentEnemies;
-	m_v3CurrentVelocity += AI::Align(this->shared_from_this(), 20.0f, Avoidables, m_fSpeed) * 0.5f;
-	m_v3CurrentVelocity += AI::Cohesion(this->shared_from_this(), 10.0f, Avoidables, m_fSpeed) * 0.2f;
+	m_v3CurrentVelocity += AI::Align(this->shared_from_this(), 20.0f, Avoidables, m_fSpeed) * 0.2f;
+	m_v3CurrentVelocity += AI::Cohesion(this->shared_from_this(), 10.0f, Avoidables, m_fSpeed) * 0.1f;
 	m_v3CurrentVelocity += AI::Seperation(this->shared_from_this(), 1.0f, Avoidables, m_fSpeed) * 10.0f;
-	m_v3CurrentVelocity += AI::pathFollowingForce(transform.Position, CurrentPath, m_v3CurrentVelocity, 10.0f, m_fSpeed) * 5.0f;
+	m_v3CurrentVelocity += AI::pathFollowingForce(transform.Position, CurrentPath, m_v3CurrentVelocity, 10.0f, m_fSpeed) * 7.0f;
 	
-
 	if (!EntityMesh) // No mesh added
 		return;
 	if (!EntityMesh->GetCollisionBounds()) // No collision Bounds added

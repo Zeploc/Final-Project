@@ -37,10 +37,10 @@ void SendChat();
 ************************************************************/
 Chat::Chat()
 {
-	m_pBackImage = std::make_shared<UIImage>(UIImage({10, Camera::GetInstance()->SCR_HEIGHT }, Utils::BOTTOM_LEFT, 0, { 0.3f, 0.3f, 0.3f, 0.5f }, 400, 200));
-	m_pTypingField = std::make_shared<UITextField>(UITextField({ 25, Camera::GetInstance()->SCR_HEIGHT - 10 }, Utils::CENTER_LEFT, 0, { 0.5f, 0.5f, 0.5f, 0.5f }, 260, 20, { 0.8f, 0.8f, 0.8f, 1.0f }, "Enter Message...", "Resources/Fonts/Arial.ttf", 20, Utils::CENTER_LEFT));
-	m_pChatBackImage = std::make_shared<UIImage>(UIImage({ 25, Camera::GetInstance()->SCR_HEIGHT - 25 }, Utils::BOTTOM_LEFT, 0, { 0.2f, 0.2f, 0.2f, 0.5f }, 370, 160));
-	m_pEnterButton = std::make_shared<UIButton>(UIButton({ 280, Camera::GetInstance()->SCR_HEIGHT }, Utils::BOTTOM_LEFT, 0, { 0.4f, 0.4f, 0.4f, 0.5f }, { 0.8f, 0.8f, 0.8f, 1.0f }, 110, 20, SendChat));
+	m_pBackImage = std::make_shared<UIImage>(UIImage({10, Camera::GetInstance()->SCR_HEIGHT - 60 }, Utils::BOTTOM_LEFT, 0, { 0.3f, 0.3f, 0.3f, 0.5f }, 400, 200));
+	m_pTypingField = std::make_shared<UITextField>(UITextField({ 25, Camera::GetInstance()->SCR_HEIGHT - 70 }, Utils::CENTER_LEFT, 0, { 0.5f, 0.5f, 0.5f, 0.5f }, 260, 20, { 0.8f, 0.8f, 0.8f, 1.0f }, "Enter Message...", "Resources/Fonts/Arial.ttf", 20, Utils::CENTER_LEFT));
+	m_pChatBackImage = std::make_shared<UIImage>(UIImage({ 25, Camera::GetInstance()->SCR_HEIGHT - 85 }, Utils::BOTTOM_LEFT, 0, { 0.2f, 0.2f, 0.2f, 0.5f }, 370, 160));
+	m_pEnterButton = std::make_shared<UIButton>(UIButton({ 280, Camera::GetInstance()->SCR_HEIGHT - 60 }, Utils::BOTTOM_LEFT, 0, { 0.4f, 0.4f, 0.4f, 0.5f }, { 0.8f, 0.8f, 0.8f, 1.0f }, 110, 20, SendChat));
 	m_pEnterButton->AddText("Send", "Resources/Fonts/Roboto-Thin.ttf", 20, { 1.0f, 1.0f, 1.0f, 1.0f }, Utils::CENTER);
 	SetChatMaximised(false);
 }

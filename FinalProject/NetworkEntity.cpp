@@ -194,7 +194,7 @@ int NetworkEntity::CreateNetworkEntity(std::shared_ptr<Entity> _Entity, int iNet
 void NetworkEntity::CreateNetworkPlayer(std::string UserName)
 {
 	std::shared_ptr<Level> levelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
-	glm::vec3 SpawnPlayerPos = levelRef->SpawnPos;
+	glm::vec3 SpawnPlayerPos = levelRef ? levelRef->SpawnPos : glm::vec3(10, -1, 10);
 	std::shared_ptr<Player> NewPlayer = std::make_shared<Player>(Player({ SpawnPlayerPos, {0, 0, 0}, {0.01f, 0.01f, 0.01f} }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
 	NewPlayer->EntityMesh->AddCollisionBounds(0.6f, 1.0f, 0.6f, NewPlayer);
 	NewPlayer->m_UserName = UserName;

@@ -27,9 +27,9 @@
 HUD::HUD()
 {
 	m_pWaveTime = std::make_shared<UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH - 10, 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Time Remaining: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::TOP_RIGHT));;
-	m_pBackImage = std::make_shared<UIImage>(UIImage({ 0, Camera::GetInstance()->SCR_HEIGHT }, Utils::BOTTOM_LEFT, 0, { 0.5f, 0.5f, 0.5f, 1.0f }, 360, 60));
-	m_pScore = std::make_shared<UIText>(UIText({ 10, Camera::GetInstance()->SCR_HEIGHT - 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Score: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::BOTTOM_LEFT));
-	m_pHealth = std::make_shared<UIText>(UIText({ 190, Camera::GetInstance()->SCR_HEIGHT - 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Health: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::BOTTOM_LEFT));
+	m_pBackImage = std::make_shared<UIImage>(UIImage({ 10, Camera::GetInstance()->SCR_HEIGHT }, Utils::BOTTOM_LEFT, 0, { 0.5f, 0.5f, 0.5f, 1.0f }, 400, 60));
+	m_pScore = std::make_shared<UIText>(UIText({ 20, Camera::GetInstance()->SCR_HEIGHT - 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Score: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::BOTTOM_LEFT));
+	m_pHealth = std::make_shared<UIText>(UIText({ 200, Camera::GetInstance()->SCR_HEIGHT - 10 }, 0, { 0.9f, 0.9f, 0.9f, 1.0f }, "Health: 0", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::BOTTOM_LEFT));
 }
 
 /************************************************************

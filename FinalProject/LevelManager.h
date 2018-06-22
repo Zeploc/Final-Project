@@ -29,7 +29,7 @@
 
 enum RoundTimes
 {
-	WAVE1 = 60,// 35,
+	WAVE1 = 35,// 35,
 	WAVE2 = 1000
 };
 
