@@ -55,7 +55,7 @@ public:
 	void HideElements();
 	void ShowElements();
 
-	void ClearServerList() { v_ServerList.clear(); };
+	void ClearServerList();
 	void AddServers(std::vector<ServerInfoProperties> Servers);
 
 	void JoinCurrentServer();

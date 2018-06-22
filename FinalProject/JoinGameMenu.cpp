@@ -93,6 +93,15 @@ void JoinGameMenu::ShowElements()
 	UIManager::GetInstance()->m_bDisplayChat = false;
 }
 
+void JoinGameMenu::ClearServerList()
+{
+	for (auto& ServerItem : v_ServerList)
+	{
+		SceneManager::GetInstance()->GetCurrentScene()->DestroyUIElement(ServerItem.ServerButton);
+	}
+	v_ServerList.clear();
+}
+
 void JoinGameMenu::AddServers(std::vector<ServerInfoProperties> Servers)
 {
 	if (Servers.size() == 0)

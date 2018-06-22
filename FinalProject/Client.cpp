@@ -318,6 +318,7 @@ void Client::ProcessData(std::string _DataReceived)
 			std::istringstream iss(Result);
 			int MeshType;
 			iss >> MeshType;
+			if (Result.size() < 3) break;
 			// Create entity from mesh type, and miss out the first number and space
 			std::shared_ptr<Entity> NewEntity = CreateNetworkEntity(Utils::EMESHTYPE(MeshType), Result.substr(2));
 
