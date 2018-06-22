@@ -278,11 +278,24 @@ void Client::ProcessData(std::string _DataReceived)
 		}
 		case LOADLEVEL:
 		{
+			for (auto& PlayerEnt : PlayerEntities)
+			{
+				for (auto& NEnt : NetworkEntities)
+				{
+					if (NEnt.second == PlayerEnt.second)
+					{
+						DestroyNetworkEntity(NEnt.first);
+						SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(PlayerEnt.second);
+					}
+				}
+			}
+			PlayerEntities.clear();
+			UIManager::GetInstance()->m_HUDInstance.ClearPlayersHUD();
 			LevelManager::GetInstance()->NextLevel();
-			for (auto& player : PlayerEntities)
+			/*for (auto& player : PlayerEntities)
 			{
 				player.second->SetVisible(true);
-			}
+			}*/
 			//SceneManager::GetInstance()->SwitchScene(_packetRecvd.MessageContent);
 			break;
 		}

@@ -397,6 +397,19 @@ void Server::DestroyNetworkEntity(int iNetworkID)
 
 void Server::CreatePlayers()
 {
+	for (auto& PlayerEnt : PlayerEntities)
+	{
+		for (auto& NEnt : NetworkEntities)
+		{
+			if (NEnt.second == PlayerEnt.second)
+			{
+				DestroyNetworkEntity(NEnt.first);
+				SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(PlayerEnt.second);
+			}
+		}
+	}
+	PlayerEntities.clear();
+	UIManager::GetInstance()->m_HUDInstance.ClearPlayersHUD();
 	for (auto& Client : *m_pConnectedClients)
 	{
 		CreateNetworkPlayer(Client.second.m_strName);

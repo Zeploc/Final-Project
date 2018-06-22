@@ -26,6 +26,7 @@
 #include "Engine\CollisionBounds.h"
 #include "Engine\Time.h"
 
+#include <iostream>
 
 Enemy3::Enemy3(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
 	: Entity(_Transform, _Anchor)
@@ -65,6 +66,7 @@ void Enemy3::Update()
 			if (EntityMesh->GetCollisionBounds()->isColliding(PlayerIt.second) || fCurrentDistance <= 1.0f)
 			{
 				PlayerIt.second->HurtPlayer(15);
+				std::cout << PlayerIt.first + " player has been hit by persuit enemy\n";
 				break;
 			}
 		}

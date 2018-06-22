@@ -122,6 +122,7 @@ void Player::Update()
 	// If Server or if singleplayer
 	if ((NetworkManager::GetInstance()->m_Network.m_pNetworkEntity && bIsServer) || !NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
 	{
+		m_fLastHurt -= (float)Time::dTimeDelta;
 		if (transform.Position.y < -20.0f)
 		{
 			GameManager::GetInstance()->PlayerDeath(std::dynamic_pointer_cast<Player>(this->shared_from_this()));
@@ -229,7 +230,6 @@ void Player::Update()
 	}
 	
 	RollTimer -= (float)Time::dTimeDelta;
-	m_fLastHurt -= (float)Time::dTimeDelta;
 	
 	if (RollTimer < 0.0f)
 	{
@@ -310,13 +310,13 @@ void Player::Reset()
 void Player::SetHealth(float _fNewHealth)
 {
 	m_fHealth = _fNewHealth;
+	if (m_fHealth <= 0)
+		GameManager::GetInstance()->PlayerDeath(std::dynamic_pointer_cast<Player>(this->shared_from_this()));
 	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity) // If multiplayer
 		// If name is not the current network user name
 		if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->GetUsername() != m_UserName) return;
 
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
-	if (m_fHealth <= 0)
-		GameManager::GetInstance()->PlayerDeath(std::dynamic_pointer_cast<Player>(this->shared_from_this()));
 }
 
 void Player::ApplyHealth(float _fmodify)
@@ -324,12 +324,12 @@ void Player::ApplyHealth(float _fmodify)
 	m_fHealth += _fmodify;
 	m_fHealth = max(m_fHealth, 0.0f);
 	m_fHealth = min(m_fHealth, 100.0f);
+	if (m_fHealth <= 0)
+		GameManager::GetInstance()->PlayerDeath(std::dynamic_pointer_cast<Player>(this->shared_from_this()));
 	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity) // If multiplayer
 		// If name is not the current network user name
 		if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->GetUsername() != m_UserName) return;
 	UIManager::GetInstance()->m_HUDInstance.SetHealth(m_fHealth);
-	if (m_fHealth <= 0)
-		GameManager::GetInstance()->PlayerDeath(std::dynamic_pointer_cast<Player>(this->shared_from_this()));
 }
 
 void Player::AddScore(int _iAddScore)
