@@ -369,7 +369,6 @@ void LevelManager::EnemySpawner()
 						std::shared_ptr<Cube> SeekEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.4f, 0.5f, 0.8f, 1.0f), "Resources/Box.png");
 						SeekEnemyMesh->SetLit(true);
 						NewSeekEnemy->AddMesh(SeekEnemyMesh);
-						NewSeekEnemy->Target = LevelRef->EPlayer;
 						SeekEnemyMesh->AddCollisionBounds(1, 1, 1, NewSeekEnemy);
 						std::shared_ptr<Entity> EnemyCopy = LevelRef->AddTempEnemy(NewSeekEnemy);
 						std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
@@ -416,7 +415,6 @@ void LevelManager::EnemySpawner()
 						std::shared_ptr<Cube> PersueEnemyMesh = std::make_shared<Cube>(1.0f, 1.0f, 1.0f, glm::vec4(0.9f, 0.8f, 0.0f, 1.0f), "Resources/Box.png");
 						PersueEnemyMesh->SetLit(true);
 						PersueEnemy->AddMesh(PersueEnemyMesh);
-						PersueEnemy->Target = LevelRef->EPlayer;
 						PersueEnemyMesh->AddCollisionBounds(1, 1, 1, PersueEnemy);
 						std::shared_ptr<Entity> EnemyCopy = LevelRef->AddTempEnemy(PersueEnemy);
 						std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
@@ -513,7 +511,6 @@ void LevelManager::EnemySpawner()
 						FlockingEnemy->AddMesh(EnemeyMesh);
 						EnemeyMesh->AddCollisionBounds(1, 1, 1, FlockingEnemy);
 						std::shared_ptr<Entity> EnemyCopy = LevelRef->AddTempEnemy(FlockingEnemy);
-						FlockingEnemy->SetTarget(LevelRef->EPlayer);
 						std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
 						int NewEnemyID = ServerRef->CreateNetworkEntity(EnemyCopy, -1, false);
 						std::string NewEnemyString = ServerRef->GetNetworkEntityString(EnemyCopy, false, NewEnemyID);

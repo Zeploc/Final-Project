@@ -18,6 +18,7 @@
 // Local Includes //
 #include "Level.h"
 #include "Player.h"
+#include "NetworkManager.h"
 
 // OpenGL Includes //
 #include <glm/gtc/matrix_transform.hpp>
@@ -86,7 +87,19 @@ void Enemy1::Update()
 	
 
 	float fDistance = abs(glm::length(transform.Position - LevelRef->EPlayer->transform.Position));
-	if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer) || fDistance <= 1.0f)
+	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+	{
+		for (auto& PlayerIt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities)
+		{
+			float fCurrentDistance = abs(glm::length(transform.Position - PlayerIt.second->transform.Position));
+			if (EntityMesh->GetCollisionBounds()->isColliding(PlayerIt.second) || fCurrentDistance <= 1.0f)
+			{
+				PlayerIt.second->HurtPlayer(15);
+				break;
+			}
+		}
+	}
+	else if (EntityMesh->GetCollisionBounds()->isColliding(LevelRef->EPlayer) || fDistance <= 1.0f)
 	{
 		LevelRef->EPlayer->HurtPlayer(15);
 	}

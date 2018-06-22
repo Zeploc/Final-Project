@@ -335,7 +335,17 @@ std::shared_ptr<Entity> Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 	{
 		std::shared_ptr<Enemy2> NewEnemyCopy = std::make_shared<Enemy2>(Enemy2(IsEnemy2->transform, IsEnemy2->EntityAnchor));
 		CurrentEnemies.push_back(NewEnemyCopy);
-		NewEnemyCopy->SetTarget(EPlayer);
+		int iRand = rand() % NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities.size();
+		int iCurrent = 0;
+		for (auto& PlayerIt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities)
+		{
+			if (iCurrent == iRand)
+			{
+				NewEnemyCopy->SetTarget(PlayerIt.second);
+				break;
+			}
+			iCurrent++;
+		}
 		NewEnemyCopy->EntityMesh = IsEnemy2->EntityMesh;
 		AddEntity(NewEnemyCopy);
 		return NewEnemyCopy;
@@ -344,7 +354,17 @@ std::shared_ptr<Entity> Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 	{
 		std::shared_ptr<Enemy3> NewEnemyCopy = std::make_shared<Enemy3>(Enemy3(IsEnemy3->transform, IsEnemy3->EntityAnchor));
 		CurrentEnemies.push_back(NewEnemyCopy);
-		NewEnemyCopy->Target = EPlayer;
+		int iRand = rand() % NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities.size();
+		int iCurrent = 0;
+		for (auto& PlayerIt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities)
+		{
+			if (iCurrent == iRand)
+			{
+				NewEnemyCopy->Target = PlayerIt.second;
+				break;
+			}
+			iCurrent++;
+		}
 		NewEnemyCopy->EntityMesh = IsEnemy3->EntityMesh;
 		AddEntity(NewEnemyCopy);
 		return NewEnemyCopy;
@@ -353,7 +373,17 @@ std::shared_ptr<Entity> Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 	{
 		std::shared_ptr<EnemySeek> NewEnemyCopy = std::make_shared<EnemySeek>(EnemySeek(IsEnemySeek->transform, IsEnemySeek->EntityAnchor));
 		CurrentEnemies.push_back(NewEnemyCopy);
-		NewEnemyCopy->Target = EPlayer;
+		int iRand = rand() % NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities.size();
+		int iCurrent = 0;
+		for (auto& PlayerIt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities)
+		{
+			if (iCurrent == iRand)
+			{
+				NewEnemyCopy->Target = PlayerIt.second;
+				break;
+			}
+			iCurrent++;
+		}
 		NewEnemyCopy->EntityMesh = IsEnemySeek->EntityMesh;
 		AddEntity(NewEnemyCopy);
 		return NewEnemyCopy;
