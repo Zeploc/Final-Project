@@ -145,6 +145,16 @@ void PickUpBase::ApplyPowerUpToPlayer(std::shared_ptr<Entity> CollidingEntity, P
 		{
 			// Is still server, since not single player (Check done in base), and also the player is the server, so apply
 			IsPlayer->ApplyPowerUp(PowerUpType, fDuration);
+			std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+			for (auto& NetworkEnt : ServerRef->NetworkEntities)
+			{
+				if (NetworkEnt.second == this->shared_from_this())
+				{
+					std::string SetInvisibleText = std::to_string(NetworkEnt.first) + " " + std::to_string(false);
+					ServerRef->SendToAllClients(SetInvisibleText, SETENTITYVISIBLE);
+					break;
+				}
+			}
 			return;
 		}
 		else
