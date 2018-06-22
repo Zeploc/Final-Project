@@ -69,9 +69,7 @@ public:
 	std::shared_ptr<Entity> Enemy1Ref;
 	std::shared_ptr<Entity> MouseAimTarget;
 	std::shared_ptr<Entity> BossRef;
-
-	std::shared_ptr<Entity> NetworkEntity;
-
+	
 	std::vector<std::shared_ptr<Entity>> Collidables;
 	std::vector<std::shared_ptr<Entity>> CurrentEnemies;
 

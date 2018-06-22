@@ -31,6 +31,7 @@
 #include "LevelManager.h"
 #include "Menu.h"
 #include "NetworkManager.h"
+#include "GameManager.h"
 
 // OpenGL Include //
 #include <glm\gtx\rotate_vector.hpp>
@@ -278,6 +279,7 @@ void Client::ProcessData(std::string _DataReceived)
 		}
 		case LOADLEVEL:
 		{
+			// Hide end screen
 			for (auto& PlayerEnt : PlayerEntities)
 			{
 				for (auto& NEnt : NetworkEntities)
@@ -297,6 +299,15 @@ void Client::ProcessData(std::string _DataReceived)
 				player.second->SetVisible(true);
 			}*/
 			//SceneManager::GetInstance()->SwitchScene(_packetRecvd.MessageContent);
+			break;
+		}
+		case SHOWENDSCREEN:
+		{
+			std::string Result = _packetRecvd.MessageContent;
+			std::stringstream ss(Result);
+			bool bWon;
+			ss >> bWon;
+			GameManager::GetInstance()->ShowEndScreen(bWon);
 			break;
 		}
 		case CHAT:

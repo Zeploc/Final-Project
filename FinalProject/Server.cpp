@@ -499,15 +499,7 @@ void Server::ServerPlayerRespondToMessage(std::string _pcMessage, EMessageType _
 	}
 	break;
 	case LOADLEVEL:
-	{
-		TPacket _packetToSend;
-
-		std::shared_ptr<Entity> NewEntity = std::make_shared<Entity>(Entity({ { 12.56f, -1.6f, 6.47f },{ 0.0f, 90.0f, 0.0f },{ 1.0f, 1.0f, 1.0f } }, Utils::CENTER));
-		std::shared_ptr<Cube> CubeMesh = std::make_shared<Cube>(Cube(1, 1, 1, { 0.0f, 1.0f, 0.0f, 1.0f }));
-		NewEntity->AddMesh(CubeMesh);
-		SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
-		LevelManager::GetInstance()->GetCurrentActiveLevel()->NetworkEntity = NewEntity;		
-		SendToAllClients(GetNetworkEntityString(NewEntity, false), CREATEENTITY);
+	{				
 		CreatePlayers();
 		LevelManager::GetInstance()->GetCurrentActiveLevel()->RestartLevel();
 		break;

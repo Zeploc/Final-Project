@@ -107,6 +107,18 @@ void GameManager::PlayerDeath(std::shared_ptr<Player> PlayerDied)
 		PlayerDied->SetVisible(false);
 		std::shared_ptr<NetworkEntity> NetworkEntityRef = NetworkManager::GetInstance()->m_Network.m_pNetworkEntity;
 		NetworkEntityRef->SendMessageNE(PlayerDied->m_UserName, PLAYERDEATH);
+		bool bPlayerAlive = false;
+		for (auto& PlayerEnt : NetworkEntityRef->PlayerEntities)
+		{
+			if (!PlayerEnt.second->bPlayerDead)
+				bPlayerAlive = true;
+		}
+		if (!bPlayerAlive)
+		{
+			NetworkEntityRef->SendMessageNE(std::to_string(true), SHOWENDSCREEN);
+			ShowEndScreen(true);
+			CurrentLevel->DestroyAllEnemies();
+		}
 	}
 }
 

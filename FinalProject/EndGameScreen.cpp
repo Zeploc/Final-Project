@@ -23,6 +23,10 @@
 #include "Level.h"
 #include "LevelManager.h"
 #include "GameManager.h"
+#include "NetworkManager.h"
+#include "Server.h"
+#include "UIManager.h"
+#include "Client.h"
 
 void BackToMenu();
 void RestartGame();
@@ -97,14 +101,39 @@ void EndScreen::SetEndText(std::string _EndText)
 
 void BackToMenu()
 {
-	std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());
-	CurrentLevel->DestroyAllEnemies();
+	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+	{
+		if (NetworkManager::GetInstance()->m_Network.IsServer())
+		{
+			std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+			ServerRef->CloseServer();
+		}
+		else
+		{
+			std::shared_ptr<Client> ClientRef = std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+			ClientRef->SendMessageNE(ClientRef->GetUsername(), CLIENTDISCONNECT);
+		}
+		NetworkManager::GetInstance()->m_Network.ShutDown();
+		UIManager::GetInstance()->m_HUDInstance.ClearPlayersHUD();
+		std::shared_ptr<Level> CurrentLevel = std::dynamic_pointer_cast<Level>(LevelManager::GetInstance()->GetCurrentActiveLevel());
+		CurrentLevel->DestroyAllEnemies();
+	}	
 	GameManager::GetInstance()->HideEndScreen();
 	SceneManager::GetInstance()->SwitchScene("MainMenu");
 }
 
 void RestartGame()
 {
+	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+	{
+		if (!NetworkManager::GetInstance()->m_Network.IsServer()) return;
+		std::string LevelName = LevelManager::GetInstance()->GetCurrentLevelName();
+		std::shared_ptr<Server> ServerPointer = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+		if (ServerPointer) ServerPointer->SendToAllClients(LevelName, LOADLEVEL); // Tell All Clients to Load Level
+		LevelManager::GetInstance()->SwitchToFirstLevel();
+		if (ServerPointer) ServerPointer->ServerPlayerRespondToMessage(LevelName, LOADLEVEL, "");
+		return;
+	}
 	LevelManager::GetInstance()->SwitchToFirstLevel();
 	//LevelManager::GetInstance()->SwitchToCurrentLevel();
 	//LevelManager::GetInstance()->GetCurrentActiveLevel()->RestartLevel();

@@ -50,6 +50,7 @@
 
 #include "NetworkManager.h"
 #include "Server.h"
+#include "NetworkEntity.h"
 
 // This Includes //
 #include "Level.h"
@@ -258,21 +259,7 @@ void Level::Update()
 		}
 	}
 	FPSCounterText->sText = "FPS: " + std::to_string(Time::dFPS);
-
-	if (NetworkManager::GetInstance()->m_Network.IsServer()) // is Server
-	{
-		if (NetworkEntity)
-		{
-			NetworkEntity->transform = MouseAimTarget->transform;
-			NetworkEntity->transform.Position.y = 1.0f;
-		}
-
-		if (Input::GetInstance()->KeyState[(unsigned int) 'f'] == Input::INPUT_FIRST_PRESS)
-		{
-			DestroyNetworkEntity(NetworkEntity);
-		}
-	}
-	
+		
 	Scene::Update(); // Call super/base Update
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'r'] == Input::INPUT_FIRST_PRESS)
@@ -469,9 +456,21 @@ void Level::AddHexPlatform(std::string _ModelPath, glm::vec3 _v3Postion, glm::ve
 
 void Level::DestroyAllEnemies()
 {
+	std::shared_ptr<NetworkEntity> IsNetwork = NetworkManager::GetInstance()->m_Network.m_pNetworkEntity;
 	for (auto& it : CurrentEnemies)
 	{
 		DestroyEntity(it);
+		if (IsNetwork)
+		{
+			for (auto& NetworkEnt : IsNetwork->NetworkEntities)
+			{
+				if (NetworkEnt.second == it)
+				{
+					IsNetwork->SendMessageNE(std::to_string(NetworkEnt.first), DESTROYENTITY);
+					break;
+				}
+			}
+		}
 	}
 	CurrentEnemies.clear();
 }
@@ -553,9 +552,6 @@ void Level::OnLoadScene()
 ************************************************************/
 void Level::RestartLevel()
 {
-	//EPlayer->Reset();
-	//Camera::GetInstance()->SetCameraPos(glm::vec3(0, 0, 3));
-	//iScore = iCoinsCollected * 5;
 	RespawnEnemies();
 	if (BossRef) std::dynamic_pointer_cast<Boss>(BossRef)->ResetHealth();
 	GameManager::GetInstance()->RespawnPlayer();
