@@ -115,8 +115,7 @@ void PlayerBullet::Update()
 					if (bEnemyKilled || LevelRef->CurrentEnemies.size() == 0) break;
 				}
 				else if ((*Enemyit)->IsActive())
-				{
-					
+				{					
 					for (auto& NetworkEnt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->NetworkEntities)
 					{
 						if (NetworkEnt.second == this->shared_from_this() || NetworkEnt.second == *Enemyit)
@@ -130,7 +129,8 @@ void PlayerBullet::Update()
 					// Send Destroy enemy message to all clients
 					bEnemyKilled = true;
 					TrackingEntity = nullptr;
-					LevelRef->EPlayer->AddScore(10);
+					if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity) NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities[UserOwner]->AddScore(10);
+					else LevelRef->EPlayer->AddScore(10);
 					if (bEnemyKilled) break;
 				}
 			}

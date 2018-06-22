@@ -590,7 +590,11 @@ void LevelManager::Update()
 		SpawnTimer -= (float)Time::dTimeDelta;
 		if (fCurrentRoundElapsed <= 0)
 		{
+			std::string LevelName = LevelManager::GetInstance()->GetCurrentLevelName();
+			std::shared_ptr<Server> ServerPointer = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+			if (ServerPointer) ServerPointer->SendToAllClients(LevelName, LOADLEVEL); // Tell All Clients to Load Level
 			NextLevel();
+			if (ServerPointer) ServerPointer->ServerPlayerRespondToMessage(LevelName, LOADLEVEL, "");
 		}
 	}
 }

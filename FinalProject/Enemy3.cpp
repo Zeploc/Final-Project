@@ -42,7 +42,7 @@ void Enemy3::Update()
 	Entity::Update();
 	std::shared_ptr<Level> LevelRef = LevelManager::GetInstance()->GetCurrentActiveLevel();
 
-	m_v3CurrentVelocity += AI::PursueForce(this->shared_from_this(), Target, PreviousPosition, 10, 30, m_v3CurrentVelocity, m_fSpeed);
+	if (Target) m_v3CurrentVelocity += AI::PursueForce(this->shared_from_this(), Target, PreviousPosition, 10, 30, m_v3CurrentVelocity, m_fSpeed);
 
 	m_v3CurrentVelocity += AI::Seperation(this->shared_from_this(), 1.5f, LevelRef->CurrentEnemies, 5);
 	transform.Position += m_v3CurrentVelocity * (float)Time::dTimeDelta;
