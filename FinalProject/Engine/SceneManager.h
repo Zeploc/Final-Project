@@ -28,13 +28,14 @@ public:
 	void AddScene(std::shared_ptr<Scene> _Scene);
 	void RemoveScene(std::string SceneName);
 	void RemoveScene(std::shared_ptr<Scene> _Scene);
-	void SwitchScene(std::string SceneName);
+	void SwitchScene(std::string SceneName, bool _bInstant = false);
 
 	void UpdateCurrentScene();
 	void RenderCurrentScene();
 	std::shared_ptr<Scene> GetCurrentScene() { return Scenes[CurrentScene]; };
 
 	int CurrentScene = 0;
+	int SceneToSwitch = 0;
 
 	// Singleton
 public:

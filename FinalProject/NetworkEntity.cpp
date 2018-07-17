@@ -136,7 +136,7 @@ std::shared_ptr<Entity> NetworkEntity::CreateNetworkEntity(Utils::EMESHTYPE Mesh
 		else
 			CubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, Colour));
 		CubeMesh->SetLit(bIsLit);
-		if (bIsReflecting) CubeMesh->SetReflection();
+		if (bIsReflecting) CubeMesh->SetReflection(true);
 		NewEntity->AddMesh(CubeMesh);
 		NetworkEntities.insert(std::pair<int, std::shared_ptr<Entity>>(NetworkID, NewEntity));
 		return NewEntity;

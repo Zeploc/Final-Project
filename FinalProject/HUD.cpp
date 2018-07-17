@@ -45,18 +45,22 @@ HUD::~HUD()
 
 void HUD::Update()
 {
-	m_pWaveTime->Update();
-	m_pBackImage->Update();
-	m_pScore->Update();
-	m_pHealth->Update();
+	m_pWaveTime->BaseUpdate();
+	m_pBackImage->BaseUpdate();
+	m_pScore->BaseUpdate();
+	m_pHealth->BaseUpdate();
 
-	for (int i = 0; i < m_vpPlayerScore.size(); i++)
+	if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
 	{
-		m_vpPlayerScore[i]->sText = "$: " + std::to_string(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities[m_vpPlayerName[i]->sText]->GetScore());
-		m_vpPlayerHealth[i]->sText = "+: " + std::to_string((int)NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities[m_vpPlayerName[i]->sText]->m_fHealth);
-		m_vpPlayerScore[i]->Update();
-		m_vpPlayerHealth[i]->Update();
+		for (int i = 0; i < m_vpPlayerScore.size(); i++)
+		{
+			m_vpPlayerScore[i]->sText = "$: " + std::to_string(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities[m_vpPlayerName[i]->sText]->GetScore());
+			m_vpPlayerHealth[i]->sText = "+: " + std::to_string((int)NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities[m_vpPlayerName[i]->sText]->m_fHealth);
+			m_vpPlayerScore[i]->BaseUpdate();
+			m_vpPlayerHealth[i]->BaseUpdate();
+		}
 	}
+	
 }
 
 void HUD::Render()

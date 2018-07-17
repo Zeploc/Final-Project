@@ -60,7 +60,7 @@ public:
 	void ChangeMoveSpeed(float _fSpeed) { m_fCurrentPlayerSpeed = _fSpeed; };
 
 	void HurtPlayer(float Damage);
-	void Reset();
+	void Restart();
 
 	void SetHealth(float _fNewHealth);
 	void ApplyHealth(float _fmodify);

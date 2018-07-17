@@ -81,14 +81,14 @@ Level::Level(std::string sSceneName)
 
 	SpawnPos = glm::vec3(17, 1.0f, 20);
 	// Add cube map first so transpancy works
-	/*if (!NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
+	if (!NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
 	{
 		std::shared_ptr<Player> Player(new Player(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(0.01f, 0.01f, 0.01f) }, 0.5f, 1.0f, 0.5f, Utils::CENTER, glm::vec4(0.1, 1.0, 0.1, 1.0)));
 		AddEntity(Player);
 		Player->EntityMesh->AddCollisionBounds(0.6f, 1.0f, 0.6f, Player);
 		EPlayer = Player;
 		EPlayer->SetActive(true);
-	}*/
+	}
 
 	std::shared_ptr<Spectator> Spec = std::make_shared<Spectator>(Spectator(Utils::Transform{ SpawnPos, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) }, Utils::CENTER));
 	ESpectator = Spec;
@@ -221,6 +221,8 @@ Level::~Level()
 ************************************************************/
 void Level::Update()
 {
+	Scene::Update(); // Call super/base Update
+	
 	LevelManager::GetInstance()->EnemySpawner();
 	MouseAimTarget->transform.Rotation.z += 10.0f *  (float)Time::dTimeDelta;
 	float fDotProductDirections = glm::dot(Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos), glm::vec3(0, 1, 0));
@@ -260,7 +262,6 @@ void Level::Update()
 	}
 	FPSCounterText->sText = "FPS: " + std::to_string(Time::dFPS);
 		
-	Scene::Update(); // Call super/base Update
 
 	if (Input::GetInstance()->KeyState[(unsigned char)'r'] == Input::INPUT_FIRST_PRESS)
 	{
@@ -300,6 +301,7 @@ void Level::AddEnemy(std::shared_ptr<Entity> Enemy)
 
 std::shared_ptr<Entity> Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 {
+	bool IsMultiplayer = NetworkManager::GetInstance()->m_Network.m_pNetworkEntity != nullptr;
 	std::shared_ptr<Enemy1> IsEnemy1 = std::dynamic_pointer_cast<Enemy1>(NewEnemy);
 	std::shared_ptr<Enemy2> IsEnemy2 = std::dynamic_pointer_cast<Enemy2>(NewEnemy);
 	std::shared_ptr<Enemy3> IsEnemy3 = std::dynamic_pointer_cast<Enemy3>(NewEnemy);
@@ -322,17 +324,22 @@ std::shared_ptr<Entity> Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 	{
 		std::shared_ptr<Enemy2> NewEnemyCopy = std::make_shared<Enemy2>(Enemy2(IsEnemy2->transform, IsEnemy2->EntityAnchor));
 		CurrentEnemies.push_back(NewEnemyCopy);
-		int iRand = rand() % NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities.size();
-		int iCurrent = 0;
-		for (auto& PlayerIt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities)
+		if (IsMultiplayer)
 		{
-			if (iCurrent == iRand)
+			int iRand = rand() % NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities.size();
+			int iCurrent = 0;
+			for (auto& PlayerIt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities)
 			{
-				NewEnemyCopy->SetTarget(PlayerIt.second);
-				break;
+				if (iCurrent == iRand)
+				{
+					NewEnemyCopy->SetTarget(PlayerIt.second);
+					break;
+				}
+				iCurrent++;
 			}
-			iCurrent++;
 		}
+		else
+			NewEnemyCopy->SetTarget(LevelManager::GetInstance()->GetCurrentActiveLevel()->EPlayer);
 		NewEnemyCopy->EntityMesh = IsEnemy2->EntityMesh;
 		AddEntity(NewEnemyCopy);
 		return NewEnemyCopy;
@@ -341,17 +348,22 @@ std::shared_ptr<Entity> Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 	{
 		std::shared_ptr<Enemy3> NewEnemyCopy = std::make_shared<Enemy3>(Enemy3(IsEnemy3->transform, IsEnemy3->EntityAnchor));
 		CurrentEnemies.push_back(NewEnemyCopy);
-		int iRand = rand() % NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities.size();
-		int iCurrent = 0;
-		for (auto& PlayerIt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities)
+		if (IsMultiplayer)
 		{
-			if (iCurrent == iRand)
+			int iRand = rand() % NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities.size();
+			int iCurrent = 0;
+			for (auto& PlayerIt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities)
 			{
-				NewEnemyCopy->Target = PlayerIt.second;
-				break;
+				if (iCurrent == iRand)
+				{
+					NewEnemyCopy->Target = PlayerIt.second;
+					break;
+				}
+				iCurrent++;
 			}
-			iCurrent++;
 		}
+		else
+			NewEnemyCopy->Target = LevelManager::GetInstance()->GetCurrentActiveLevel()->EPlayer;
 		NewEnemyCopy->EntityMesh = IsEnemy3->EntityMesh;
 		AddEntity(NewEnemyCopy);
 		return NewEnemyCopy;
@@ -360,17 +372,22 @@ std::shared_ptr<Entity> Level::AddTempEnemy(std::shared_ptr<Entity> NewEnemy)
 	{
 		std::shared_ptr<EnemySeek> NewEnemyCopy = std::make_shared<EnemySeek>(EnemySeek(IsEnemySeek->transform, IsEnemySeek->EntityAnchor));
 		CurrentEnemies.push_back(NewEnemyCopy);
-		int iRand = rand() % NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities.size();
-		int iCurrent = 0;
-		for (auto& PlayerIt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities)
+		if (IsMultiplayer)
 		{
-			if (iCurrent == iRand)
+			int iRand = rand() % NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities.size();
+			int iCurrent = 0;
+			for (auto& PlayerIt : NetworkManager::GetInstance()->m_Network.m_pNetworkEntity->PlayerEntities)
 			{
-				NewEnemyCopy->Target = PlayerIt.second;
-				break;
+				if (iCurrent == iRand)
+				{
+					NewEnemyCopy->Target = PlayerIt.second;
+					break;
+				}
+				iCurrent++;
 			}
-			iCurrent++;
 		}
+		else
+			NewEnemyCopy->Target = LevelManager::GetInstance()->GetCurrentActiveLevel()->EPlayer;
 		NewEnemyCopy->EntityMesh = IsEnemySeek->EntityMesh;
 		AddEntity(NewEnemyCopy);
 		return NewEnemyCopy;

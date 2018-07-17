@@ -1,0 +1,38 @@
+- Destroy entity sets a flag to destroy it,
+	- End of scene update, cleanup is done
+	- Destroys all entity pointers with this flag
+	- Destroys all references
+	- Adds to destroyed entites map (for restarting and keeping info like model, colour, etc)
+
+- Switch scene, Destroy Scene, sets flag
+	- End of scene update applys update
+
+- Incorporate Networking into engine
+	- Create network entity, base class entity
+	- Built in system for scene to update all clients with network entity
+	- Merge network ID into using entity ID
+	- Scene contains pointer to network entities
+
+- Add "Persistant" scene flag
+	- If true, when switching to scene, it remains as is
+	- If false, all the entities will be restored to original states
+	- Scene stores map (id as entity id) with basic entity struct storing:
+		- transform
+		- visible
+		- enable
+		- (and any others)
+	- On load scene, if isin't persistant reload entities using map
+		- For all objects of map, if destroyed, add back entity to entities
+		- Restore the entity's transform, visible, enable (+ other states)
+
+- Because of persistant on load
+	- OnSceneLoad will now be defined in scene to do the above
+	- This means level will call base function first, then restore customisations(enemies)
+	- For restoring custom objects
+		- Since the pointer is deleted from destroy
+		- The destroyed object that was restored will still have derived class
+		- So can cast then add following info (like to enemies struct and enemies info)
+- For things like enemies, they will be restored using above system, then custom values are restored
+
+
+- Plane change collisionbox to collision bounds class

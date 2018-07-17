@@ -17,6 +17,7 @@
 
 // OpenGL Library Includes //
 #include <glm\gtx\string_cast.hpp>
+#include <glm\gtx\rotate_vector.hpp>
 
 // Engine Includes //
 #include "Engine/Utils.h"
@@ -159,19 +160,32 @@ void Player::Update()
 	{
 		if (BulletTimer <= 0)
 		{
-			std::string BulletCreateMessage = m_UserName + " " + NetworkEntity::Vec3ToSendString(transform.Position) + " " + NetworkEntity::Vec3ToSendString(transform.Rotation);
-			if (NetworkManager::GetInstance()->m_Network.IsServer())
+			
+			if (NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)
 			{
-				std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
-				ServerRef->ServerPlayerRespondToMessage(BulletCreateMessage, CREATEBULLET, ServerRef->CurrentServerAddress());
+				std::string BulletCreateMessage = m_UserName + " " + NetworkEntity::Vec3ToSendString(transform.Position) + " " + NetworkEntity::Vec3ToSendString(transform.Rotation);
+				if (NetworkManager::GetInstance()->m_Network.IsServer())
+				{
+					std::shared_ptr<Server> ServerRef = std::dynamic_pointer_cast<Server>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity);
+					ServerRef->ServerPlayerRespondToMessage(BulletCreateMessage, CREATEBULLET, ServerRef->CurrentServerAddress());
+				}
+				else
+				{
+
+					TPacket _packet;
+					_packet.Serialize(CREATEBULLET, const_cast<char *>(BulletCreateMessage.c_str()));
+					std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)->SendData(_packet.PacketData);
+				}
 			}
 			else
 			{
-
-				TPacket _packet;
-				_packet.Serialize(CREATEBULLET, const_cast<char *>(BulletCreateMessage.c_str()));
-				std::dynamic_pointer_cast<Client>(NetworkManager::GetInstance()->m_Network.m_pNetworkEntity)->SendData(_packet.PacketData);
+				std::shared_ptr<PlayerBullet> NewBullet = std::make_shared<PlayerBullet>(PlayerBullet({ transform.Position, transform.Rotation, glm::vec3(0.1f, 0.1f, 0.1f) }, Utils::CENTER,  glm::rotateY(glm::vec3(0, 0, 1), glm::radians(transform.Rotation.y))));
+				std::shared_ptr<Cube> BulletCube = std::make_shared<Cube>(Cube(1, 1, 1, { 1,0,0,1 }));
+				BulletCube->AddCollisionBounds(0.3f, 10.0f, 0.3f, NewBullet);
+				NewBullet->AddMesh(BulletCube);
+				SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewBullet);
 			}
+			
 			
 			if (FireRatePickup)
 			{
@@ -280,7 +294,7 @@ void Player::Update()
 #--Parameters--#:	NA
 #--Return--#: 		NA
 ************************************************************/
-void Player::Reset()
+void Player::Restart()
 {
 	std::shared_ptr<Level> GotLevel = std::dynamic_pointer_cast<Level>(SceneManager::GetInstance()->Scenes[SceneManager::GetInstance()->CurrentScene]);
 	v3Speed.x = 0;

@@ -19,7 +19,6 @@
 // OpenGL Library Includes //
 
 // Engine Includes //
-
 #include "Engine\UISlider.h"
 #include "Engine\SceneManager.h"
 #include "Engine\SoundManager.h"
